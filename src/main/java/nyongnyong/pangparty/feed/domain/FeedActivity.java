@@ -2,7 +2,7 @@ package nyongnyong.pangparty.feed.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import nyongnyong.pangparty.common.FeedType;
+import nyongnyong.pangparty.common.ActivityType;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,17 +14,18 @@ import java.util.concurrent.atomic.AtomicLong;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Feed {
+public class FeedActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private AtomicLong uid;
 
-    private AtomicLong activityUid;
-    private AtomicLong postUid;
-    private AtomicLong followeeUid;
+    private AtomicLong memberUid;
+    private AtomicLong eventUid;
+    private AtomicLong mediaUid;
 
-    private FeedType feedType;
-    private LocalDateTime createTime;
+    private ActivityType activityType;
+
+    private LocalDateTime activityTime;
 
 }
