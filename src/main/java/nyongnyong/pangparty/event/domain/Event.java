@@ -37,6 +37,4 @@ public class Event {
     private boolean hasAlbum;
     private boolean hasPlaylist;
     private boolean hasFunding;
-
-
 }
