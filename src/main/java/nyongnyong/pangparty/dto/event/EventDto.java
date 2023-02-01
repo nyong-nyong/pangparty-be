@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.event.dto;
+package nyongnyong.pangparty.dto.event;
 
 public class EventDto {
 }

@@ -18,9 +18,9 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong hostUid;
+    private Long hostUid;
     private String eventName;
     private String introduction;
     private String imgUrl;

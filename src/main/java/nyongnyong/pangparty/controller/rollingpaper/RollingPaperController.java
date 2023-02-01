@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.rollingpaper.controller;
+package nyongnyong.pangparty.controller.rollingpaper;
 
 public class RollingPaperController {
 }

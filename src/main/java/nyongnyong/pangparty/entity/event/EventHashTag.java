@@ -17,10 +17,10 @@ public class EventHashTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong eventUid;
-    private AtomicLong hashtagUid;
+    private Long eventUid;
+    private Long hashtagUid;
 
     private LocalDateTime addTime;
 }

@@ -17,9 +17,9 @@ public class Banner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong writerUid;
+    private Long writerUid;
     private String content;
 
     private LocalDateTime createTime;

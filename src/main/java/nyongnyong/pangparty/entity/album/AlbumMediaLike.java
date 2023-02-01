@@ -17,10 +17,10 @@ public class AlbumMediaLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong memberUid;
-    private AtomicLong mediaUid;
+    private Long memberUid;
+    private Long mediaUid;
 
     private LocalDateTime likeTime;
 

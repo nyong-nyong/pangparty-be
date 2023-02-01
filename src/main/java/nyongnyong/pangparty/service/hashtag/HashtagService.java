@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.hashtag.service;
+package nyongnyong.pangparty.service.hashtag;
 
 public class HashtagService {
 }

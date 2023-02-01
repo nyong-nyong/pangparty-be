@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.member.controller;
+package nyongnyong.pangparty.controller.member;
 
 public class MemberController {
 }

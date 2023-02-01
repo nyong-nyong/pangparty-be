@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.event.service;
+package nyongnyong.pangparty.service.event;
 
 public class EventService {
 }

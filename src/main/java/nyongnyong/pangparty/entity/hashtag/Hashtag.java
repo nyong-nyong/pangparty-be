@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Hashtag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
     private String name;
     private LocalDateTime createTime;

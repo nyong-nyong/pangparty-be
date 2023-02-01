@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.member.repository;
+package nyongnyong.pangparty.repository.member;
 
 public class MemberRepository {
 }

@@ -18,11 +18,11 @@ public class FeedActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong memberUid;
-    private AtomicLong eventUid;
-    private AtomicLong mediaUid;
+    private Long memberUid;
+    private Long eventUid;
+    private Long mediaUid;
 
     private ActivityType activityType;
 

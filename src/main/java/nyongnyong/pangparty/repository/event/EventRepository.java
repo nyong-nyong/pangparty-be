@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.event.repository;
+package nyongnyong.pangparty.repository.event;
 
 public class EventRepository {
 }

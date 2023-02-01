@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.album.controller;
+package nyongnyong.pangparty.controller.album;
 
 public class AlbumController {
 }

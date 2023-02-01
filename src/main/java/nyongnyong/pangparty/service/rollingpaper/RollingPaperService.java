@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.rollingpaper.service;
+package nyongnyong.pangparty.service.rollingpaper;
 
 public class RollingPaperService {
 }

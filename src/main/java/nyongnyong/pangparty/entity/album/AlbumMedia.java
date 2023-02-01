@@ -17,9 +17,9 @@ public class AlbumMedia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong eventUid;
+    private Long eventUid;
 
     private String mediaUrl;
     private String extension;

@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.feed.service;
+package nyongnyong.pangparty.service.feed;
 
 public class FeedService {
 }

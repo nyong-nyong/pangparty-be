@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.event.controller;
+package nyongnyong.pangparty.controller.event;
 
 public class EventController {
 }
