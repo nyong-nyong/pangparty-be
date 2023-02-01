@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.rollingpaper.domain;
+package nyongnyong.pangparty.entity.rollingpaper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
