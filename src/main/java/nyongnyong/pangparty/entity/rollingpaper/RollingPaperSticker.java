@@ -16,12 +16,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public class RollingPaperSticker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong paperUid;
-    private AtomicLong writerUid;
+    private Long paperUid;
+    private Long memberUid;
     private LocalDateTime createTime;
-    private String stickerUrl;
+    private Long stickerUid;
     private String locX;
     private String locY;
     private String zIndex;

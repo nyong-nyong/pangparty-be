@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.album.dto;
+package nyongnyong.pangparty.dto.album;
 
 public class AlbumDto {
 }

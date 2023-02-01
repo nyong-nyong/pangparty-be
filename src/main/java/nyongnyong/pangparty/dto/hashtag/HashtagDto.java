@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.hashtag.dto;
+package nyongnyong.pangparty.dto.hashtag;
 
 public class HashtagDto {
 }

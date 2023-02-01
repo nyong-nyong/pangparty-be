@@ -17,11 +17,11 @@ public class AlbumMediaComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong eventUid;
-    private AtomicLong writerUid;
-    private AtomicLong mediaUid;
+    private Long eventUid;
+    private Long writerUid;
+    private Long mediaUid;
 
     private String content;
 

@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.album.service;
+package nyongnyong.pangparty.service.album;
 
 public class AlbumService {
 }

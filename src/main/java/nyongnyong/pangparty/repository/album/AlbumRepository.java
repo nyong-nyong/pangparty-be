@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.album.repository;
+package nyongnyong.pangparty.repository.album;
 
 public class AlbumRepository {
 }

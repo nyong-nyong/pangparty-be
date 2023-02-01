@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.feed.repository;
+package nyongnyong.pangparty.repository.feed;
 
 public class FeedRepository {
 }

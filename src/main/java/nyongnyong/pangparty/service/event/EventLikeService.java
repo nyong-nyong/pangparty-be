@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.relation.service;
+package nyongnyong.pangparty.service.event;
 
 public class EventLikeService {
 }

@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.rollingpaper.repository;
+package nyongnyong.pangparty.repository.rollingpaper;
 
 public class RollingPaperRepository {
 }

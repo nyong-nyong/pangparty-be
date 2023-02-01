@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.relation.controller;
+package nyongnyong.pangparty.controller.event;
 
 public class EventLikeController {
 }
