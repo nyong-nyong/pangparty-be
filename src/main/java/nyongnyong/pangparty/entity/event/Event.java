@@ -2,13 +2,12 @@ package nyongnyong.pangparty.entity.event;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import nyongnyong.pangparty.entity.album.AlbumMedia;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
@@ -34,6 +33,10 @@ public class Event {
 
     private boolean isPrivate;
     private boolean hasRollingPaper;
+
+    @OneToMany
+    private List<AlbumMedia> albumMedia;
+
     private boolean hasAlbum;
     private boolean hasPlaylist;
     private boolean hasFunding;

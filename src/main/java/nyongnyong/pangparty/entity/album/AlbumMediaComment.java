@@ -1,31 +1,45 @@
 package nyongnyong.pangparty.entity.album;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import nyongnyong.pangparty.entity.event.Event;
+import nyongnyong.pangparty.entity.member.Member;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"uid", "content", "createTime", "modifyTime"})
 public class AlbumMediaComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    private Long eventUid;
-    private Long writerUid;
-    private Long mediaUid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_uid")
+    private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_uid")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "album_media_uid")
+    private AlbumMedia albumMedia;
 
     private String content;
-
     private LocalDateTime createTime;
     private LocalDateTime modifyTime;
 
+    public void changeAlbumMedia(AlbumMedia albumMedia) {
+        this.albumMedia = albumMedia;
+        if (!albumMedia.getAlbumMediaComments().contains(this)) {
+            albumMedia.getAlbumMediaComments().add(this);
+        }
+    }
 }

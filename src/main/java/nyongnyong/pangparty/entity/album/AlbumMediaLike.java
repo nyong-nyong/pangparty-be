@@ -1,27 +1,43 @@
 package nyongnyong.pangparty.entity.album;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import nyongnyong.pangparty.entity.member.Member;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"likeTime"})
 public class AlbumMediaLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    private Long memberUid;
-    private Long mediaUid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_uid")
+    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "album_media_uid")
+    private AlbumMedia albumMedia;
 
     private LocalDateTime likeTime;
+
+    public void changeAlbumMedia(AlbumMedia albumMedia) {
+        this.albumMedia = albumMedia;
+        if (!albumMedia.getAlbumMediaLikes().contains(this)) {
+            albumMedia.getAlbumMediaLikes().add(this);
+        }
+    }
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
 
 }
