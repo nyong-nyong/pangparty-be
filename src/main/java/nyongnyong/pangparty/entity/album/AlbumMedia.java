@@ -58,5 +58,4 @@ public class AlbumMedia {
             albumMediaLike.changeAlbumMedia(this);
         }
     }
-
 }
