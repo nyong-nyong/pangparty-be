@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.member.domain;
+package nyongnyong.pangparty.entity.badge;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
