@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.hashtag.repository;
+package nyongnyong.pangparty.repository.hashtag;
 
 public class HashtagRepository {
 }

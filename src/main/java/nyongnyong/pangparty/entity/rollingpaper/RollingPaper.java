@@ -15,8 +15,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class RollingPaper {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong eventUid;
+    private Long eventUid;
     private String bgColor;
 }

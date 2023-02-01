@@ -16,8 +16,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class MemberHashtag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
-    private AtomicLong hashtagUid;
-    private AtomicLong memberUid;
+    private Long uid;
+    private Long hashtagUid;
+    private Long memberUid;
     private LocalDateTime addTime;
 }

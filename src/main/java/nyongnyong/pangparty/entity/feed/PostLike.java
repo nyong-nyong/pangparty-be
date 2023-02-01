@@ -17,10 +17,10 @@ public class PostLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong postUid;
-    private AtomicLong memberUid;
+    private Long postUid;
+    private Long memberUid;
 
     private LocalDateTime likeTime;
 }

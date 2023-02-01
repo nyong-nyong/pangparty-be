@@ -17,10 +17,10 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong eventUid;
-    private AtomicLong writerUid;
+    private Long eventUid;
+    private Long memberUid;
 
     private String content;
     private LocalDateTime createTime;

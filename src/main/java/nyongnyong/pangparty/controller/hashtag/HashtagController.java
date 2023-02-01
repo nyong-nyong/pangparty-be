@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.hashtag.controller;
+package nyongnyong.pangparty.controller.hashtag;
 
 public class HashtagController {
 }

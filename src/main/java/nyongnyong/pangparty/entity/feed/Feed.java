@@ -18,11 +18,11 @@ public class Feed {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong activityUid;
-    private AtomicLong postUid;
-    private AtomicLong followeeUid;
+    private Long activityUid;
+    private Long postUid;
+    private Long followeeUid;
 
     private FeedType feedType;
     private LocalDateTime createTime;

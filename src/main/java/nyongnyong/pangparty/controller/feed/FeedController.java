@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.feed.controller;
+package nyongnyong.pangparty.controller.feed;
 
 public class FeedController {
 }

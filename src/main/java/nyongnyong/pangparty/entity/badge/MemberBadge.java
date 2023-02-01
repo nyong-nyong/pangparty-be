@@ -16,9 +16,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public class MemberBadge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong badgeUid;
-    private AtomicLong memberUid;
+    private Long badgeUid;
+    private Long memberUid;
     private LocalDateTime aquireTime;
 }

@@ -18,10 +18,10 @@ public class PostComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private AtomicLong uid;
+    private Long uid;
 
-    private AtomicLong postUid;
-    private AtomicLong writerUid;
+    private Long postUid;
+    private Long memberUid;
 
     private String content;
     private LocalDateTime createTime;
