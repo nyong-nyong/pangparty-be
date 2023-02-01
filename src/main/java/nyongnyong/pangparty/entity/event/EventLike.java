@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@ToString(of = {"likeTime"})
+@ToString(of = {"uid", "likeTime"})
 public class EventLike {
 
     @Id

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"likeTime"})
+@ToString(of = {"uid", "likeTime"})
 public class AlbumMediaLike {
 
     @Id
