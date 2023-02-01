@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -19,10 +18,6 @@ public class AlbumMediaComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_uid")
-    private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
