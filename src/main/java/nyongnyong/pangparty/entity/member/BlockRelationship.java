@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.member.domain;
+package nyongnyong.pangparty.entity.member;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Entity
 @Getter
 @NoArgsConstructor
-public class blockRelationship {
+public class BlockRelationship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

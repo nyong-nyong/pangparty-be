@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.hashtag.domain;
+package nyongnyong.pangparty.entity.hashtag;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
