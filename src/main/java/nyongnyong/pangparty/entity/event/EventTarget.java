@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;

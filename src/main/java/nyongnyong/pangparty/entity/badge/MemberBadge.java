@@ -2,22 +2,37 @@ package nyongnyong.pangparty.entity.badge;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import nyongnyong.pangparty.entity.member.Member;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@ToString(of = {"uid", "acquireTime"})
 public class MemberBadge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    private Long badgeUid;
-    private Long memberUid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "badge_uid")
+    private Badge badge;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_uid")
+    private Member member;
+
     private LocalDateTime aquireTime;
+
+    public void changeBadge(Badge badge) {
+        this.badge = badge;
+    }
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
+
 }

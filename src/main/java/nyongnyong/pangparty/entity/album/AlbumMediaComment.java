@@ -37,4 +37,8 @@ public class AlbumMediaComment {
             albumMedia.getAlbumMediaComments().add(this);
         }
     }
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
 }

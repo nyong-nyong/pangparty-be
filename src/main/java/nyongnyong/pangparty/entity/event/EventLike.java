@@ -27,4 +27,12 @@ public class EventLike {
     private Member member;
 
     private LocalDateTime likeTime;
+
+    public void changeEvent(Event event) {
+        this.event = event;
+    }
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
 }

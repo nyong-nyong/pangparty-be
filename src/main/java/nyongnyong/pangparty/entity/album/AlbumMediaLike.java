@@ -28,15 +28,15 @@ public class AlbumMediaLike {
 
     private LocalDateTime likeTime;
 
+    public void changeMember(Member member) {
+        this.member = member;
+    }
+
     public void changeAlbumMedia(AlbumMedia albumMedia) {
         this.albumMedia = albumMedia;
         if (!albumMedia.getAlbumMediaLikes().contains(this)) {
             albumMedia.getAlbumMediaLikes().add(this);
         }
-    }
-
-    public void changeMember(Member member) {
-        this.member = member;
     }
 
 }
