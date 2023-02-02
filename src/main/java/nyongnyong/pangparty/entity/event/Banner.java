@@ -29,6 +29,13 @@ public class Banner {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
+    public Banner(String content, LocalDateTime createTime, LocalDateTime startTime, LocalDateTime endTime) {
+        this.content = content;
+        this.createTime = createTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
     public void changeMember(Member member) {
         this.member = member;
     }
