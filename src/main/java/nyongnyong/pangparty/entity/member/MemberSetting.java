@@ -26,4 +26,12 @@ public class MemberSetting {
     private boolean alarmOnEventSchedule;
     private boolean alarmOnFriendEventCreate;
 
+    public MemberSetting(Member member, boolean alarmOnAll, boolean alarmOnFollowing, boolean alarmOnBadge, boolean alarmOnEventSchedule, boolean alarmOnFriendEventCreate) {
+        this.member = member;
+        this.alarmOnAll = alarmOnAll;
+        this.alarmOnFollowing = alarmOnFollowing;
+        this.alarmOnBadge = alarmOnBadge;
+        this.alarmOnEventSchedule = alarmOnEventSchedule;
+        this.alarmOnFriendEventCreate = alarmOnFriendEventCreate;
+    }
 }

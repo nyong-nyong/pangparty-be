@@ -27,4 +27,12 @@ public class MemberProfile {
     private String introduction;
     private LocalDateTime updateTime;
 
+    public MemberProfile(Member member, String id, String name, String imgUrl, String introduction, LocalDateTime updateTime) {
+        this.member = member;
+        this.id = id;
+        this.name = name;
+        this.imgUrl = imgUrl;
+        this.introduction = introduction;
+        this.updateTime = updateTime;
+    }
 }

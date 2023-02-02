@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import nyongnyong.pangparty.common.SocialAuthType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,8 +22,16 @@ public class MemberSocialAuthInfo {
     @MapsId
     @JoinColumn(name = "member_uid")
     private Member member;
-    private boolean socialType;
-    private boolean externalId;
+
+    @Enumerated(EnumType.STRING)
+    private SocialAuthType socialType;
+    private String externalId;
     private LocalDateTime updateTime;
 
+    public MemberSocialAuthInfo(Member member, SocialAuthType socialType, String externalId, LocalDateTime updateTime) {
+        this.member = member;
+        this.socialType = socialType;
+        this.externalId = externalId;
+        this.updateTime = updateTime;
+    }
 }
