@@ -17,7 +17,7 @@ public class MemberPersonal {
     @Id
     private Long memberUid;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "member_uid")
     private Member member;

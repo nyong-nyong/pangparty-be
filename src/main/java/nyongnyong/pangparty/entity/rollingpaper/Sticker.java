@@ -15,7 +15,7 @@ public class Sticker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
-    
+
     private String stickerUrl;
     private String metaTag;
 }
