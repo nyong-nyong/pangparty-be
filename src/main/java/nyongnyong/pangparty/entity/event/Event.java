@@ -17,6 +17,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "eventName", "introduction", "imgUrl", "dDay", "createTime", "modifyTime", "startTime", "endTime", "partyTime", "isPrivate"})
 public class Event {
+    public Event(String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate) {
+        this.eventName = eventName;
+        this.introduction = introduction;
+        this.imgUrl = imgUrl;
+        this.dDay = dDay;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.partyTime = partyTime;
+        this.isPrivate = isPrivate;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +55,8 @@ public class Event {
     private Album album;
 //    private boolean hasPlaylist;
 //    private boolean hasFunding;
+
+
 
     public void changeRollingPaper(RollingPaper rollingPaper) {
         this.rollingPaper = rollingPaper;
