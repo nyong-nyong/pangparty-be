@@ -21,9 +21,10 @@ public class Member {
     private boolean isSocial;
     private LocalDateTime withdrawTime;
 
-    public Member(String email, boolean isSocial) {
+    public Member(String email, boolean isSocial, LocalDateTime withdrawTime) {
         this.email = email;
         this.isSocial = isSocial;
+        this.withdrawTime = withdrawTime;
     }
 
 }

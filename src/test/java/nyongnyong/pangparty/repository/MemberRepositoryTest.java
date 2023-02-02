@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
@@ -20,7 +21,7 @@ public class MemberRepositoryTest {
     @Test
     @Transactional
     public void testMember() {
-        Member member = new Member("nyong@pang.party", false);
+        Member member = new Member("nyong@pang.party", false, LocalDateTime.now());
         Member savedMember = memberRepository.save(member);
 
         Member findMember = memberRepository.findById(savedMember.getUid()).get();
@@ -35,8 +36,8 @@ public class MemberRepositoryTest {
     public void basicCRUD() {
         System.out.println("=========START SAVE MEMBER=========");
 
-        Member member1 = new Member("nyong@pang.party", false);
-        Member member2 = new Member("test@pang.party", true);
+        Member member1 = new Member("nyong@pang.party", false, LocalDateTime.now());
+        Member member2 = new Member("test@pang.party", true, LocalDateTime.now());
         memberRepository.save(member1);
         memberRepository.save(member2);
 
