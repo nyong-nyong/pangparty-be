@@ -29,6 +29,10 @@ public class EventTarget {
 
     private LocalDateTime addTime;
 
+    public EventTarget(LocalDateTime addTime) {
+        this.addTime = addTime;
+    }
+
     public void changeEvent(Event event) {
         this.event = event;
         // TODO Event에 participant 추가 시, 예외 처리 코드 필요
