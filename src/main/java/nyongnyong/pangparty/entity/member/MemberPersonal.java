@@ -1,23 +1,26 @@
 package nyongnyong.pangparty.entity.member;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Email;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"memberUid", "phoneNo", "email", "birthday", "gender", "emailAuthTime", "phoneAuthTime", "address", "postalCode", "authority"})
 public class MemberPersonal {
 
     @Id
-    private AtomicLong memberUid;
+    private Long memberUid;
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "member_uid")
+    private Member member;
     private String phoneNo;
     private String email;
     private LocalDateTime birthday;

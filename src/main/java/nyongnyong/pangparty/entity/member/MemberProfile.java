@@ -1,24 +1,29 @@
 package nyongnyong.pangparty.entity.member;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"name", "imgUrl", "introduction", "joinTime", "updateTime"})
 public class MemberProfile {
 
     @Id
-    private AtomicLong memberUid;
+    private Long memberUid;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "member_uid")
+    private Member member;
     private String id;
     private String name;
-    private String img_url;
+    private String imgUrl;
     private String introduction;
     private LocalDateTime joinTime;
     private LocalDateTime updateTime;

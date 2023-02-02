@@ -1,21 +1,26 @@
 package nyongnyong.pangparty.entity.member;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"memberUid", "socialType", "externalId", "updateTime"})
 public class MemberSocialAuthInfo {
 
     @Id
-    private AtomicLong memberUid;
+    private Long memberUid;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "member_uid")
+    private Member member;
     private boolean socialType;
     private boolean externalId;
     private LocalDateTime updateTime;
