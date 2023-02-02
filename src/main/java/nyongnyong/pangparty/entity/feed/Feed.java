@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import nyongnyong.pangparty.common.FeedType;
+import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,21 +13,26 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "memberUid", "feedType", "createTime"})
+@ToString(of = {"uid", "feedType", "createTime"})
 public class Feed {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    @OneToOne
-    @JoinColumn()
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_acitivty_uid")
     private FeedActivity feedActivity;
 
-    @OneToOne
-    @JoinColumn()
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_uid")
     private Post post;
-    private Long memberUid;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_uid")
+    private Member member;
+
+    @Enumerated(EnumType.STRING)
     private FeedType feedType;
     private LocalDateTime createTime;
 

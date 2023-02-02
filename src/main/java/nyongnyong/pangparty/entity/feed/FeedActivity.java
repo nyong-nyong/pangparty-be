@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import nyongnyong.pangparty.common.ActivityType;
+import nyongnyong.pangparty.entity.album.AlbumMedia;
+import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -12,18 +14,26 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@ToString(of = {"uid", "eventUid", "mediaUid", "activityType", "activityTime"})
+@ToString(of = {"uid", "activityType", "activityTime"})
 public class FeedActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    @OneToOne @MapsId
-    @JoinColumn()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_uid")
     private Member member;
-    private Long eventUid;
-    private Long mediaUid;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_uid")
+    private Event event;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "album_media_uid")
+    private AlbumMedia albumMedia;
+
+    @Enumerated(EnumType.STRING)
     private ActivityType activityType;
     private LocalDateTime activityTime;
 

@@ -3,6 +3,7 @@ package nyongnyong.pangparty.entity.feed;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -12,24 +13,26 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@ToString(of = {"uid", "eventUid", "content", "createTime", "modifyTime", "hit"})
+@ToString(of = {"uid", "content", "createTime", "modifyTime", "hit"})
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    private Long eventUid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_uid")
+    private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_uid")
+    private Member member;
 
     @OneToMany(mappedBy = "post")
     private List<PostComment> postComments;
 
     @OneToMany(mappedBy = "post")
     private List<PostLike> postLikes;
-
-    @OneToOne @MapsId
-    @JoinColumn()
-    private Member member;
 
     private String content;
     private LocalDateTime createTime;
