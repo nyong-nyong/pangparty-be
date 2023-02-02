@@ -29,6 +29,10 @@ public class EventHashtag {
 
     private LocalDateTime addTime;
 
+    public EventHashtag(LocalDateTime addTime) {
+        this.addTime = addTime;
+    }
+
     public void changeEvent(Event event) {
         this.event = event;
     }
