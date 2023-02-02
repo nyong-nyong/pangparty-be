@@ -1,26 +1,31 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import nyongnyong.pangparty.entity.member.Member;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"uid", "writerName", "createTime", "modifyTime", "content", "bgColor", "bgImgUrl", "bgImgAlt", "fontFamily", "textColor", "textAlign"})
 public class RollingPaperPiece {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    private Long paperUid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rolling_paper_uid")
+    private RollingPaper rollingPaper;
 
-    private Long memberUid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_uid")
+    private Member member;
+
     private String writerName;
     private LocalDateTime createTime;
     private LocalDateTime modifyTime;
@@ -31,4 +36,15 @@ public class RollingPaperPiece {
     private String fontFamily;
     private String textColor;
     private String textAlign;
+
+    public void changeRollingPaper(RollingPaper rollingPaper) {
+        this.rollingPaper = rollingPaper;
+        if (!rollingPaper.getRollingPaperPieces().contains(this)) {
+            rollingPaper.getRollingPaperPieces().add(this);
+        }
+    }
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
 }

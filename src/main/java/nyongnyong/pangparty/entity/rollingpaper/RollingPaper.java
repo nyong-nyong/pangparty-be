@@ -1,22 +1,45 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import nyongnyong.pangparty.entity.event.Event;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"uid", "bgColor"})
 public class RollingPaper {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    private Long eventUid;
+    @OneToOne(mappedBy = "rollingPaper")
+    private Event event;
+
+    @OneToMany(mappedBy = "rollingPaper")
+    private List<RollingPaperPiece> rollingPaperPieces;
+
+    @OneToMany(mappedBy = "rollingPaper")
+    private List<RollingPaperSticker> rollingPaperStickers;
+
     private String bgColor;
+
+    public void addRollingPaperPiece(RollingPaperPiece rollingPaperPiece) {
+        this.rollingPaperPieces.add(rollingPaperPiece);
+        if (rollingPaperPiece.getRollingPaper() != this) {
+            rollingPaperPiece.changeRollingPaper(this);
+        }
+    }
+
+    public void addRollingPaperSticker(RollingPaperSticker rollingPaperSticker) {
+        this.rollingPaperStickers.add(rollingPaperSticker);
+        if (rollingPaperSticker.getRollingPaper() != this) {
+            rollingPaperSticker.changeRollingPaper(this);
+        }
+    }
 }
