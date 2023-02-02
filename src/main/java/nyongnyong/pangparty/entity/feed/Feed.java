@@ -21,7 +21,7 @@ public class Feed {
     private Long uid;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feed_acitivty_uid")
+    @JoinColumn(name = "feed_activity_uid")
     private FeedActivity feedActivity;
 
     @OneToOne(fetch = FetchType.LAZY)
