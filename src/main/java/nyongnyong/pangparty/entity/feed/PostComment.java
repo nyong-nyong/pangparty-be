@@ -6,9 +6,7 @@ import lombok.ToString;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter

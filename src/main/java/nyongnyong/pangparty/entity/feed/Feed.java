@@ -8,12 +8,11 @@ import nyongnyong.pangparty.common.FeedType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "followeeUid", "feedType", "createTime"})
+@ToString(of = {"uid", "memberUid", "feedType", "createTime"})
 public class Feed {
 
     @Id
@@ -27,7 +26,7 @@ public class Feed {
     @OneToOne
     @JoinColumn()
     private Post post;
-    private Long followeeUid;
+    private Long memberUid;
     private FeedType feedType;
     private LocalDateTime createTime;
 

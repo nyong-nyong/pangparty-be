@@ -8,7 +8,6 @@ import nyongnyong.pangparty.entity.member.Member;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
