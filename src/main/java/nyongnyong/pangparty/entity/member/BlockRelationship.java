@@ -26,4 +26,8 @@ public class BlockRelationship {
     private Member blocked;
     private LocalDateTime blockTime;
 
+    public BlockRelationship(LocalDateTime blockTime) {
+        this.blockTime = blockTime;
+    }
+
 }

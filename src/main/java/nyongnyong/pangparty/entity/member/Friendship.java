@@ -26,4 +26,8 @@ public class Friendship {
     private Member followee;
     private LocalDateTime followTime;
 
+    public Friendship(LocalDateTime followTime) {
+        this.followTime = followTime;
+    }
+
 }
