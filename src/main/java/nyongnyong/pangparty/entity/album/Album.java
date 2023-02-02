@@ -25,7 +25,7 @@ public class Album {
     @OneToMany(mappedBy = "album")
     private List<AlbumMedia> albumMedia;
 
-    public void addAlbumMediaLike(AlbumMedia albumMedia) {
+    public void addAlbumMedia(AlbumMedia albumMedia) {
         this.albumMedia.add(albumMedia);
         if (albumMedia.getAlbum() != this) {
             albumMedia.changeAlbum(this);

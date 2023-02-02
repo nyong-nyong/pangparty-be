@@ -39,15 +39,15 @@ public class AlbumMedia {
 
     public void addAlbumMediaComment(AlbumMediaComment albumMediaComment) {
         this.albumMediaComments.add(albumMediaComment);
-        if (albumMediaComment.getAlbumMedia() != this) {
-            albumMediaComment.changeAlbumMedia(this);
+            if (albumMediaComment.getAlbumMedia() != this) {
+                albumMediaComment.changeAlbumMedia(this);
+            }
         }
-    }
 
-    public void addAlbumMediaLike(AlbumMediaLike albumMediaLike) {
-        this.albumMediaLikes.add(albumMediaLike);
-        if (albumMediaLike.getAlbumMedia() != this) {
-            albumMediaLike.changeAlbumMedia(this);
+        public void addAlbumMediaLike(AlbumMediaLike albumMediaLike) {
+            this.albumMediaLikes.add(albumMediaLike);
+            if (albumMediaLike.getAlbumMedia() != this) {
+                albumMediaLike.changeAlbumMedia(this);
         }
     }
     public void changeAlbum(Album album) {

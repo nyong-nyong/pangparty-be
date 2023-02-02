@@ -38,7 +38,4 @@ public class AlbumMediaComment {
         }
     }
 
-    public void changeMember(Member member) {
-        this.member = member;
-    }
 }

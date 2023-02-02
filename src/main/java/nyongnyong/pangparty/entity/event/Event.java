@@ -1,7 +1,9 @@
 package nyongnyong.pangparty.entity.event;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import nyongnyong.pangparty.entity.album.Album;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
@@ -12,7 +14,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"uid", "eventName", "introduction", "imgUrl", "dDay", "createTime", "modifyTime", "startTime", "endTime", "partyTime", "isPrivate"})
 public class Event {
 
     @Id
@@ -33,10 +36,10 @@ public class Event {
     private LocalDateTime partyTime;
 
     private boolean isPrivate;
-    @OneToOne(mappedBy = "rollingPaper_uid")
+    @OneToOne(mappedBy = "event")
     private RollingPaper rollingPaper;
 
-    @OneToOne(mappedBy = "album_uid")
+    @OneToOne(mappedBy = "event")
     private Album album;
 //    private boolean hasPlaylist;
 //    private boolean hasFunding;
