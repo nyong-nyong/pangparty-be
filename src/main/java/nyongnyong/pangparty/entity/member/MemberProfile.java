@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"name", "imgUrl", "introduction", "joinTime", "updateTime"})
+@ToString(of = {"memberUid", "id", "name","imgUrl", "introduction", "updateTime"})
 public class MemberProfile {
 
     @Id
@@ -25,7 +25,6 @@ public class MemberProfile {
     private String name;
     private String imgUrl;
     private String introduction;
-    private LocalDateTime joinTime;
     private LocalDateTime updateTime;
 
 }

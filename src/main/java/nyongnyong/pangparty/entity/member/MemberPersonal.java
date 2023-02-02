@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"memberUid", "phoneNo", "email", "birthday", "gender", "emailAuthTime", "phoneAuthTime", "address", "postalCode", "authority"})
+@ToString(of = {"memberUid", "phoneNo", "email", "birthday", "gender", "address", "postalCode", "emailAuthTime", "phoneAuthTime", "joinTime", "updateTime", "authority"})
 public class MemberPersonal {
 
     @Id
@@ -25,10 +25,12 @@ public class MemberPersonal {
     private String email;
     private LocalDateTime birthday;
     private int gender;
-    private LocalDateTime emailAuthTime;
-    private LocalDateTime phoneAuthTime;
     private String address;
     private String postalCode;
+    private LocalDateTime emailAuthTime;
+    private LocalDateTime phoneAuthTime;
+    private LocalDateTime join_time;
+    private LocalDateTime update_time;
     private String authority;
 
 }

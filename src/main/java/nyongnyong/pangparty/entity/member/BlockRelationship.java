@@ -26,7 +26,4 @@ public class BlockRelationship {
     private Member blocked;
     private LocalDateTime blockTime;
 
-    private String email;
-    private boolean is_social;
-
 }
