@@ -22,6 +22,7 @@ public class Album {
     @OneToOne
     @JoinColumn(name = "event_uid")
     private Event event;
+
     @OneToMany(mappedBy = "album")
     private List<AlbumMedia> albumMedia;
 

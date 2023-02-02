@@ -18,7 +18,8 @@ public class RollingPaper {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    @OneToOne(mappedBy = "rollingPaper")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_uid")
     private Event event;
 
     @OneToMany(mappedBy = "rollingPaper")
