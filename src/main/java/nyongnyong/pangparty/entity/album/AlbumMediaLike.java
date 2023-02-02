@@ -28,6 +28,10 @@ public class AlbumMediaLike {
 
     private LocalDateTime likeTime;
 
+    public AlbumMediaLike(LocalDateTime likeTime) {
+        this.likeTime = likeTime;
+    }
+
     public void changeMember(Member member) {
         this.member = member;
     }

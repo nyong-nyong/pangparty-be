@@ -37,6 +37,15 @@ public class AlbumMedia {
     private String takenLat;
     private String takenLng;
 
+    public AlbumMedia(String mediaUrl, String extension, LocalDateTime uploadTime, LocalDateTime takenTime, String takenLat, String takenLng) {
+        this.mediaUrl = mediaUrl;
+        this.extension = extension;
+        this.uploadTime = uploadTime;
+        this.takenTime = takenTime;
+        this.takenLat = takenLat;
+        this.takenLng = takenLng;
+    }
+
     public void addAlbumMediaComment(AlbumMediaComment albumMediaComment) {
         this.albumMediaComments.add(albumMediaComment);
             if (albumMediaComment.getAlbumMedia() != this) {

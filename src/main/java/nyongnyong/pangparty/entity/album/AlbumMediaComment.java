@@ -31,6 +31,12 @@ public class AlbumMediaComment {
     private LocalDateTime createTime;
     private LocalDateTime modifyTime;
 
+    public AlbumMediaComment(String content, LocalDateTime createTime, LocalDateTime modifyTime) {
+        this.content = content;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+    }
+
     public void changeAlbumMedia(AlbumMedia albumMedia) {
         this.albumMedia = albumMedia;
         if (!albumMedia.getAlbumMediaComments().contains(this)) {
