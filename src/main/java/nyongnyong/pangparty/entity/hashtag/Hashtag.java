@@ -19,4 +19,9 @@ public class Hashtag {
 
     private String name;
     private LocalDateTime createTime;
+
+    public Hashtag(String name, LocalDateTime createTime) {
+        this.name = name;
+        this.createTime = createTime;
+    }
 }
