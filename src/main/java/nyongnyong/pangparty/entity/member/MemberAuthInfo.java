@@ -25,4 +25,10 @@ public class MemberAuthInfo {
     private String password;
     private LocalDateTime updateTime;
 
+    public MemberAuthInfo(Member member, String salt, String password, LocalDateTime updateTime) {
+        this.member = member;
+        this.salt = salt;
+        this.password = password;
+        this.updateTime = updateTime;
+    }
 }

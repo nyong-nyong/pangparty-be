@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import nyongnyong.pangparty.common.AuthorityType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,8 +30,24 @@ public class MemberPersonal {
     private String postalCode;
     private LocalDateTime emailAuthTime;
     private LocalDateTime phoneAuthTime;
-    private LocalDateTime join_time;
-    private LocalDateTime update_time;
-    private String authority;
+    private LocalDateTime joinTime;
+    private LocalDateTime updateTime;
 
+    @Enumerated(EnumType.STRING)
+    private AuthorityType authority;
+
+    public MemberPersonal(Member member, String phoneNo, String email, LocalDateTime birthday, int gender, String address, String postalCode, LocalDateTime emailAuthTime, LocalDateTime phoneAuthTime, LocalDateTime joinTime, LocalDateTime updateTime, AuthorityType authority) {
+        this.member = member;
+        this.phoneNo = phoneNo;
+        this.email = email;
+        this.birthday = birthday;
+        this.gender = gender;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.emailAuthTime = emailAuthTime;
+        this.phoneAuthTime = phoneAuthTime;
+        this.joinTime = joinTime;
+        this.updateTime = updateTime;
+        this.authority = authority;
+    }
 }
