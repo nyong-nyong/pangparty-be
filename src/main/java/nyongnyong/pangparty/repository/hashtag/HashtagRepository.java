@@ -1,4 +1,7 @@
 package nyongnyong.pangparty.repository.hashtag;
 
-public class HashtagRepository {
+import nyongnyong.pangparty.entity.hashtag.Hashtag;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
 }
