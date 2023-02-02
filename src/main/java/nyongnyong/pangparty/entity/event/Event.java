@@ -2,12 +2,13 @@ package nyongnyong.pangparty.entity.event;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import nyongnyong.pangparty.entity.album.AlbumMedia;
+import nyongnyong.pangparty.entity.album.Album;
+import nyongnyong.pangparty.entity.member.Member;
+import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -18,7 +19,8 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    private Long hostUid;
+    @OneToOne
+    private Member host;
     private String eventName;
     private String introduction;
     private String imgUrl;
@@ -31,12 +33,25 @@ public class Event {
     private LocalDateTime partyTime;
 
     private boolean isPrivate;
-    private boolean hasRollingPaper;
+    @OneToOne(mappedBy = "rollingPaper_uid")
+    private RollingPaper rollingPaper;
 
-    @OneToMany
-    private List<AlbumMedia> albumMedia;
+    @OneToOne(mappedBy = "album_uid")
+    private Album album;
+//    private boolean hasPlaylist;
+//    private boolean hasFunding;
 
-    private boolean hasAlbum;
-    private boolean hasPlaylist;
-    private boolean hasFunding;
+    public void changeRollingPaper(RollingPaper rollingPaper) {
+        this.rollingPaper = rollingPaper;
+        if (rollingPaper.getEvent() != this) {
+            rollingPaper.changeEvent(this);
+        }
+    }
+    public void changeAlbum(Album album) {
+        this.album = album;
+        if (album.getEvent() != this) {
+            album.changeEvent(this);
+        }
+    }
+
 }

@@ -35,11 +35,17 @@ public class RollingPaper {
             rollingPaperPiece.changeRollingPaper(this);
         }
     }
-
     public void addRollingPaperSticker(RollingPaperSticker rollingPaperSticker) {
         this.rollingPaperStickers.add(rollingPaperSticker);
         if (rollingPaperSticker.getRollingPaper() != this) {
             rollingPaperSticker.changeRollingPaper(this);
         }
     }
+    public void changeEvent(Event event) {
+        this.event = event;
+        if (event.getRollingPaper() != this) {
+            event.changeRollingPaper(this);
+        }
+    }
+
 }

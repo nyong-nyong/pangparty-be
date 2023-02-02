@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import nyongnyong.pangparty.entity.event.Event;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,8 +20,8 @@ public class AlbumMedia {
     private Long uid;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_uid")
-    private Event event;
+    @JoinColumn(name = "album_uid")
+    private Album album;
 
     @OneToMany(mappedBy = "albumMedia")
     private List<AlbumMediaComment> albumMediaComments;
@@ -38,13 +37,6 @@ public class AlbumMedia {
     private String takenLat;
     private String takenLng;
 
-    public void changeEvent(Event event) {
-        this.event = event;
-        if (!event.getAlbumMedia().contains(this)) {
-            event.getAlbumMedia().add(this);
-        }
-    }
-
     public void addAlbumMediaComment(AlbumMediaComment albumMediaComment) {
         this.albumMediaComments.add(albumMediaComment);
         if (albumMediaComment.getAlbumMedia() != this) {
@@ -56,6 +48,12 @@ public class AlbumMedia {
         this.albumMediaLikes.add(albumMediaLike);
         if (albumMediaLike.getAlbumMedia() != this) {
             albumMediaLike.changeAlbumMedia(this);
+        }
+    }
+    public void changeAlbum(Album album) {
+        this.album = album;
+        if (!album.getAlbumMedia().contains(this)) {
+            album.getAlbumMedia().add(this);
         }
     }
 }
