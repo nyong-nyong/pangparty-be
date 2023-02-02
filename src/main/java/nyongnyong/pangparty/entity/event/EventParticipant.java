@@ -29,6 +29,10 @@ public class EventParticipant {
 
     private LocalDateTime joinTime;
 
+    public EventParticipant(LocalDateTime joinTime) {
+        this.joinTime = joinTime;
+    }
+
     public void changeEvent(Event event) {
         this.event = event;
         // TODO Event에 participant 추가 시, 예외 처리 코드 필요
