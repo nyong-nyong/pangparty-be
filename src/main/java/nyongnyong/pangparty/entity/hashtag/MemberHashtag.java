@@ -1,23 +1,39 @@
 package nyongnyong.pangparty.entity.hashtag;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import nyongnyong.pangparty.entity.member.Member;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"uid", "addTime"})
 public class MemberHashtag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
-    private Long hashtagUid;
-    private Long memberUid;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hashtag_uid")
+    private Hashtag hashtag;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_uid")
+    private Member member;
+
     private LocalDateTime addTime;
+
+    public void changeHashtag(Hashtag hashtag) {
+        this.hashtag = hashtag;
+    }
+
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
 }

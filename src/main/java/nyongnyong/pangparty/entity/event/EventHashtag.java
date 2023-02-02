@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"addTime"})
+@ToString(of = {"uid", "addTime"})
 public class EventHashtag {
 
     @Id
