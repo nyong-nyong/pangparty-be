@@ -25,7 +25,7 @@ public class MemberBadge {
     @JoinColumn(name = "member_uid")
     private Member member;
 
-    private LocalDateTime aquireTime;
+    private LocalDateTime acquireTime;
 
     public void changeBadge(Badge badge) {
         this.badge = badge;
