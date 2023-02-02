@@ -1,4 +1,7 @@
 package nyongnyong.pangparty.repository.album;
 
-public class AlbumRepository {
+import nyongnyong.pangparty.entity.album.Album;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AlbumRepository extends JpaRepository<Album, Long> {
 }
