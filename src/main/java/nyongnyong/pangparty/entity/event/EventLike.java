@@ -28,6 +28,10 @@ public class EventLike {
 
     private LocalDateTime likeTime;
 
+    public EventLike(LocalDateTime likeTime) {
+        this.likeTime = likeTime;
+    }
+
     public void changeEvent(Event event) {
         this.event = event;
     }
