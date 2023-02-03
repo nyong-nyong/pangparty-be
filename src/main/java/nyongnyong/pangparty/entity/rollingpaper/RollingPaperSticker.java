@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "createTime", "locX", "locY", "zIndex", "angle", "scale"})
+@ToString(of = {"uid", "createTime", "leftLoc", "topLoc", "zIndex", "angle", "scale"})
 public class RollingPaperSticker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,16 +31,16 @@ public class RollingPaperSticker {
     private Sticker sticker;
 
     private LocalDateTime createTime;
-    private String locX;
-    private String locY;
+    private int leftLoc;
+    private int topLoc;
     private String zIndex;
-    private String angle;
-    private String scale;
+    private float angle;
+    private float scale;
 
-    public RollingPaperSticker(LocalDateTime createTime, String locX, String locY, String zIndex, String angle, String scale) {
+    public RollingPaperSticker(LocalDateTime createTime, int leftLoc, int topLoc, String zIndex, float angle, float scale) {
         this.createTime = createTime;
-        this.locX = locX;
-        this.locY = locY;
+        this.leftLoc = leftLoc;
+        this.topLoc = topLoc;
         this.zIndex = zIndex;
         this.angle = angle;
         this.scale = scale;

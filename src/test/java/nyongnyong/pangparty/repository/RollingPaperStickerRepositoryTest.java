@@ -23,15 +23,15 @@ public class RollingPaperStickerRepositoryTest {
     @Test
     public void testRollingPaper() {
 
-        RollingPaperSticker rollingPaperSticker = new RollingPaperSticker(now(), "", "", "", "", "");
+        RollingPaperSticker rollingPaperSticker = new RollingPaperSticker(now(), 100, 120, "100", 27.45f, 100.0f);
         RollingPaperSticker savedRollingPaperSticker = rollingPaperStickerRepository.save(rollingPaperSticker);
 
         RollingPaperSticker findRollingPaperSticker = rollingPaperStickerRepository.findById(savedRollingPaperSticker.getUid()).get();
 
         Assertions.assertThat(findRollingPaperSticker.getUid()).isEqualTo(rollingPaperSticker.getUid());
         Assertions.assertThat(findRollingPaperSticker.getCreateTime()).isEqualTo(rollingPaperSticker.getCreateTime());
-        Assertions.assertThat(findRollingPaperSticker.getLocX()).isEqualTo(rollingPaperSticker.getLocX());
-        Assertions.assertThat(findRollingPaperSticker.getLocY()).isEqualTo(rollingPaperSticker.getLocY());
+        Assertions.assertThat(findRollingPaperSticker.getLeftLoc()).isEqualTo(rollingPaperSticker.getLeftLoc());
+        Assertions.assertThat(findRollingPaperSticker.getTopLoc()).isEqualTo(rollingPaperSticker.getTopLoc());
         Assertions.assertThat(findRollingPaperSticker.getZIndex()).isEqualTo(rollingPaperSticker.getZIndex());
         Assertions.assertThat(findRollingPaperSticker.getAngle()).isEqualTo(rollingPaperSticker.getAngle());
         Assertions.assertThat(findRollingPaperSticker.getScale()).isEqualTo(rollingPaperSticker.getScale());
@@ -41,8 +41,8 @@ public class RollingPaperStickerRepositoryTest {
     @Test
     public void basicCRUD() {
         System.out.println("=========START SAVE ROLLINGPAPER STICKER=========");
-        RollingPaperSticker rollingPaperSticker1 = new RollingPaperSticker(now(), "", "", "", "90", "50");
-        RollingPaperSticker rollingPaperSticker2 = new RollingPaperSticker(now(), "", "", "", "270", "100");
+        RollingPaperSticker rollingPaperSticker1 = new RollingPaperSticker(now(), 100, 120, "100", 27.45f, 100.0f);
+        RollingPaperSticker rollingPaperSticker2 = new RollingPaperSticker(now(), 50, 122, "1", 30.99f, 75f);
         rollingPaperStickerRepository.save(rollingPaperSticker1);
         rollingPaperStickerRepository.save(rollingPaperSticker2);
         System.out.println("=========END SAVE ROLLINGPAPER STICKER=========");
