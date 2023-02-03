@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.feed;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.common.FeedType;
 import nyongnyong.pangparty.entity.member.Member;
 
@@ -36,6 +33,7 @@ public class Feed {
     private FeedType feedType;
     private LocalDateTime createTime;
 
+    @Builder
     public Feed(FeedType feedType, LocalDateTime createTime) {
         this.feedType = feedType;
         this.createTime = createTime;

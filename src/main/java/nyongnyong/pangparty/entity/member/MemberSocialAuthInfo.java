@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.member;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.common.SocialAuthType;
 
 import javax.persistence.*;
@@ -28,6 +25,7 @@ public class MemberSocialAuthInfo {
     private String externalId;
     private LocalDateTime updateTime;
 
+    @Builder
     public MemberSocialAuthInfo(Member member, SocialAuthType socialType, String externalId, LocalDateTime updateTime) {
         this.member = member;
         this.socialType = socialType;

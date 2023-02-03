@@ -29,6 +29,7 @@ public class RollingPaper {
 
     private String bgColor;
 
+    @Builder
     public RollingPaper(String bgColor) {
         this.bgColor = bgColor;
     }

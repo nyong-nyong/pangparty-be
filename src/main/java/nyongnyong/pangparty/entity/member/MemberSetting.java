@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.member;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -26,6 +23,7 @@ public class MemberSetting {
     private boolean alarmOnEventSchedule;
     private boolean alarmOnFriendEventCreate;
 
+    @Builder
     public MemberSetting(Member member, boolean alarmOnAll, boolean alarmOnFollowing, boolean alarmOnBadge, boolean alarmOnEventSchedule, boolean alarmOnFriendEventCreate) {
         this.member = member;
         this.alarmOnAll = alarmOnAll;

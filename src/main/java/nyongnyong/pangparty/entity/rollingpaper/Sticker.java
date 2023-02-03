@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -19,6 +16,7 @@ public class Sticker {
     private String stickerUrl;
     private String metaTag;
 
+    @Builder
     public Sticker(String stickerUrl, String metaTag) {
         this.stickerUrl = stickerUrl;
         this.metaTag = metaTag;

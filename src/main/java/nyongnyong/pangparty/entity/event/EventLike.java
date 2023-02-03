@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.event;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -29,6 +26,7 @@ public class EventLike {
 
     private LocalDateTime likeTime;
 
+    @Builder
     public EventLike(LocalDateTime likeTime) {
         this.likeTime = likeTime;
     }

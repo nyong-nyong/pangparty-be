@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.member;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.common.AuthorityType;
 
 import javax.persistence.*;
@@ -38,6 +35,7 @@ public class MemberPersonal {
     @Enumerated(EnumType.STRING)
     private AuthorityType authority;
 
+    @Builder
     public MemberPersonal(Member member, String phoneNo, String email, LocalDateTime birthday, int gender, String address, String postalCode, LocalDateTime emailAuthTime, LocalDateTime phoneAuthTime, LocalDateTime joinTime, LocalDateTime updateTime, AuthorityType authority) {
         this.member = member;
         this.phoneNo = phoneNo;

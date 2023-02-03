@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.album;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -31,6 +28,7 @@ public class AlbumMediaComment {
     private LocalDateTime createTime;
     private LocalDateTime modifyTime;
 
+    @Builder
     public AlbumMediaComment(String content, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.content = content;
         this.createTime = createTime;

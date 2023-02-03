@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.badge;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -20,6 +17,7 @@ public class Badge {
     private String imgUrl;
     private String badgeCondition;
 
+    @Builder
     public Badge(String badgeName, String imgUrl, String badgeCondition) {
         this.badgeName = badgeName;
         this.imgUrl = imgUrl;

@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.badge;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -28,6 +25,7 @@ public class MemberBadge {
 
     private LocalDateTime acquireTime;
 
+    @Builder
     public MemberBadge(LocalDateTime acquireTime) {
         this.acquireTime = acquireTime;
     }

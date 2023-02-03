@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.album;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -37,6 +34,7 @@ public class AlbumMedia {
     private String takenLat;
     private String takenLng;
 
+    @Builder
     public AlbumMedia(String mediaUrl, String extension, LocalDateTime uploadTime, LocalDateTime takenTime, String takenLat, String takenLng) {
         this.mediaUrl = mediaUrl;
         this.extension = extension;

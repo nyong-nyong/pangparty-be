@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.member;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,6 +25,7 @@ public class MemberProfile {
     private String introduction;
     private LocalDateTime updateTime;
 
+    @Builder
     public MemberProfile(Member member, String id, String name, String imgUrl, String introduction, LocalDateTime updateTime) {
         this.member = member;
         this.id = id;

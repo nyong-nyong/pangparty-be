@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.hashtag;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -28,6 +25,7 @@ public class MemberHashtag {
 
     private LocalDateTime addTime;
 
+    @Builder
     public MemberHashtag(LocalDateTime addTime) {
         this.addTime = addTime;
     }
