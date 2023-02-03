@@ -18,4 +18,9 @@ public class Sticker {
 
     private String stickerUrl;
     private String metaTag;
+
+    public Sticker(String stickerUrl, String metaTag) {
+        this.stickerUrl = stickerUrl;
+        this.metaTag = metaTag;
+    }
 }
