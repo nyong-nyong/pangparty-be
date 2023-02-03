@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.entity.feed;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "activityType", "activityTime"})
 public class FeedActivity {
 
@@ -37,4 +38,8 @@ public class FeedActivity {
     private ActivityType activityType;
     private LocalDateTime activityTime;
 
+    public FeedActivity(ActivityType activityType, LocalDateTime activityTime) {
+        this.activityType = activityType;
+        this.activityTime = activityTime;
+    }
 }

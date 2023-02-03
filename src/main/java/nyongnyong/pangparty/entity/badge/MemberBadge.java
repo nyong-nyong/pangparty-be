@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.entity.badge;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "acquireTime"})
 public class MemberBadge {
     @Id

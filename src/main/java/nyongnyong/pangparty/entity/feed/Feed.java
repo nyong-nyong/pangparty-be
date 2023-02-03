@@ -36,4 +36,8 @@ public class Feed {
     private FeedType feedType;
     private LocalDateTime createTime;
 
+    public Feed(FeedType feedType, LocalDateTime createTime) {
+        this.feedType = feedType;
+        this.createTime = createTime;
+    }
 }

@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.entity.feed;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "content", "createTime", "modifyTime", "hit"})
 public class Post {
 
@@ -39,16 +40,23 @@ public class Post {
     private LocalDateTime modifyTime;
     private int hit;
 
-    public void addPostComment(PostComment postComment){
+    public Post(String content, LocalDateTime createTime, LocalDateTime modifyTime, int hit) {
+        this.content = content;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+        this.hit = hit;
+    }
+
+    public void addPostComment(PostComment postComment) {
         this.postComments.add(postComment);
-        if(postComment.getPost() != this){
+        if (postComment.getPost() != this) {
             postComment.changePost(this);
         }
     }
 
-    public void addPostLike(PostLike postLike){
+    public void addPostLike(PostLike postLike) {
         this.postLikes.add(postLike);
-        if(postLike.getPost() != this){
+        if (postLike.getPost() != this) {
             postLike.changePost(this);
         }
     }

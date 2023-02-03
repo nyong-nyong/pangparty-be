@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.entity.feed;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "likeTime"})
 public class PostLike {
 
@@ -28,9 +29,13 @@ public class PostLike {
 
     private LocalDateTime likeTime;
 
-    public void changePost(Post post){
+    public PostLike(LocalDateTime likeTime) {
+        this.likeTime = likeTime;
+    }
+
+    public void changePost(Post post) {
         this.post = post;
-        if(!post.getPostLikes().contains(this)){
+        if (!post.getPostLikes().contains(this)) {
             post.getPostLikes().add(this);
         }
     }
