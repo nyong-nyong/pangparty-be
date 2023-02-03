@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.feed;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.member.Member;
 
@@ -40,6 +37,7 @@ public class Post {
     private LocalDateTime modifyTime;
     private int hit;
 
+    @Builder
     public Post(String content, LocalDateTime createTime, LocalDateTime modifyTime, int hit) {
         this.content = content;
         this.createTime = createTime;

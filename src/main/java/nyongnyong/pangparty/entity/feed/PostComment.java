@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.feed;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -30,6 +27,7 @@ public class PostComment {
     private String content;
     private LocalDateTime createTime;
 
+    @Builder
     public PostComment(String content, LocalDateTime createTime) {
         this.content = content;
         this.createTime = createTime;

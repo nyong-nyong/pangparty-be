@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.feed;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.common.ActivityType;
 import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.entity.event.Event;
@@ -38,6 +35,7 @@ public class FeedActivity {
     private ActivityType activityType;
     private LocalDateTime activityTime;
 
+    @Builder
     public FeedActivity(ActivityType activityType, LocalDateTime activityTime) {
         this.activityType = activityType;
         this.activityTime = activityTime;

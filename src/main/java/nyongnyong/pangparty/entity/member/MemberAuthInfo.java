@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.member;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,6 +22,7 @@ public class MemberAuthInfo {
     private String password;
     private LocalDateTime updateTime;
 
+    @Builder
     public MemberAuthInfo(Member member, String salt, String password, LocalDateTime updateTime) {
         this.member = member;
         this.salt = salt;

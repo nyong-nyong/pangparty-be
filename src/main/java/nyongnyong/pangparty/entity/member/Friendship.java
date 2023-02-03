@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.member;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,6 +23,7 @@ public class Friendship {
     private Member followee;
     private LocalDateTime followTime;
 
+    @Builder
     public Friendship(LocalDateTime followTime) {
         this.followTime = followTime;
     }

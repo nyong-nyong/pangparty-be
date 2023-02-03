@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.hashtag;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,6 +17,7 @@ public class Hashtag {
     private String name;
     private LocalDateTime createTime;
 
+    @Builder
     public Hashtag(String name, LocalDateTime createTime) {
         this.name = name;
         this.createTime = createTime;

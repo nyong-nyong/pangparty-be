@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.member;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,6 +18,7 @@ public class Member {
     private boolean isSocial;
     private LocalDateTime withdrawTime;
 
+    @Builder
     public Member(String email, boolean isSocial, LocalDateTime withdrawTime) {
         this.email = email;
         this.isSocial = isSocial;

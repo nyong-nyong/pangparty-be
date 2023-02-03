@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -37,6 +34,7 @@ public class RollingPaperSticker {
     private float angle;
     private float scale;
 
+    @Builder
     public RollingPaperSticker(LocalDateTime createTime, int leftLoc, int topLoc, String zIndex, float angle, float scale) {
         this.createTime = createTime;
         this.leftLoc = leftLoc;

@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -37,6 +34,7 @@ public class RollingPaperPiece {
     private String textColor;
     private String textAlign;
 
+    @Builder
     public RollingPaperPiece(String writerName, LocalDateTime createTime, LocalDateTime modifyTime, String content, String bgColor, String bgImgUrl, String bgImgAlt, String fontFamily, String textColor, String textAlign) {
         this.writerName = writerName;
         this.createTime = createTime;
