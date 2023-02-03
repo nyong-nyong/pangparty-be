@@ -22,7 +22,9 @@ public class MemberPersonal {
     @MapsId
     @JoinColumn(name = "member_uid")
     private Member member;
+    @Column(unique = true)
     private String phoneNo;
+    @Column(unique = true)
     private String email;
     private LocalDateTime birthday;
     private int gender;

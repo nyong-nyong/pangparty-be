@@ -17,6 +17,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
+    @Column(unique = true)
     private String email;
     private boolean isSocial;
     private LocalDateTime withdrawTime;

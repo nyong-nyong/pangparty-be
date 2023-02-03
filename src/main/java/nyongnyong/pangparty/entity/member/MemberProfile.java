@@ -21,6 +21,7 @@ public class MemberProfile {
     @MapsId
     @JoinColumn(name = "member_uid")
     private Member member;
+    @Column(unique = true)
     private String id;
     private String name;
     private String imgUrl;
