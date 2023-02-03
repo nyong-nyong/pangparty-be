@@ -19,4 +19,11 @@ public class Badge {
     private String badgeName;
     private String imgUrl;
     private String badgeCondition;
+
+    public Badge(String badgeName, String imgUrl, String badgeCondition) {
+        this.badgeName = badgeName;
+        this.imgUrl = imgUrl;
+        this.badgeCondition = badgeCondition;
+    }
+
 }

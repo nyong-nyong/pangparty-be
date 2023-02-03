@@ -28,6 +28,10 @@ public class MemberBadge {
 
     private LocalDateTime acquireTime;
 
+    public MemberBadge(LocalDateTime acquireTime) {
+        this.acquireTime = acquireTime;
+    }
+
     public void changeBadge(Badge badge) {
         this.badge = badge;
     }
