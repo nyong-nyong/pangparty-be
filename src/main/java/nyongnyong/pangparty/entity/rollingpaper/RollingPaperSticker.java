@@ -37,6 +37,15 @@ public class RollingPaperSticker {
     private String angle;
     private String scale;
 
+    public RollingPaperSticker(LocalDateTime createTime, String locX, String locY, String zIndex, String angle, String scale) {
+        this.createTime = createTime;
+        this.locX = locX;
+        this.locY = locY;
+        this.zIndex = zIndex;
+        this.angle = angle;
+        this.scale = scale;
+    }
+
     public void changeRollingPaper(RollingPaper rollingPaper) {
         this.rollingPaper = rollingPaper;
         if (!rollingPaper.getRollingPaperStickers().contains(this)) {

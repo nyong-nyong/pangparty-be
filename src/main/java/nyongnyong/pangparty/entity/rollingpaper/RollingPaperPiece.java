@@ -37,6 +37,19 @@ public class RollingPaperPiece {
     private String textColor;
     private String textAlign;
 
+    public RollingPaperPiece(String writerName, LocalDateTime createTime, LocalDateTime modifyTime, String content, String bgColor, String bgImgUrl, String bgImgAlt, String fontFamily, String textColor, String textAlign) {
+        this.writerName = writerName;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+        this.content = content;
+        this.bgColor = bgColor;
+        this.bgImgUrl = bgImgUrl;
+        this.bgImgAlt = bgImgAlt;
+        this.fontFamily = fontFamily;
+        this.textColor = textColor;
+        this.textAlign = textAlign;
+    }
+
     public void changeRollingPaper(RollingPaper rollingPaper) {
         this.rollingPaper = rollingPaper;
         if (!rollingPaper.getRollingPaperPieces().contains(this)) {

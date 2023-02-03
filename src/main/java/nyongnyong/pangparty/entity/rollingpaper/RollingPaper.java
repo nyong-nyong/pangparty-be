@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.event.Event;
 
 import javax.persistence.*;
@@ -12,8 +9,10 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @ToString(of = {"uid", "bgColor"})
 public class RollingPaper {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
@@ -29,6 +28,10 @@ public class RollingPaper {
     private List<RollingPaperSticker> rollingPaperStickers;
 
     private String bgColor;
+
+    public RollingPaper(String bgColor) {
+        this.bgColor = bgColor;
+    }
 
     public void addRollingPaperPiece(RollingPaperPiece rollingPaperPiece) {
         this.rollingPaperPieces.add(rollingPaperPiece);
