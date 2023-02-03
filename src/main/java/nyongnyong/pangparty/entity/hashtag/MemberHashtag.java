@@ -28,6 +28,10 @@ public class MemberHashtag {
 
     private LocalDateTime addTime;
 
+    public MemberHashtag(LocalDateTime addTime) {
+        this.addTime = addTime;
+    }
+
     public void changeHashtag(Hashtag hashtag) {
         this.hashtag = hashtag;
     }
