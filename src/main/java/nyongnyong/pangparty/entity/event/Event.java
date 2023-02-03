@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.event;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.album.Album;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
@@ -17,18 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "eventName", "introduction", "imgUrl", "dDay", "createTime", "modifyTime", "startTime", "endTime", "partyTime", "isPrivate"})
 public class Event {
-    public Event(String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate) {
-        this.eventName = eventName;
-        this.introduction = introduction;
-        this.imgUrl = imgUrl;
-        this.dDay = dDay;
-        this.createTime = createTime;
-        this.modifyTime = modifyTime;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.partyTime = partyTime;
-        this.isPrivate = isPrivate;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +41,19 @@ public class Event {
 //    private boolean hasPlaylist;
 //    private boolean hasFunding;
 
-
+    @Builder
+    public Event(String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate) {
+        this.eventName = eventName;
+        this.introduction = introduction;
+        this.imgUrl = imgUrl;
+        this.dDay = dDay;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.partyTime = partyTime;
+        this.isPrivate = isPrivate;
+    }
 
     public void changeRollingPaper(RollingPaper rollingPaper) {
         this.rollingPaper = rollingPaper;
