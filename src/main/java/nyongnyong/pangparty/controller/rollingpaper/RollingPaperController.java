@@ -1,11 +1,11 @@
 package nyongnyong.pangparty.controller.rollingpaper;
 
 import lombok.RequiredArgsConstructor;
-import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerDto;
+import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerRequestDto;
+import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerResponseDto;
 import nyongnyong.pangparty.service.rollingpaper.RollingPaperService;
 import nyongnyong.pangparty.service.rollingpaper.RollingPaperStickerService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -20,32 +20,38 @@ public class RollingPaperController {
     private final RollingPaperService rollingPaperService;
     private final RollingPaperStickerService rollingPaperStickerService;
 
-    @GetMapping
-    public ResponseEntity<?> findRollingPaper(@PathVariable("eventUid") Long eventUid) {
-        // TODO check if eventUid is valid
-
-        return ResponseEntity.ok(rollingPaperService.findRollingPaperByEventUid(eventUid));
-    }
+//    @GetMapping
+//    public ResponseEntity<?> findRollingPaper(@PathVariable("eventUid") Long eventUid) {
+//        // TODO check if eventUid is valid
+//
+//        return ResponseEntity.ok(rollingPaperService.findRollingPaperByEventUid(eventUid));
+//    }
 
 
     @GetMapping("/{rollingPaperUid}/stickers")
     public ResponseEntity<?> findRollingPaperStickersByTopLoc(@PathVariable("eventUid") Long eventUid, @PathVariable("rollingPaperUid") Long rollingPaperUid, @RequestParam int topStart, @RequestParam int topEnd) {
+        // TODO check if eventUid/rollingPaperUid is valid
+        if (eventUid < 0 || rollingPaperUid < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+
         if (topStart < 0 || topEnd < 0 || topStart > topEnd) {
             return ResponseEntity.badRequest().build();
         }
 
         Map<String, Object> response = new HashMap<>();
-        response.put("rollingPaperStickers", rollingPaperStickerService.findRollingPaperStickersByTopLoc(eventUid, rollingPaperUid, topStart, topEnd));
+        response.put("rollingPaperStickers", rollingPaperStickerService.findRollingPaperStickersByTopLoc(rollingPaperUid, topStart, topEnd));
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{rollingPaperUid}/stickers")
-    public ResponseEntity<?> addRollingPaperSticker(@RequestBody RollingPaperStickerDto rollingPaperStickerDto) {
+    public ResponseEntity<?> addRollingPaperSticker(@PathVariable("rollingPaperUid") Long rollingPaperUid, @RequestBody RollingPaperStickerRequestDto rollingPaperStickerRequestDto) {
         // TODO check login status
         // TODO check if eventUid/rollingPaperUid/stickerUid/topLoc/leftLoc is valid
         // TODO check if stickerUid is added to RollingPaperSticker table
 
-        Long uid = rollingPaperStickerService.addRollingPaperSticker(rollingPaperStickerDto.toEntity());
+        rollingPaperStickerRequestDto.setRollingPaperUid(rollingPaperUid);
+        Long uid = rollingPaperStickerService.addRollingPaperSticker(rollingPaperStickerRequestDto);
         URI uri = URI.create("/stickers/" + uid);
 
         return ResponseEntity.created(uri).build();

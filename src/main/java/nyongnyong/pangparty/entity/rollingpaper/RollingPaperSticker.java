@@ -20,12 +20,10 @@ public class RollingPaperSticker implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rolling_paper_uid")
     private RollingPaper rollingPaper;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
     private Member member;
@@ -44,6 +42,18 @@ public class RollingPaperSticker implements Serializable {
     private float scale;
 
     @Builder
+    public RollingPaperSticker(RollingPaper rollingPaper, Member member, Sticker sticker, LocalDateTime createTime, int leftLoc, int topLoc, String zIndex, float angle, float scale) {
+        this.rollingPaper = rollingPaper;
+        this.member = member;
+        this.sticker = sticker;
+        this.createTime = createTime;
+        this.leftLoc = leftLoc;
+        this.topLoc = topLoc;
+        this.zIndex = zIndex;
+        this.angle = angle;
+        this.scale = scale;
+    }
+
     public RollingPaperSticker(LocalDateTime createTime, int leftLoc, int topLoc, String zIndex, float angle, float scale) {
         this.createTime = createTime;
         this.leftLoc = leftLoc;

@@ -78,8 +78,7 @@ public class RollingPaperStickerRepositoryTest {
         rollingPaperStickerRepository.save(rollingPaperSticker1);
         rollingPaperStickerRepository.save(rollingPaperSticker2);
 
-        List<RollingPaperSticker> all = rollingPaperStickerRepository.findRollingPaperStickersByTopLoc(100, 121);
+        List<RollingPaperSticker> all = rollingPaperStickerRepository.findRollingPaperStickersByTopLoc(1l,0,100);
         assertThat(all.size()).isEqualTo(1);
-
     }
 }
