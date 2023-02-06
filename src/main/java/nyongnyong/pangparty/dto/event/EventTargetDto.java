@@ -4,17 +4,17 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-public class EventLikeDto {
+public class EventTargetDto {
     private Long uid;
     private Long eventUid;
     private Long memberUid;
-    private LocalDateTime likeTime;
+    private LocalDateTime addTime;
 
     @Builder
-    public EventLikeDto(Long uid, Long eventUid, Long memberUid, LocalDateTime likeTime) {
+    public EventTargetDto(Long uid, Long eventUid, Long memberUid, LocalDateTime addTime) {
         this.uid = uid;
         this.eventUid = eventUid;
         this.memberUid = memberUid;
-        this.likeTime = likeTime;
+        this.addTime = addTime;
     }
 }
