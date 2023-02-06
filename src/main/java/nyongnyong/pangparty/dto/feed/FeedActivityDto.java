@@ -4,16 +4,16 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-public class FeedDto {
+public class FeedActivityDto {
     private Long uid;
-    private Long postuid;
+    private Long postUid;
     private Long memberUid;
     private LocalDateTime likeTime;
 
     @Builder
-    public FeedDto(Long uid, Long postuid, Long memberUid, LocalDateTime likeTime) {
+    public FeedActivityDto(Long uid, Long postUid, Long memberUid, LocalDateTime likeTime) {
         this.uid = uid;
-        this.postuid = postuid;
+        this.postUid = postUid;
         this.memberUid = memberUid;
         this.likeTime = likeTime;
     }
