@@ -12,10 +12,10 @@ public class RollingPaperDto {
     private Long eventUid;
     private String bgColor;
 
-    public RollingPaperDto(Long uid, Long eventUid, String bgColor) {
-        this.uid = uid;
-        this.eventUid = eventUid;
-        this.bgColor = bgColor;
+    public RollingPaperDto(RollingPaper rollingPaper) {
+        this.uid = rollingPaper.getUid();
+        this.eventUid = rollingPaper.getEvent().getUid();
+        this.bgColor = rollingPaper.getBgColor();
     }
 
     public RollingPaper toEntity() {
