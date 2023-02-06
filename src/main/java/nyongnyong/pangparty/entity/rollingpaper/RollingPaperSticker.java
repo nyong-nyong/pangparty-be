@@ -1,13 +1,17 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import nyongnyong.pangparty.entity.member.Member;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "createTime", "leftLoc", "topLoc", "zIndex", "angle", "scale"})
@@ -16,10 +20,12 @@ public class RollingPaperSticker implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rolling_paper_uid")
     private RollingPaper rollingPaper;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
     private Member member;
@@ -28,6 +34,8 @@ public class RollingPaperSticker implements Serializable {
     @JoinColumn(name = "sticker_uid")
     private Sticker sticker;
 
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createTime;
     private int leftLoc;
     private int topLoc;

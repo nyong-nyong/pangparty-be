@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -16,10 +17,12 @@ public class RollingPaperPiece implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rolling_paper_uid")
     private RollingPaper rollingPaper;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
     private Member member;

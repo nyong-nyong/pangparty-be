@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import nyongnyong.pangparty.entity.event.Event;
 
 import javax.persistence.*;
@@ -22,9 +23,11 @@ public class RollingPaper implements Serializable {
     @JoinColumn(name = "event_uid")
     private Event event;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "rollingPaper")
     private List<RollingPaperPiece> rollingPaperPieces;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "rollingPaper")
     private List<RollingPaperSticker> rollingPaperStickers;
 
