@@ -4,6 +4,8 @@ import lombok.*;
 import nyongnyong.pangparty.entity.album.Album;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,7 +29,11 @@ public class Event implements Serializable {
     private String imgUrl;
     private LocalDate dDay;
 
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createTime;
+
+    @LastModifiedDate
     private LocalDateTime modifyTime;
     private LocalDateTime startTime;
     private LocalDateTime endTime;

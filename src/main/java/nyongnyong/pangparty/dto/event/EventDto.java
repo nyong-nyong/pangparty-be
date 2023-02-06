@@ -1,9 +1,11 @@
 package nyongnyong.pangparty.dto.event;
 
 import lombok.*;
+import nyongnyong.pangparty.entity.event.Event;
 
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Getter
@@ -18,15 +20,22 @@ public class EventDto {
     private String introduction;
     private String imgUrl;
     private LocalDate dDay;
-    private String createTime;
-    private String modifyTime;
-    private String startTime;
-    private String endTime;
-    private String partyTime;
+    private LocalDateTime createTime;
+    private LocalDateTime modifyTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private LocalDateTime partyTime;
     private boolean isPrivate;
 
-    @Builder
-    public EventDto(Long uid, Long hostUid, String eventName, String introduction, String imgUrl, LocalDate dDay, String createTime, String modifyTime, String startTime, String endTime, String partyTime, boolean isPrivate) {
+
+
+    public Event toEntity() {
+        return Event.builder().eventName(eventName).introduction(introduction).imgUrl(imgUrl).dDay(dDay)
+                .createTime(createTime).modifyTime(modifyTime).startTime(startTime).endTime(endTime).partyTime(partyTime).isPrivate(isPrivate).build();
+    }
+
+//    @Builder
+    public EventDto(Long uid, Long hostUid, String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate) {
         this.uid = uid;
         this.hostUid = hostUid;
         this.eventName = eventName;
