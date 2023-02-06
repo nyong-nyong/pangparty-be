@@ -22,11 +22,9 @@ public class AlbumMedia implements Serializable {
     private Album album;
 
     @OneToMany(mappedBy = "albumMedia")
-    @Builder.Default
     private List<AlbumMediaComment> albumMediaComments;
 
     @OneToMany(mappedBy = "albumMedia")
-    @Builder.Default
     private List<AlbumMediaLike> albumMediaLikes;
 
     private String mediaUrl;

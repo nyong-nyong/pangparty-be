@@ -23,11 +23,9 @@ public class RollingPaper implements Serializable {
     private Event event;
 
     @OneToMany(mappedBy = "rollingPaper")
-    @Builder.Default
     private List<RollingPaperPiece> rollingPaperPieces;
 
     @OneToMany(mappedBy = "rollingPaper")
-    @Builder.Default
     private List<RollingPaperSticker> rollingPaperStickers;
 
     private String bgColor;

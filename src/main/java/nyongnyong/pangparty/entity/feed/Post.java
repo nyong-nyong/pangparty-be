@@ -28,11 +28,9 @@ public class Post implements Serializable {
     private Member member;
 
     @OneToMany(mappedBy = "post")
-    @Builder.Default
     private List<PostComment> postComments;
 
     @OneToMany(mappedBy = "post")
-    @Builder.Default
     private List<PostLike> postLikes;
 
     private String content;

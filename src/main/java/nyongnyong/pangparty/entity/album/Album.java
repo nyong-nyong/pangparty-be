@@ -1,6 +1,9 @@
 package nyongnyong.pangparty.entity.album;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import nyongnyong.pangparty.entity.event.Event;
 
 import javax.persistence.*;
@@ -22,7 +25,6 @@ public class Album implements Serializable {
     private Event event;
 
     @OneToMany(mappedBy = "album")
-    @Builder.Default
     private List<AlbumMedia> albumMedia;
 
     public void addAlbumMedia(AlbumMedia albumMedia) {
