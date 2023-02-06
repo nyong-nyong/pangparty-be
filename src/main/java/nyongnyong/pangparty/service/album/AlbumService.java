@@ -1,4 +1,7 @@
 package nyongnyong.pangparty.service.album;
 
-public class AlbumService {
+public interface AlbumService {
+    public void createAlbum();
+    public void getAlbum();
+    public void deleteAlbum();
 }

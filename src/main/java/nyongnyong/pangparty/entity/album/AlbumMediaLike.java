@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "likeTime"})
+@ToString
 public class AlbumMediaLike implements Serializable {
 
     @Id
@@ -19,9 +19,11 @@ public class AlbumMediaLike implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
+    @ToString.Exclude
     private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_media_uid")
+    @ToString.Exclude
     private AlbumMedia albumMedia;
 
     private LocalDateTime likeTime;
@@ -31,10 +33,18 @@ public class AlbumMediaLike implements Serializable {
         this.likeTime = likeTime;
     }
 
+    /**
+     * 연관관계 편의 메소드
+     * @param member
+     */
     public void changeMember(Member member) {
         this.member = member;
     }
 
+    /**
+     * 연관관계 편의 메소드
+     * @param albumMedia
+     */
     public void changeAlbumMedia(AlbumMedia albumMedia) {
         this.albumMedia = albumMedia;
         if (!albumMedia.getAlbumMediaLikes().contains(this)) {
