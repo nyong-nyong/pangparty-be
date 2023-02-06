@@ -2,10 +2,13 @@ package nyongnyong.pangparty.repository;
 
 import nyongnyong.pangparty.entity.rollingpaper.Sticker;
 import nyongnyong.pangparty.repository.rollingpaper.StickerRepository;
+import nyongnyong.pangparty.service.rollingpaper.StickerService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,7 +24,6 @@ public class StickerRepositoryTest {
 
     @Test
     public void testRollingPaper() {
-
         Sticker sticker = new Sticker("", "");
         Sticker savedSticker = stickerRepository.save(sticker);
 
@@ -63,5 +65,25 @@ public class StickerRepositoryTest {
         stickerRepository.delete(sticker2);
         long deletedCount = stickerRepository.count();
         assertThat(deletedCount).isEqualTo(0);
+    }
+
+    @Test
+    public void paging() {
+        System.out.println("=========START GET STICKER BY PAGE=========");
+
+        // when
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<Sticker> stickerPages = stickerRepository.findPage(pageRequest);
+
+        // then
+        List<Sticker> content = stickerPages.getContent();
+        long totalElements = stickerPages.getTotalElements();
+
+        assertThat(content.size()).isEqualTo(5);
+        assertThat(totalElements).isEqualTo(5);
+        System.out.println("content " + content);
+        System.out.println("totalElements = " + totalElements);
+
+        System.out.println("=========END GET STICKER BY PAGE=========");
     }
 }

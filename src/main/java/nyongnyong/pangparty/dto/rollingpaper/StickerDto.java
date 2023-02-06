@@ -1,23 +1,23 @@
 package nyongnyong.pangparty.dto.rollingpaper;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import nyongnyong.pangparty.entity.rollingpaper.Sticker;
 
 @Data
-@NoArgsConstructor
+@ToString
 public class StickerDto {
-    private Long uid;
-    private String stickerUrl;
-    private String metaTag;
+    private final Long uid;
+    private final String stickerUrl;
+    private final String metaTag;
 
-    public StickerDto(Sticker sticker) {
+    public StickerDto(final Sticker sticker) {
         this.uid = sticker.getUid();
         this.stickerUrl = sticker.getStickerUrl();
         this.metaTag = sticker.getMetaTag();
     }
-    
-    public Sticker toEntity() {
-        return Sticker.builder().stickerUrl(stickerUrl).metaTag(metaTag).build();
+
+    // StickerDto to Sticker Entity
+    public Sticker toEntity(StickerDto stickerDto) {
+        return Sticker.builder().stickerUrl(stickerDto.getStickerUrl()).metaTag(stickerDto.getMetaTag()).build();
     }
 }
