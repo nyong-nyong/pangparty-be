@@ -2,6 +2,7 @@ package nyongnyong.pangparty.entity.event;
 
 import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
+import nyongnyong.pangparty.entity.member.MemberProfile;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,7 +24,7 @@ public class EventTarget implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
-    private Member member;
+    private MemberProfile targetMemberProfile;
 
     private LocalDateTime addTime;
 

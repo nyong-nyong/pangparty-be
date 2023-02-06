@@ -20,6 +20,8 @@ public class Member implements Serializable {
     private boolean isSocial;
     private LocalDateTime withdrawTime;
 
+    // 여기 MemberProfile을 넣으면...????
+
     @Builder
     public Member(String email, boolean isSocial, LocalDateTime withdrawTime) {
         this.email = email;

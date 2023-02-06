@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Id;
 import java.time.LocalDate;
 
+@Data
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
