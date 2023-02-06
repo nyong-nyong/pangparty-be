@@ -4,13 +4,14 @@ import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "likeTime"})
-public class EventLike {
+public class EventLike implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

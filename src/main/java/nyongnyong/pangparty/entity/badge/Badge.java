@@ -3,12 +3,13 @@ package nyongnyong.pangparty.entity.badge;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "badgeName", "imgUrl", "badgeCondition"})
-public class Badge {
+public class Badge implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;

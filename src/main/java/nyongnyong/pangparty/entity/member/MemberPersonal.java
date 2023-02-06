@@ -4,13 +4,14 @@ import lombok.*;
 import nyongnyong.pangparty.common.AuthorityType;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"memberUid", "phoneNo", "email", "birthday", "gender", "address", "postalCode", "emailAuthTime", "phoneAuthTime", "joinTime", "updateTime", "authority"})
-public class MemberPersonal {
+public class MemberPersonal implements Serializable {
 
     @Id
     private Long memberUid;

@@ -3,12 +3,13 @@ package nyongnyong.pangparty.entity.member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"memberUid", "alarmOnAll", "alarmOnFollowing", "alarmOnBadge", "alarmOnEventSchedule", "alarmOnFriendEventCreate"})
-public class MemberSetting {
+public class MemberSetting implements Serializable {
 
     @Id
     private Long memberUid;

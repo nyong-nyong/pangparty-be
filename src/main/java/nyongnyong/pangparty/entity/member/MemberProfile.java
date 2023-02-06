@@ -3,13 +3,14 @@ package nyongnyong.pangparty.entity.member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"memberUid", "id", "name","imgUrl", "introduction", "updateTime"})
-public class MemberProfile {
+public class MemberProfile implements Serializable {
 
     @Id
     private Long memberUid;
