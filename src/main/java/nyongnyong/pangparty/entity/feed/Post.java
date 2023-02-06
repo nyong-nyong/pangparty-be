@@ -33,6 +33,7 @@ public class Post implements Serializable {
     @OneToMany(mappedBy = "post")
     private List<PostLike> postLikes;
 
+    @Lob
     private String content;
     private LocalDateTime createTime;
     private LocalDateTime modifyTime;

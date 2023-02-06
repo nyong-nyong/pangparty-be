@@ -25,6 +25,7 @@ public class AlbumMediaComment implements Serializable {
     @JoinColumn(name = "album_media_uid")
     private AlbumMedia albumMedia;
 
+    @Lob
     private String content;
     private LocalDateTime createTime;
     private LocalDateTime modifyTime;

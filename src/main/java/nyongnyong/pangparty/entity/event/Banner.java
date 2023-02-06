@@ -21,6 +21,7 @@ public class Banner implements Serializable {
     @JoinColumn(name = "member_uid")
     private Member member;
 
+    @Lob
     private String content;
 
     private LocalDateTime createTime;

@@ -27,6 +27,7 @@ public class RollingPaperPiece implements Serializable {
     private String writerName;
     private LocalDateTime createTime;
     private LocalDateTime modifyTime;
+    @Lob
     private String content;
     private String bgColor;
     private String bgImgUrl;
