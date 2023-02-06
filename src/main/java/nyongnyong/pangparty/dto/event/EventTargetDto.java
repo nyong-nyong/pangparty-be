@@ -1,12 +1,19 @@
 package nyongnyong.pangparty.dto.event;
 
-import lombok.Builder;
+import lombok.*;
 
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class EventTargetDto {
+    @Id
     private Long uid;
+    @NonNull
     private Long eventUid;
+    @NonNull
     private Long memberUid;
     private LocalDateTime addTime;
 

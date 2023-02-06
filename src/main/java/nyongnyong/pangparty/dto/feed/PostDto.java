@@ -1,15 +1,26 @@
 package nyongnyong.pangparty.dto.feed;
 
-import lombok.Builder;
+import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class PostDto {
+    @Id
     private Long uid;
+    @NonNull
     private Long eventUid;
+    @NonNull
     private Long memberUid;
+
+    @UniqueElements
     private List<Long> postCommentUid;
+    @UniqueElements
     private List<Long> postLikeUid;
     private String content;
     private LocalDateTime createTime;

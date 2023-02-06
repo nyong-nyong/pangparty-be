@@ -1,12 +1,19 @@
 package nyongnyong.pangparty.dto.feed;
 
-import lombok.Builder;
+import lombok.*;
 
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class PostLikeDto {
+    @Id
     private Long uid;
+    @NonNull
     private Long postUid;
+    @NonNull
     private Long memberUid;
     private String content;
     private LocalDateTime createTime;

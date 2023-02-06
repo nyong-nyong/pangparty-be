@@ -2,14 +2,16 @@ package nyongnyong.pangparty.dto.event;
 
 import lombok.*;
 
+import javax.persistence.Id;
 import java.time.LocalDate;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "email", "isSocial", "withdrawTime"})
+@ToString
 public class EventDto {
+    @Id
     private Long uid;
+    @NonNull
     private Long hostUid;
     private String eventName;
     private String introduction;

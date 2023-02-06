@@ -1,12 +1,19 @@
 package nyongnyong.pangparty.dto.hashtag;
 
-import lombok.Builder;
+import lombok.*;
 
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class MemberHashtagDto {
+    @Id
     private Long uid;
+    @NonNull
     private Long hashtagUid;
+    @NonNull
     private Long memberUid;
     private LocalDateTime addTime;
 

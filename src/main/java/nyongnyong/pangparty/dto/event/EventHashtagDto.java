@@ -2,14 +2,18 @@ package nyongnyong.pangparty.dto.event;
 
 import lombok.*;
 
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "addTime"})
+@ToString
 public class EventHashtagDto {
+    @Id
     private Long uid;
+    @NonNull
     private Long eventUid;
+    @NonNull
     private Long hashtagUid;
     private LocalDateTime addTime;
 
