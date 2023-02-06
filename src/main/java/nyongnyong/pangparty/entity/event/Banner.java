@@ -4,13 +4,14 @@ import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "content", "createTime", "startTime", "endTime"})
-public class Banner {
+public class Banner implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

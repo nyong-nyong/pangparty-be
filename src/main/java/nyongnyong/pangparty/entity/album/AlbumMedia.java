@@ -3,6 +3,7 @@ package nyongnyong.pangparty.entity.album;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "mediaUrl", "extension", "uploadTime", "takenTime", "takenLat", "takenLng"})
-public class AlbumMedia {
+public class AlbumMedia implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

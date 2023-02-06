@@ -7,13 +7,14 @@ import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "activityType", "activityTime"})
-public class FeedActivity {
+public class FeedActivity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

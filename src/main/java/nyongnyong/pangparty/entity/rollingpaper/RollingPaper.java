@@ -4,6 +4,7 @@ import lombok.*;
 import nyongnyong.pangparty.entity.event.Event;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -11,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString(of = {"uid", "bgColor"})
-public class RollingPaper {
+public class RollingPaper implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +23,11 @@ public class RollingPaper {
     private Event event;
 
     @OneToMany(mappedBy = "rollingPaper")
+    @Builder.Default
     private List<RollingPaperPiece> rollingPaperPieces;
 
     @OneToMany(mappedBy = "rollingPaper")
+    @Builder.Default
     private List<RollingPaperSticker> rollingPaperStickers;
 
     private String bgColor;

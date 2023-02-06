@@ -4,13 +4,14 @@ import lombok.*;
 import nyongnyong.pangparty.common.SocialAuthType;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"memberUid", "socialType", "externalId", "updateTime"})
-public class MemberSocialAuthInfo {
+public class MemberSocialAuthInfo implements Serializable {
 
     @Id
     private Long memberUid;

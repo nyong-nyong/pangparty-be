@@ -4,13 +4,14 @@ import lombok.*;
 import nyongnyong.pangparty.entity.hashtag.Hashtag;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "addTime"})
-public class EventHashtag {
+public class EventHashtag implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

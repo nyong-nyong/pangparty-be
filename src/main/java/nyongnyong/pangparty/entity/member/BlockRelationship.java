@@ -3,13 +3,14 @@ package nyongnyong.pangparty.entity.member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "blockTime"})
-public class BlockRelationship {
+public class BlockRelationship implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
