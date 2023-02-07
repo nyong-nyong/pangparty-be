@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@ToString(of = {"uid", "bgColor"})
+@ToString
 public class RollingPaper implements Serializable {
 
     @Id
@@ -21,6 +21,7 @@ public class RollingPaper implements Serializable {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_uid")
+    @ToString.Exclude
     private Event event;
 
     @JsonIgnore

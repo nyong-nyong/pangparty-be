@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerRequestDto;
 import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerResponseDto;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaperSticker;
-import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.rollingpaper.RollingPaperRepository;
 import nyongnyong.pangparty.repository.rollingpaper.RollingPaperStickerRepository;
 import nyongnyong.pangparty.repository.rollingpaper.StickerRepository;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RollingPaperStickerServiceImpl implements RollingPaperStickerService {
 
-    private final EventRepository eventRepository;
     private final StickerRepository stickerRepository;
     private final RollingPaperRepository rollingPaperRepository;
     private final RollingPaperStickerRepository rollingPaperStickerRepository;
@@ -43,8 +41,10 @@ public class RollingPaperStickerServiceImpl implements RollingPaperStickerServic
         return RollingPaperSticker.builder()
                 .sticker(stickerRepository.findById(rollingPaperStickerRequestDto.getStickerUid()).orElseThrow(() -> new IllegalArgumentException("해당 스티커가 존재하지 않습니다.")))
                 .rollingPaper(rollingPaperRepository.findById(rollingPaperStickerRequestDto.getRollingPaperUid()).orElseThrow(() -> new IllegalArgumentException("해당 롤링페이퍼가 존재하지 않습니다.")))
+                // TODO add find Member by Access Token Info
                 .topLoc(rollingPaperStickerRequestDto.getTopLoc())
                 .leftLoc(rollingPaperStickerRequestDto.getLeftLoc())
-                .build();
+                .zIndex(rollingPaperStickerRequestDto.getZIndex())
+                .scale(rollingPaperStickerRequestDto.getScale()).build();
     }
 }

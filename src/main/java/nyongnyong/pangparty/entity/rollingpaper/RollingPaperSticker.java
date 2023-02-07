@@ -1,7 +1,6 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 import nyongnyong.pangparty.entity.member.Member;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "createTime", "leftLoc", "topLoc", "zIndex", "angle", "scale"})
+@ToString
 public class RollingPaperSticker implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +21,12 @@ public class RollingPaperSticker implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rolling_paper_uid")
+    @ToString.Exclude
     private RollingPaper rollingPaper;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
+    @ToString.Exclude
     private Member member;
 
     @OneToOne
@@ -42,11 +43,10 @@ public class RollingPaperSticker implements Serializable {
     private float scale;
 
     @Builder
-    public RollingPaperSticker(RollingPaper rollingPaper, Member member, Sticker sticker, LocalDateTime createTime, int leftLoc, int topLoc, String zIndex, float angle, float scale) {
+    public RollingPaperSticker(RollingPaper rollingPaper, Member member, Sticker sticker, int leftLoc, int topLoc, String zIndex, float angle, float scale) {
         this.rollingPaper = rollingPaper;
         this.member = member;
         this.sticker = sticker;
-        this.createTime = createTime;
         this.leftLoc = leftLoc;
         this.topLoc = topLoc;
         this.zIndex = zIndex;

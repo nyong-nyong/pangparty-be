@@ -4,19 +4,35 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaperSticker;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+
 @Data
 @NoArgsConstructor
 public class RollingPaperStickerResponseDto {
 
-//    private Long uid;
-//    private Long rollingPaperUid;
-//    private Long stickerUid;
+    //    private Long uid;
+    //    private Long rollingPaperUid;
+    //    private Long stickerUid;
+    @NotBlank
     private String stickerUrl;
-//    private LocalDateTime createTime;
+
+    //    private LocalDateTime createTime;
+    @NotBlank
+    @Digits(integer = 5, fraction = 0)
     private int leftLoc;
+
+    @NotBlank
+    @Digits(integer = 5, fraction = 0)
     private int topLoc;
+
+    @NotBlank
     private String zIndex;
+
+    @NotBlank
     private float angle;
+
+    @NotBlank
     private float scale;
 
     public RollingPaperStickerResponseDto(RollingPaperSticker rollingPaperSticker) {
