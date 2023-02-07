@@ -13,7 +13,8 @@ public class RollingPaperStickerResponseDto {
 
     //    private Long uid;
     //    private Long rollingPaperUid;
-    //    private Long stickerUid;
+    @NotBlank
+    private Long stickerUid;
     @NotBlank
     private String stickerUrl;
 
@@ -38,7 +39,7 @@ public class RollingPaperStickerResponseDto {
     public RollingPaperStickerResponseDto(RollingPaperSticker rollingPaperSticker) {
 //        this.uid = rollingPaperSticker.getUid();
 //        this.rollingPaperUid = rollingPaperSticker.getRollingPaper().getUid();
-//        this.stickerUid = rollingPaperSticker.getSticker().getUid();
+        this.stickerUid = rollingPaperSticker.getSticker().getUid();
 //        this.createTime = rollingPaperSticker.getCreateTime();
         this.stickerUrl = rollingPaperSticker.getSticker().getStickerUrl();
         this.leftLoc = rollingPaperSticker.getLeftLoc();
