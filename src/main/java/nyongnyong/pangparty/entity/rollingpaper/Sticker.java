@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "stickerUrl", "metaTag"})
+@ToString
 public class Sticker implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

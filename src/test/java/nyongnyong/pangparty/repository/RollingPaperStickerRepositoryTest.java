@@ -69,4 +69,16 @@ public class RollingPaperStickerRepositoryTest {
         long deletedCount = rollingPaperStickerRepository.count();
         assertThat(deletedCount).isEqualTo(0);
     }
+
+    @Test
+    public void testTopLoc() {
+        RollingPaperSticker rollingPaperSticker1 = new RollingPaperSticker(now(), 100, 120, "100", 27.45f, 100.0f);
+        RollingPaperSticker rollingPaperSticker2 = new RollingPaperSticker(now(), 50, 122, "1", 30.99f, 75f);
+
+        rollingPaperStickerRepository.save(rollingPaperSticker1);
+        rollingPaperStickerRepository.save(rollingPaperSticker2);
+
+        List<RollingPaperSticker> all = rollingPaperStickerRepository.findRollingPaperStickersByTopLoc(1l,0,100);
+        assertThat(all.size()).isEqualTo(1);
+    }
 }

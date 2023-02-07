@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import nyongnyong.pangparty.entity.event.Event;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@ToString(of = {"uid", "bgColor"})
+@ToString
 public class RollingPaper implements Serializable {
 
     @Id
@@ -20,11 +21,14 @@ public class RollingPaper implements Serializable {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_uid")
+    @ToString.Exclude
     private Event event;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "rollingPaper")
     private List<RollingPaperPiece> rollingPaperPieces;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "rollingPaper")
     private List<RollingPaperSticker> rollingPaperStickers;
 

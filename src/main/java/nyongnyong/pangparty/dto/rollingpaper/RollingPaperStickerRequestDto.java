@@ -1,41 +1,51 @@
 package nyongnyong.pangparty.dto.rollingpaper;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaperSticker;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 
 @Data
 @NoArgsConstructor
-public class RollingPaperStickerDto {
+@ToString
+public class RollingPaperStickerRequestDto {
 
-    private Long uid;
+    @NotBlank
     private Long rollingPaperUid;
+    //    private Long memberUid;
+    @NotBlank
     private Long stickerUid;
-    private String stickerUrl;
-    private LocalDateTime createTime;
+
+    @NotBlank
+    @Digits(integer = 5, fraction = 0)
     private int leftLoc;
+
+    @NotBlank
+    @Digits(integer = 5, fraction = 0)
     private int topLoc;
+
+    @NotBlank
+    @JsonProperty("zIndex")
     private String zIndex;
+
+    @NotBlank
     private float angle;
+
+    @NotBlank
     private float scale;
 
-    public RollingPaperStickerDto(RollingPaperSticker rollingPaperSticker) {
-        this.uid = rollingPaperSticker.getUid();
+    public RollingPaperStickerRequestDto(RollingPaperSticker rollingPaperSticker) {
         this.rollingPaperUid = rollingPaperSticker.getRollingPaper().getUid();
+//        this.memberUid = rollingPaperSticker.getMember().getUid();
         this.stickerUid = rollingPaperSticker.getSticker().getUid();
-        this.stickerUrl = rollingPaperSticker.getSticker().getStickerUrl();
-        this.createTime = rollingPaperSticker.getCreateTime();
         this.leftLoc = rollingPaperSticker.getLeftLoc();
         this.topLoc = rollingPaperSticker.getTopLoc();
         this.zIndex = rollingPaperSticker.getZIndex();
         this.angle = rollingPaperSticker.getAngle();
         this.scale = rollingPaperSticker.getScale();
     }
-
-    public RollingPaperSticker toEntity() {
-        return RollingPaperSticker.builder().leftLoc(leftLoc).topLoc(topLoc).zIndex(zIndex).angle(angle).scale(scale).build();
-    }
 }
-

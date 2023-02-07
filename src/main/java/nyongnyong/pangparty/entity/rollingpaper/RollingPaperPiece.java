@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -10,18 +11,22 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "writerName", "createTime", "modifyTime", "content", "bgColor", "bgImgUrl", "bgImgAlt", "fontFamily", "textColor", "textAlign"})
+@ToString
 public class RollingPaperPiece implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rolling_paper_uid")
+    @ToString.Exclude
     private RollingPaper rollingPaper;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
+    @ToString.Exclude
     private Member member;
 
     private String writerName;
