@@ -3,12 +3,15 @@ package nyongnyong.pangparty.entity.event;
 import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.member.MemberProfile;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "addTime"})
@@ -24,8 +27,10 @@ public class EventTarget implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
-    private MemberProfile targetMemberProfile;
+    private Member targetMember;
 
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime addTime;
 
     @Builder
@@ -38,7 +43,7 @@ public class EventTarget implements Serializable {
         // TODO Event에 participant 추가 시, 예외 처리 코드 필요
     }
 
-    public void changeMember(Member member) {
-        this.member = member;
+    public void changeTargetMember(Member targetMember) {
+        this.targetMember = targetMember;
     }
 }

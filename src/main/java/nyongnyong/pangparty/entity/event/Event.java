@@ -6,6 +6,7 @@ import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "eventName", "introduction", "imgUrl", "dDay", "createTime", "modifyTime", "startTime", "endTime", "partyTime", "isPrivate"})
