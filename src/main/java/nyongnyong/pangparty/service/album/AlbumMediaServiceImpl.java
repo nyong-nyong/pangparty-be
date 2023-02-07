@@ -1,13 +1,13 @@
 package nyongnyong.pangparty.service.album;
 
 import lombok.extern.slf4j.Slf4j;
-import nyongnyong.pangparty.dto.album.AlbumMediaDto;
+import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
+import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.repository.album.AlbumMediaRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -19,38 +19,28 @@ public class AlbumMediaServiceImpl implements AlbumMediaService {
         this.albumMediaRepository = albumMediaRepository;
     }
 
-    /**
-     * @return
-     */
     @Override
-    public AlbumMediaDto createAlbumMedia() {
+    public AlbumMediaSimpleRes createAlbumMedia(AlbumMediaDetailRes albumMediaDetailRes) {
         return null;
     }
 
-    /**
-     * @return
-     */
     @Override
-    public AlbumMediaDto getAlbumMedia(Long eventUid) {
+    public AlbumMediaDetailRes getAlbumMedia(Long eventUid) {
         AlbumMedia medium = albumMediaRepository.findById(eventUid).orElse(null);
         return null;
     }
 
-    /**
-     * @return
-     */
     @Override
-    public Page<AlbumMediaDto> getAlbumMediaList() {
-        List<AlbumMedia> media = albumMediaRepository.findAll();
-        return null;
+    public Page<AlbumMediaSimpleRes> getAlbumMediaList(Long albumUid, PageRequest pageRequest) {
+        Page<AlbumMedia> albumMediaPage = albumMediaRepository.findAll(pageRequest);
+        Page<AlbumMediaSimpleRes> dtoPage = albumMediaPage.map(m -> new AlbumMediaSimpleRes());
+        log.debug("get albumMediaDtoPage = " + dtoPage);
+        return dtoPage;
     }
 
-    /**
-     *
-     */
     @Override
-    public void deleteAlbumMedia() {
-
+    public void deleteAlbumMedia(Long albumMediaUid) {
+        log.debug("delete albumMediaUid = " + albumMediaUid);
     }
 
 }

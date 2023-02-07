@@ -1,32 +1,25 @@
 package nyongnyong.pangparty.service.album;
 
-import lombok.extern.slf4j.Slf4j;
-import nyongnyong.pangparty.repository.album.AlbumRepository;
+import nyongnyong.pangparty.entity.album.Album;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
-public class AlbumServiceImpl implements AlbumService {
-
-    private final AlbumRepository albumRepository;
-
-    public AlbumServiceImpl(AlbumRepository albumRepository) {
-        this.albumRepository = albumRepository;
-    }
-
+public class AlbumServiceImpl implements AlbumService{
 
     @Override
-    public void createAlbum() {
+    public Long createAlbum(Long eventUid) {
 
+        return null;
     }
 
     @Override
-    public void getAlbum() {
+    public Long getAlbumUid(Long eventUid) {
 
+        return null;
     }
 
     @Override
-    public void deleteAlbum() {
+    public void deleteAlbum(Long albumUid) {
 
     }
 }

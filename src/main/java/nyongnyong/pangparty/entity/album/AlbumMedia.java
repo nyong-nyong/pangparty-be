@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.entity.album;
 
 import lombok.*;
+import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,6 +22,11 @@ public class AlbumMedia implements Serializable {
     @JoinColumn(name = "album_uid")
     @ToString.Exclude
     private Album album;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_uid")
+    @ToString.Exclude
+    private Member member;
 
     @OneToMany(mappedBy = "albumMedia")
     @ToString.Exclude

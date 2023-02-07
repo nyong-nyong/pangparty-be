@@ -1,13 +1,11 @@
 package nyongnyong.pangparty.service.album;
 
 import lombok.extern.slf4j.Slf4j;
-import nyongnyong.pangparty.dto.album.AlbumMediaCommentDto;
+import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
 import nyongnyong.pangparty.repository.album.AlbumMediaCommentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -20,17 +18,12 @@ public class AlbumMediaCommentServiceImpl implements AlbumMediaCommentService {
     }
 
     @Override
-    public AlbumMediaCommentDto createAlbumMediaComment(AlbumMediaCommentDto albumMediaCommentDto) {
+    public AlbumMediaCommentSimpleRes createAlbumMediaComment(AlbumMediaCommentSimpleRes albumMediaCommentSimpleRes) {
         return null;
     }
 
     @Override
-    public AlbumMediaCommentDto getAlbumMediaComment(Long albumMediaCommentUid) {
-        return null;
-    }
-
-    @Override
-    public Page<AlbumMediaCommentDto> getAlbumMediaCommentList(Long albumMediaUid, PageRequest pageRequest) {
+    public Page<AlbumMediaCommentSimpleRes> getAlbumMediaCommentList(Long albumMediaUid, PageRequest pageRequest) {
         return null;
     }
 

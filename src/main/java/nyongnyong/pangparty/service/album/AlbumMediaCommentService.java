@@ -1,11 +1,8 @@
 package nyongnyong.pangparty.service.album;
 
-import nyongnyong.pangparty.dto.album.AlbumMediaCommentDto;
-import nyongnyong.pangparty.entity.album.AlbumMediaComment;
+import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
-import java.util.List;
 
 public interface AlbumMediaCommentService {
 
@@ -14,21 +11,14 @@ public interface AlbumMediaCommentService {
      * @param albumMediaCommentDto
      * @return
      */
-    public AlbumMediaCommentDto createAlbumMediaComment(AlbumMediaCommentDto albumMediaCommentDto);
-
-    /**
-     * 앨범 미디어 댓글 조회
-     * @param albumMediaCommentUid
-     * @return
-     */
-    public AlbumMediaCommentDto getAlbumMediaComment(Long albumMediaCommentUid);
+    public AlbumMediaCommentSimpleRes createAlbumMediaComment(AlbumMediaCommentSimpleRes albumMediaCommentDto);
 
     /**
      * 앨범 미디어 댓글 목록 조회
      * @param albumMediaUid
      * @return
      */
-    public Page<AlbumMediaCommentDto> getAlbumMediaCommentList(Long albumMediaUid, PageRequest pageRequest  );
+    public Page<AlbumMediaCommentSimpleRes> getAlbumMediaCommentList(Long albumMediaUid, PageRequest pageRequest);
 
     /**
      * 앨범 미디어 댓글 삭제
