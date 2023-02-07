@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/events")
+//@RestController
+//@RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventController {
-    private final EventService eventService;
+//    private final EventService eventService;
 
-    @GetMapping
-    public ResponseEntity<?> findEventList(Pageable pageable){
-        return ResponseEntity.ok(eventService.findEvents(pageable));
-    }
+//    @GetMapping
+//    public ResponseEntity<?> findEventList(Pageable pageable){
+//        return ResponseEntity.ok(eventService.findEvents(pageable));
+//    }
 
 }

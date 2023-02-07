@@ -1,10 +1,8 @@
 package nyongnyong.pangparty.dto.event;
 
 import lombok.*;
-import nyongnyong.pangparty.entity.event.Event;
-import nyongnyong.pangparty.entity.event.EventTarget;
-import nyongnyong.pangparty.entity.member.MemberProfile;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,18 +10,24 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class EventIntroduceRequestDto {
+public class EventIntroduceReq {
     private String targetId;
-    private LocalDateTime dDay;
+    @NotBlank
     private String eventName;
-    private boolean isLiked;
+    @NotBlank
+    private LocalDateTime dDay;
     private String introduction;
+    private List<Long> hashtags;
     private String imgUrl;
 
-    private List<Long> hashtags;
-    private List<Long> albumMedias;
-
-
+    public EventIntroduceReq(String targetId, @NotBlank String eventName, @NotBlank LocalDateTime dDay, String introduction, List<Long> hashtags, String imgUrl) {
+        this.targetId = targetId;
+        this.eventName = eventName;
+        this.dDay = dDay;
+        this.introduction = introduction;
+        this.hashtags = hashtags;
+        this.imgUrl = imgUrl;
+    }
 
 //    @Builder
 //    public static EventIntroduceRequestDto from(Event event, EventTarget eventTarget, MemberProfile memberProfile){

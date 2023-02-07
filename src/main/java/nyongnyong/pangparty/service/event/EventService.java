@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface EventService {
-    Page<Event> findEvents(Pageable pageable);
+//    Page<Event> findEvents(Pageable pageable);
 //    List<Event> findEventList();
 }

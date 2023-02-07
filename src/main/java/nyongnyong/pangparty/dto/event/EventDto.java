@@ -29,24 +29,39 @@ public class EventDto {
 
 
 
-    public Event toEntity() {
-        return Event.builder().eventName(eventName).introduction(introduction).imgUrl(imgUrl).dDay(dDay)
-                .createTime(createTime).modifyTime(modifyTime).startTime(startTime).endTime(endTime).partyTime(partyTime).isPrivate(isPrivate).build();
+//    public Event toEntity() {
+//        return Event.builder().eventName(eventName).introduction(introduction).imgUrl(imgUrl).dDay(dDay)
+//                .createTime(createTime).modifyTime(modifyTime).startTime(startTime).endTime(endTime).partyTime(partyTime).isPrivate(isPrivate).build();
+//    }
+
+    public EventDto(final Event event){
+        this.uid = event.getUid();
+        this.hostUid = event.getHost().getUid();
+        this.eventName = event.getEventName();
+        this.introduction = event.getIntroduction();
+        this.imgUrl = event.getImgUrl();
+        this.dDay = event.getDDay();
+        this.createTime = event.getCreateTime();
+        this.modifyTime = event.getModifyTime();
+        this.startTime = event.getStartTime();
+        this.endTime = event.getEndTime();
+        this.partyTime = event.getPartyTime();
+        this.isPrivate = event.isPrivate();
     }
 
 //    @Builder
-    public EventDto(Long uid, Long hostUid, String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate) {
-        this.uid = uid;
-        this.hostUid = hostUid;
-        this.eventName = eventName;
-        this.introduction = introduction;
-        this.imgUrl = imgUrl;
-        this.dDay = dDay;
-        this.createTime = createTime;
-        this.modifyTime = modifyTime;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.partyTime = partyTime;
-        this.isPrivate = isPrivate;
-    }
+//    public EventDto(Long uid, Long hostUid, String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate) {
+//        this.uid = uid;
+//        this.hostUid = hostUid;
+//        this.eventName = eventName;
+//        this.introduction = introduction;
+//        this.imgUrl = imgUrl;
+//        this.dDay = dDay;
+//        this.createTime = createTime;
+//        this.modifyTime = modifyTime;
+//        this.startTime = startTime;
+//        this.endTime = endTime;
+//        this.partyTime = partyTime;
+//        this.isPrivate = isPrivate;
+//    }
 }
