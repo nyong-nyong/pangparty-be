@@ -17,7 +17,13 @@ public class StickerServiceImpl implements StickerService {
 
     @Override
     @Transactional
-    public Page findStickerList(Pageable pageable) {
-        return stickerRepository.findAll(pageable).map(sticker -> new StickerDto(sticker));
+    public Page<StickerDto> findStickerList(Pageable pageable) {
+        return stickerRepository.findAll(pageable).map(StickerDto::new);
+    }
+
+    @Override
+    @Transactional
+    public boolean isExistStickerByStickerUid(Long stickerUid) {
+        return stickerRepository.existsById(stickerUid);
     }
 }
