@@ -53,7 +53,10 @@ public class Event implements Serializable {
     private EventTarget eventTarget;
 
     @OneToMany(mappedBy = "event")
-    private List<EventParticipant> eventParticipant;
+    private List<EventParticipant> eventParticipants;
+
+    @OneToMany(mappedBy = "event")
+    private List<EventHashtag> eventHashtags;
 
 //    private boolean hasPlaylist;
 //    private boolean hasFunding;

@@ -1,5 +1,7 @@
 package nyongnyong.pangparty.service.event;
 import nyongnyong.pangparty.dto.event.EventCard;
+import nyongnyong.pangparty.dto.event.EventIntroduceRes;
+
 import java.util.List;
 
 public interface EventService {
@@ -13,4 +15,6 @@ public interface EventService {
     List<EventCard> findInvolvingEventsByMemberId(String memberId);
 
     List<EventCard> findInvolvedEventsByMemberId(String memberId);
+
+    EventIntroduceRes findEventIntroduceByEventUid(Long memberUid, Long eventUid);
 }

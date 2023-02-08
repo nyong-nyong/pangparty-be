@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.controller.event;
 
+import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.service.event.EventService;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EventController {
     private final EventService eventService;
+
+    @GetMapping("/{eventUid}")
+    public ResponseEntity<?> findEventIntroduceByEventUid(@PathVariable Long eventUid){
+        Long memberUid = 31L;   // Test: 31L -> isLiked가 true, 그 외 -> isLiked가 false
+        // TODO: memberUid를 어떻게 받아올지 고민해보기 memberUid = memberAuthService.getMemberUid();
+        return ResponseEntity.ok(eventService.findEventIntroduceByEventUid(memberUid, eventUid));
+    }
 
 //    @GetMapping
 //    public ResponseEntity<?> findEventList(Pageable pageable){

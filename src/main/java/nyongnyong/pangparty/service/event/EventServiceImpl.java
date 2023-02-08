@@ -3,6 +3,7 @@ package nyongnyong.pangparty.service.event;
 import lombok.RequiredArgsConstructor;
 //import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.dto.event.EventCard;
+import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventCard> findInvolvedEventsByMemberId(String memberId) {
         return eventRepository.findInvolvedEventsByMemberId(memberId);
+    }
+
+    @Override
+    public EventIntroduceRes findEventIntroduceByEventUid(Long memberUid, Long eventUid) {
+        return eventRepository.findEventIntroduceByEventUid(memberUid, eventUid);
     }
 
 }
