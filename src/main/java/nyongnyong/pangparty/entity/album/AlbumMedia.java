@@ -43,20 +43,12 @@ public class AlbumMedia implements Serializable {
     private String takenLat;
     private String takenLng;
 
-    public void setAlbumMediaLikes(List<AlbumMediaLike> albumMediaLikes) {
-        this.albumMediaLikes = albumMediaLikes;
-    }
-
-    public void setAlbumMediaComments(List<AlbumMediaComment> albumMediaComments) {
-        this.albumMediaComments = albumMediaComments;
-    }
-
-    public void setAlbum(Album album) {
-        this.album = album;
-    }
-
     @Builder
-    public AlbumMedia(String mediaUrl, String extension, LocalDateTime uploadTime, LocalDateTime takenTime, String takenLat, String takenLng) {
+    public AlbumMedia(Album album, Member member, List<AlbumMediaComment> albumMediaComments, List<AlbumMediaLike> albumMediaLikes, String mediaUrl, String extension, LocalDateTime uploadTime, LocalDateTime takenTime, String takenLat, String takenLng) {
+        this.album = album;
+        this.member = member;
+        this.albumMediaComments = albumMediaComments;
+        this.albumMediaLikes = albumMediaLikes;
         this.mediaUrl = mediaUrl;
         this.extension = extension;
         this.uploadTime = uploadTime;

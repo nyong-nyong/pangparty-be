@@ -27,9 +27,11 @@ public class AlbumMediaRepositoryTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         // String to LocalDateTime: LocalDateTime.parse("2023-01-19 10:24:00", formatter);
 
-        AlbumMedia albumMedia = new AlbumMedia("https://cdn.eyesmag.com/content/uploads/posts/2022/08/08/main-ad65ae47-5a50-456d-a41f-528b63071b7b.jpg",
-                "jpg", LocalDateTime.parse("2023-01-20 10:24:00", formatter), LocalDateTime.parse("2023-01-18 10:24:00", formatter),
-                "37.532600", "127.024612");
+        AlbumMedia albumMedia = AlbumMedia.builder()
+                .mediaUrl("https://cdn.eyesmag.com/content/uploads/posts/2022/08/08/main-ad65ae47-5a50-456d-a41f-528b63071b7b.jpg")
+                .extension("jpg").uploadTime(LocalDateTime.parse("2023-01-20 10:24:00", formatter))
+                .takenTime(LocalDateTime.parse("2023-01-18 10:24:00", formatter))
+                .takenLat("37.532600").takenLng("127.024612").build();
         AlbumMedia savedAlbumMedia = albumMediaRepository.save(albumMedia);
 
         AlbumMedia findAlbumMedia = albumMediaRepository.findById(savedAlbumMedia.getUid()).get();
@@ -48,13 +50,17 @@ public class AlbumMediaRepositoryTest {
     public void basicCRUD(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        AlbumMedia albumMedia1 = new AlbumMedia("https://cdn.eyesmag.com/content/uploads/posts/2022/08/08/main-ad65ae47-5a50-456d-a41f-528b63071b7b.jpg",
-                "jpg", LocalDateTime.parse("2023-01-17 10:24:00", formatter), LocalDateTime.parse("2023-01-13 10:24:00", formatter),
-                "37.532600", "127.024612");
+        AlbumMedia albumMedia1 = AlbumMedia.builder()
+                .mediaUrl("https://cdn.eyesmag.com/content/uploads/posts/2022/08/08/main-ad65ae47-5a50-456d-a41f-528b63071b7b.jpg")
+                .extension("jpg").uploadTime(LocalDateTime.parse("2023-01-17 10:24:00", formatter))
+                .takenTime(LocalDateTime.parse("2023-01-13 10:24:00", formatter))
+                .takenLat("37.532600").takenLng("127.024612").build();
 
-        AlbumMedia albumMedia2 = new AlbumMedia("https://cdn.imweb.me/upload/S201807025b39d1981b0b0/16b98d3e3d30e.jpg",
-                "jpg", LocalDateTime.parse("2023-01-21 10:24:00", formatter), LocalDateTime.parse("2023-01-20 10:24:00", formatter),
-                "37.532600", "127.024612");
+        AlbumMedia albumMedia2 = AlbumMedia.builder()
+                .mediaUrl("https://cdn.imweb.me/upload/S201807025b39d1981b0b0/16b98d3e3d30e.jpg")
+                .extension("jpg").uploadTime(LocalDateTime.parse("2023-01-21 10:24:00", formatter))
+                .takenTime(LocalDateTime.parse("2023-01-20 10:24:00", formatter))
+                .takenLat("86.532600").takenLng("19.43825").build();
 
         albumMediaRepository.save(albumMedia1);
         albumMediaRepository.save(albumMedia2);
