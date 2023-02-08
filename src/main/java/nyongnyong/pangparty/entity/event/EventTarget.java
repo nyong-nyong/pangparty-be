@@ -2,7 +2,6 @@ package nyongnyong.pangparty.entity.event;
 
 import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
-import nyongnyong.pangparty.entity.member.MemberProfile;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

@@ -26,14 +26,6 @@ public class MemberProfile implements Serializable {
     private String introduction;
     private LocalDateTime updateTime;
 
-//    @Builder
-//    public MemberProfile(String id, String name, String imgUrl, String introduction, LocalDateTime updateTime) {
-//        this.id = id;
-//        this.name = name;
-//        this.imgUrl = imgUrl;
-//        this.introduction = introduction;
-//        this.updateTime = updateTime;
-//    }
     @Builder
     public MemberProfile(Member member, String id, String name, String imgUrl, String introduction, LocalDateTime updateTime) {
         this.member = member;

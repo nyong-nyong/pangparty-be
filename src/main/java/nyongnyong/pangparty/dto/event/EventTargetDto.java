@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class EventTargetDto {
-    @Id
     private Long uid;
     @NonNull
     private Long eventUid;

@@ -25,14 +25,4 @@ public class EventServiceImpl implements EventService {
     public List<EventCard> findReceivedEventsByMemberId(String memberId) {
         return eventRepository.findReceivedEventsByMemberId(memberId);
     }
-
-//    @Override
-//    public Page<Event> findEvents(Pageable pageable) {
-//        return eventRepository.findEvents(pageable).map(EventIntroduceRequestDto::from);
-//    }
-
-//    @Override
-//    public List<Event> findEventList() {
-//        return eventRepository.findAll();
-//    }
 }

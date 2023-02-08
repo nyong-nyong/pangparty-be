@@ -1,13 +1,8 @@
 package nyongnyong.pangparty.dto.event;
 
 import lombok.*;
-import nyongnyong.pangparty.entity.event.Event;
-import nyongnyong.pangparty.entity.event.EventTarget;
-import nyongnyong.pangparty.entity.member.MemberProfile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Getter

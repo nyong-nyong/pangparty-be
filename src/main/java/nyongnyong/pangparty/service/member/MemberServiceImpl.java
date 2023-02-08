@@ -14,11 +14,7 @@ public class MemberServiceImpl implements MemberService{
 
 //    @Override
 //    public boolean isExistMemberByMemberId(String memberId) {
-//        return ;
-//    }
-//
-//    @Override
-//    public Long findMemberUidByMemberId(String memberId) {
 //        return memberRepository.;
 //    }
+
 }

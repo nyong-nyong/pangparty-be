@@ -2,6 +2,7 @@ package nyongnyong.pangparty.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.service.event.EventService;
+import nyongnyong.pangparty.service.member.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemberController {
     private final EventService eventService;
+    private final MemberService memberService;
 
     @GetMapping("/{memberId}/received-events")
     public ResponseEntity<?> findReceivedEvent(@PathVariable("memberId") String memberId){
