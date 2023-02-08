@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class EventDto {
+    @NonNull
     private Long uid;
     @NonNull
     private Long hostUid;

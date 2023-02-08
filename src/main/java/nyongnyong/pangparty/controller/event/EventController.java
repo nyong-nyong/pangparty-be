@@ -2,13 +2,11 @@ package nyongnyong.pangparty.controller.event;
 
 import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
+import nyongnyong.pangparty.dto.event.EventCreateReq;
 import nyongnyong.pangparty.service.event.EventService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +22,23 @@ public class EventController {
         Long memberUid = 31L;   // Test: 31L -> isLiked가 true, 그 외 -> isLiked가 false
         // TODO: memberUid를 어떻게 받아올지 고민해보기 memberUid = memberAuthService.getMemberUid();
         return ResponseEntity.ok(eventService.findEventIntroduceByEventUid(memberUid, eventUid));
+    }
+
+    @PostMapping("/{eventUid}/like")
+    public ResponseEntity<?> likeEvent(@PathVariable Long eventUid, @RequestBody EventCreateReq eventCreateReq){
+
+        // Validate Path Variable and Request Body
+        if (eventUid < 0 || !eventService.isExistEventByEventUid(eventCreateReq.getEventUid())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        eventCreateReq.setEventUid(eventUid);
+
+        Long uid =
+
+        Long memberUid = 31L;
+
+
     }
 
 //    @GetMapping
