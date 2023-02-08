@@ -1,7 +1,7 @@
 package nyongnyong.pangparty.service.rollingpaper;
 
 public interface RollingPaperService {
-//    RollingPaper findRollingPaperByEventUid(Long eventUid);
+//    RollingPaperSimple findRollingPaperByEventUid(Long eventUid);
 
     /**
      * 롤링페이퍼 존재 여부

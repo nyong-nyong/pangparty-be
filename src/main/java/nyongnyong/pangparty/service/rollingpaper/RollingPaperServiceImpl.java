@@ -14,7 +14,7 @@ public class RollingPaperServiceImpl implements RollingPaperService{
 
 //    @Override
 //    @Transactional
-//    public RollingPaper findRollingPaperByEventUid(Long eventUid) {
+//    public RollingPaperSimple findRollingPaperByEventUid(Long eventUid) {
 //        return rollingPaperRepository.findRollingPaperByEventUid(eventUid);
 //    }
 
