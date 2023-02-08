@@ -24,9 +24,9 @@ public class MemberAuthController {
     private final MemberAuthService memberAuthService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(MemberLoginReq memberLoginReq) {
+    public ResponseEntity<?> login(@Validated @RequestBody MemberLoginReq memberLoginReq) {
         Map<String, String> response = memberAuthService.login(memberLoginReq);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(response);
     }
 
 //    @PostMapping("/logout")

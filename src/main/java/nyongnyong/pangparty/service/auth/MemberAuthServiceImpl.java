@@ -14,8 +14,8 @@ import nyongnyong.pangparty.repository.member.MemberPersonalRepository;
 import nyongnyong.pangparty.repository.member.MemberProfileRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import nyongnyong.pangparty.repository.member.MemberSettingRepository;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import nyongnyong.pangparty.util.JwtTokenProvider;
+import nyongnyong.pangparty.util.RedisUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +26,11 @@ import java.util.Map;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberAuthServiceImpl implements MemberAuthService, UserDetailsService {
+public class MemberAuthServiceImpl implements MemberAuthService {
 
     private final PasswordEncoder passwordEncoder; // B2CryptPasswordEncoder
+    private final JwtTokenProvider jwtTokenProvider;
+    private final RedisUtil redisUtil;
 
     private final MemberRepository memberRepository;
     private final MemberAuthInfoRepository memberAuthInfoRepository;
@@ -38,6 +40,7 @@ public class MemberAuthServiceImpl implements MemberAuthService, UserDetailsServ
 
     @Override
     public Map<String, String> login(MemberLoginReq memberLoginReq) {
+        System.out.println(memberLoginReq);
         // email 존재하는지 확인
         MemberAuthInfo memberAuthInfo = memberAuthInfoRepository.findByEmail(memberLoginReq.getEmail());
         if (memberAuthInfo == null) {
@@ -52,10 +55,22 @@ public class MemberAuthServiceImpl implements MemberAuthService, UserDetailsServ
         }
 
         // TODO 유저 로그인 로그 남겨야지...
-        
-        // JWT token 발급 및 등록
+        // TODO 이걸 이렇게 두번에 나눠서 넣는 게 맞는 걸까?
+        Member member = memberRepository.findByEmail(memberLoginReq.getEmail());
+        if (member == null) {
+            // TODO 따로 Exception 처리해주기 MemberNotFoundException 등
+            throw new IllegalStateException("존재하지 않는 회원입니다.");
+        }
 
-        return null;
+        String accessToken = jwtTokenProvider.generateToken(member.getEmail(), member.getMemberProfile().getId(), member.getUid(), memberAuthInfo.getAuthorities());
+        String refreshToken = jwtTokenProvider.generateRefreshToken();
+
+        redisUtil.deleteValue(memberLoginReq.getEmail());
+        redisUtil.setValueWithExpiration(memberLoginReq.getEmail(), refreshToken, jwtTokenProvider.refreshTokenExpiration);
+
+        Map<String, String> tokenMap = Map.of("accessToken", accessToken, "refreshToken", refreshToken);
+
+        return tokenMap;
     }
     
     @Override
@@ -92,18 +107,6 @@ public class MemberAuthServiceImpl implements MemberAuthService, UserDetailsServ
 
         return member.getUid();
     }
-
-    @Override // email이 username 역할
-    public MemberAuthInfo loadUserByUsername(String username) throws UsernameNotFoundException {
-        MemberAuthInfo memberAuthInfo = memberAuthInfoRepository.findByEmail(username);
-
-        if (memberAuthInfo == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        return memberAuthInfo;
-    }
-
 
     Member fromMemberRegisterReqtoMember(MemberRegisterReq memberRegisterReq) {
         return Member.builder().email(memberRegisterReq.getEmail()).isSocial(false).build();
