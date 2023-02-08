@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.repository.event;
 
+import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.entity.event.Event;
@@ -12,6 +13,11 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long>, EventRepositoryCustom {
+
+    @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
+            " from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp where mp.id = ?1")
+    List<EventCard> findReceivedEventsByMemberId(String memberId);
 
 //    @Query("select e, mp.id, true,  from Event e left join fetch e.album left join EventHashtag eht left join Hashtag ht left join EventLike el left join EventTarget et left join Member m left join MemberProfile mp left join AlbumMedia am where e.uid = ?1")
 //    Event findEventIntroduceByUid(Long eventUid);

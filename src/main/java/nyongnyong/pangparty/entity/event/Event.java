@@ -49,8 +49,8 @@ public class Event implements Serializable {
     @OneToOne(mappedBy = "event")
     private Album album;
 
-    @OneToMany(mappedBy = "event")
-    private List<EventTarget> eventTarget;
+    @OneToOne(mappedBy = "event")
+    private EventTarget eventTarget;
 
 //    private boolean hasPlaylist;
 //    private boolean hasFunding;

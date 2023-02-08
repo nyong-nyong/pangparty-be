@@ -29,5 +29,13 @@ public class Member implements Serializable {
         this.email = email;
         this.isSocial = isSocial;
         this.withdrawTime = withdrawTime;
+//        this.memberProfile = memberProfile;
     }
+//    @Builder
+//    public Member(String email, boolean isSocial, LocalDateTime withdrawTime, MemberProfile memberProfile) {
+//        this.email = email;
+//        this.isSocial = isSocial;
+//        this.withdrawTime = withdrawTime;
+//        this.memberProfile = memberProfile;
+//    }
 }

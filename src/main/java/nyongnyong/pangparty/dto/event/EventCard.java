@@ -16,18 +16,16 @@ import java.util.List;
 public class EventCard {
     private Long eventUid;
     private String eventName;
-    private List<String> targetIds;
+    private String targetId;
     private String imgUrl;
 //    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)   // LocalDateTime 변환 과정에서 오류나기도 하나봄..?
     private LocalDate dDay;
 
-    public EventCard(Event event){
-        this.eventUid = event.getUid();
-        this.eventName = event.getEventName();
-        for(int i = 0; i < event.getEventTarget().size(); i++){
-            this.targetIds.add(event.getEventTarget().get(i).getTargetMember().getMemberProfile().getId());
-        }
-        this.imgUrl = event.getImgUrl();
-        this.dDay = event.getDDay();
+    public EventCard(Long eventUid, String eventName, String targetId, String imgUrl, LocalDate dDay) {
+        this.eventUid = eventUid;
+        this.eventName = eventName;
+        this.targetId = targetId;
+        this.imgUrl = imgUrl;
+        this.dDay = dDay;
     }
 }
