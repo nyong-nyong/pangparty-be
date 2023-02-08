@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.security;
+package nyongnyong.pangparty.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity//(debug = true)
+// TODO WebSecurityConfigurerAdapter is deprecated
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 //    @Autowired

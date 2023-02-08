@@ -16,7 +16,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -48,7 +47,7 @@ public class MemberAuthInfo implements UserDetails, Serializable {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "role", joinColumns = @JoinColumn(name = "member_uid"))
-    private Set<Role> roles;
+    private List<Role> roles;
 
     @LastModifiedDate
     private LocalDateTime updateTime;
@@ -62,7 +61,7 @@ public class MemberAuthInfo implements UserDetails, Serializable {
     }
 
     @Builder
-    public MemberAuthInfo(Member member, String email, String password, Set<Role> roles, LocalDateTime updateTime) {
+    public MemberAuthInfo(Member member, String email, String password, List<Role> roles, LocalDateTime updateTime) {
         this.member = member;
         this.email = email;
         this.password = password;

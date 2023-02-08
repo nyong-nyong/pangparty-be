@@ -1,8 +1,10 @@
 package nyongnyong.pangparty.service.auth;
 
 import lombok.RequiredArgsConstructor;
+import nyongnyong.pangparty.dto.auth.MemberLoginReq;
 import nyongnyong.pangparty.dto.auth.MemberRegisterReq;
 import nyongnyong.pangparty.entity.auth.MemberAuthInfo;
+import nyongnyong.pangparty.entity.auth.Role;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.member.MemberPersonal;
 import nyongnyong.pangparty.entity.member.MemberProfile;
@@ -18,6 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Map;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -31,6 +36,28 @@ public class MemberAuthServiceImpl implements MemberAuthService, UserDetailsServ
     private final MemberPersonalRepository memberPersonalRepository;
     private final MemberSettingRepository memberSettingRepository;
 
+    @Override
+    public Map<String, String> login(MemberLoginReq memberLoginReq) {
+        // email 존재하는지 확인
+        MemberAuthInfo memberAuthInfo = memberAuthInfoRepository.findByEmail(memberLoginReq.getEmail());
+        if (memberAuthInfo == null) {
+            // TODO 따로 Exception 처리해주기 MemberNotFoundException 등
+            throw new IllegalStateException("존재하지 않는 회원입니다.");
+        }
+        
+        // 비밀번호 맞는지 확인
+        if (!passwordEncoder.matches(memberLoginReq.getPassword(), memberAuthInfo.getPassword())) {
+            // TODO 따로 Exception 처리해주기 PasswordNotMatchException 등
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        }
+
+        // TODO 유저 로그인 로그 남겨야지...
+        
+        // JWT token 발급 및 등록
+
+        return null;
+    }
+    
     @Override
     @Transactional
     public Long register(MemberRegisterReq memberRegisterReq) {
@@ -48,7 +75,6 @@ public class MemberAuthServiceImpl implements MemberAuthService, UserDetailsServ
         memberRepository.save(member);
 
         // MemberAuth에 추가
-        // TODO 여기서 member UID가 제대로 들어가니...?
         MemberAuthInfo memberAuthInfo = fromMemberRegisterReqtoMemberAuthInfo(member, memberRegisterReq);
         memberAuthInfoRepository.save(memberAuthInfo);
 
@@ -84,7 +110,8 @@ public class MemberAuthServiceImpl implements MemberAuthService, UserDetailsServ
     }
 
     MemberAuthInfo fromMemberRegisterReqtoMemberAuthInfo(Member member, MemberRegisterReq memberRegisterReq) {
-        return MemberAuthInfo.builder().member(member).email(memberRegisterReq.getEmail()).password(memberRegisterReq.getPassword()).build();
+        return MemberAuthInfo.builder().member(member).email(memberRegisterReq.getEmail()).password(memberRegisterReq.getPassword()).roles(Collections.singletonList(Role.ROLE_USER))
+                .build();
     }
 
     MemberProfile fromMemberRegisterReqtoMemberProfile(Member member, MemberRegisterReq memberRegisterReq) {
