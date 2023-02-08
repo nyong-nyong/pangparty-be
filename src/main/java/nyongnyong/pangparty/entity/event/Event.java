@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -50,6 +51,9 @@ public class Event implements Serializable {
 
     @OneToOne(mappedBy = "event")
     private EventTarget eventTarget;
+
+    @OneToMany(mappedBy = "event")
+    private List<EventParticipant> eventParticipant;
 
 //    private boolean hasPlaylist;
 //    private boolean hasFunding;

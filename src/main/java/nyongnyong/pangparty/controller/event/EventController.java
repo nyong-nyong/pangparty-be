@@ -23,4 +23,15 @@ public class EventController {
 //        return ResponseEntity.ok(eventService.findEvents(pageable));
 //    }
 
+//    @GetMapping
+//    public ResponseEntity<?> findHomeEvents(){
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("popularEvents", eventService.findPopularEvents());
+//        response.put("createdTodayEvents", eventService.findCreatedTodayEvents());
+//        response.put("dDayEvents", eventService.findDDayEvents());
+//
+//
+//        return ResponseEntity.ok(eventService.findHomeEvents());
+//    }
 }

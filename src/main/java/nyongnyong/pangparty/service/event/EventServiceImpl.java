@@ -25,4 +25,20 @@ public class EventServiceImpl implements EventService {
     public List<EventCard> findReceivedEventsByMemberId(String memberId) {
         return eventRepository.findReceivedEventsByMemberId(memberId);
     }
+
+    @Override
+    public List<EventCard> findHostEventsByMemberId(String memberId) {
+        return eventRepository.findHostEventsByMemberId(memberId);
+    }
+
+    @Override
+    public List<EventCard> findInvolvingEventsByMemberId(String memberId) {
+        return eventRepository.findInvolvingEventsByMemberId(memberId);
+    }
+
+    @Override
+    public List<EventCard> findInvolvedEventsByMemberId(String memberId) {
+        return eventRepository.findInvolvedEventsByMemberId(memberId);
+    }
+
 }

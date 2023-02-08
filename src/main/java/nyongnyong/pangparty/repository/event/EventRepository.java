@@ -14,4 +14,23 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
             " left join e.eventTarget.targetMember.memberProfile mp where mp.id = ?1")
     List<EventCard> findReceivedEventsByMemberId(String memberId);
 
+    @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
+            " from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " left join e.host.memberProfile hmp where hmp.id = ?1")
+    List<EventCard> findHostEventsByMemberId(String memberId);
+
+    @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
+            " from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " left join e.eventParticipant p " +
+            " where p.member.memberProfile.id = ?1 and e.dDay > SYSDATE()")
+    List<EventCard> findInvolvingEventsByMemberId(String memberId);
+
+    @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
+            " from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " left join e.eventParticipant p " +
+            " where p.member.memberProfile.id = ?1 and e.dDay <= SYSDATE()")
+    List<EventCard> findInvolvedEventsByMemberId(String memberId);
 }

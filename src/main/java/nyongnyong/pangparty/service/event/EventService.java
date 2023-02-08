@@ -7,4 +7,10 @@ public interface EventService {
     boolean isExistEventByEventUid(Long eventUid);
 
     List<EventCard> findReceivedEventsByMemberId(String memberId);
+
+    List<EventCard> findHostEventsByMemberId(String memberId);
+
+    List<EventCard> findInvolvingEventsByMemberId(String memberId);
+
+    List<EventCard> findInvolvedEventsByMemberId(String memberId);
 }
