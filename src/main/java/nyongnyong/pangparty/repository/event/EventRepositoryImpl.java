@@ -3,6 +3,7 @@ package nyongnyong.pangparty.repository.event;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
+import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.QEvent;
 import nyongnyong.pangparty.entity.event.QEventLike;
@@ -29,8 +30,17 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
                 .fetchOne();
 
         Event event = queryFactory.selectFrom(qEvent)
+                .leftJoin(qEvent.eventHashtags).fetchJoin()
+                .leftJoin(qEvent.album).fetchJoin()
                 .where(qEvent.uid.eq(eventUid))
                 .fetchOne();
+
+        List<AlbumMedia> albumMedias = queryFactory.select(qEvent.album.albumMedia.any())
+                .from(qEvent)
+                .where(qEvent.uid.eq(eventUid))
+                .fetch();
+
+        System.out.println(albumMedias);
 
         boolean isLiked = true;
         if(tempIsLiked == 0) {
