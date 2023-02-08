@@ -9,11 +9,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-//@RequestMapping("/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class MemberAuthController {
 
@@ -29,7 +30,7 @@ public class MemberAuthController {
 //        return ResponseEntity.ok().build();
 //    }
 
-    @PostMapping("/members")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@Validated @RequestBody MemberRegisterReq memberRegisterReq, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
@@ -44,7 +45,4 @@ public class MemberAuthController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-
-
 }
