@@ -1,9 +1,7 @@
 package nyongnyong.pangparty.dto.rollingpaper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaperSticker;
 
 import javax.validation.constraints.Digits;
@@ -11,15 +9,15 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @NoArgsConstructor
-@ToString
-public class RollingPaperStickerRequestDto {
+public class RollingPaperStickerRes {
 
+    //    private Long uid;
+    //    private Long rollingPaperUid;
+    //    private Long stickerUid;
     @NotBlank
-    private Long rollingPaperUid;
-    //    private Long memberUid;
-    @NotBlank
-    private Long stickerUid;
+    private String stickerUrl;
 
+    //    private LocalDateTime createTime;
     @NotBlank
     @Digits(integer = 5, fraction = 0)
     private int leftLoc;
@@ -29,7 +27,6 @@ public class RollingPaperStickerRequestDto {
     private int topLoc;
 
     @NotBlank
-    @JsonProperty("zIndex")
     private String zIndex;
 
     @NotBlank
@@ -38,10 +35,12 @@ public class RollingPaperStickerRequestDto {
     @NotBlank
     private float scale;
 
-    public RollingPaperStickerRequestDto(RollingPaperSticker rollingPaperSticker) {
-        this.rollingPaperUid = rollingPaperSticker.getRollingPaper().getUid();
-//        this.memberUid = rollingPaperSticker.getMember().getUid();
-        this.stickerUid = rollingPaperSticker.getSticker().getUid();
+    public RollingPaperStickerRes(RollingPaperSticker rollingPaperSticker) {
+//        this.uid = rollingPaperSticker.getUid();
+//        this.rollingPaperUid = rollingPaperSticker.getRollingPaper().getUid();
+//        this.stickerUid = rollingPaperSticker.getSticker().getUid();
+//        this.createTime = rollingPaperSticker.getCreateTime();
+        this.stickerUrl = rollingPaperSticker.getSticker().getStickerUrl();
         this.leftLoc = rollingPaperSticker.getLeftLoc();
         this.topLoc = rollingPaperSticker.getTopLoc();
         this.zIndex = rollingPaperSticker.getZIndex();

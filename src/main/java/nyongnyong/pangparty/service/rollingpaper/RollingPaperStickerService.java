@@ -1,8 +1,8 @@
 package nyongnyong.pangparty.service.rollingpaper;
 
 
-import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerRequestDto;
-import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerResponseDto;
+import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerReq;
+import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerRes;
 
 import java.util.List;
 
@@ -14,16 +14,16 @@ public interface RollingPaperStickerService {
      * @param rollingPaperUid 롤링페이퍼 uid
      * @param topStart top 시작 위치
      * @param topEnd top 끝 위치
-     * @return List<RollingPaperStickerResponseDto>
+     * @return List<RollingPaperStickerRes>
      */
-    List<RollingPaperStickerResponseDto> findRollingPaperStickersByTopLoc(Long rollingPaperUid, int topStart, int topEnd);
+    List<RollingPaperStickerRes> findRollingPaperStickersByTopLoc(Long rollingPaperUid, int topStart, int topEnd);
 
     /**
      * 스티커 생성
      *
-     * @param rollingPaperStickerRequestDto 롤링페이퍼 스티커 요청 dto
+     * @param rollingPaperStickerReq 롤링페이퍼 스티커 요청 dto
      * @return Long 생성된 롤링페이퍼 스티커 uid
      */
-    Long addRollingPaperSticker(RollingPaperStickerRequestDto rollingPaperStickerRequestDto);
+    Long addRollingPaperSticker(RollingPaperStickerReq rollingPaperStickerReq);
 
 }
