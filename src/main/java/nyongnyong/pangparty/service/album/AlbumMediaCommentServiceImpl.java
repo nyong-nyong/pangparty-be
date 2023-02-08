@@ -5,6 +5,7 @@ import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
 import nyongnyong.pangparty.repository.album.AlbumMediaCommentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -19,16 +20,18 @@ public class AlbumMediaCommentServiceImpl implements AlbumMediaCommentService {
 
     @Override
     public AlbumMediaCommentSimpleRes createAlbumMediaComment(AlbumMediaCommentSimpleRes albumMediaCommentSimpleRes) {
+        //TODO: create album media comment
         return null;
     }
 
     @Override
-    public Page<AlbumMediaCommentSimpleRes> getAlbumMediaCommentList(Long albumMediaUid, PageRequest pageRequest) {
+    public Page<AlbumMediaCommentSimpleRes> getAlbumMediaCommentList(Long albumMediaUid, Pageable pageable) {
+        //TODO: get album media comment list
         return null;
     }
 
     @Override
     public void deleteAlbumMediaComment(Long albumMediaCommentUid) {
-
+        //TODO: delete album media comment
     }
 }

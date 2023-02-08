@@ -3,6 +3,7 @@ package nyongnyong.pangparty.service.album;
 import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public interface AlbumMediaCommentService {
 
@@ -18,7 +19,7 @@ public interface AlbumMediaCommentService {
      * @param albumMediaUid
      * @return
      */
-    public Page<AlbumMediaCommentSimpleRes> getAlbumMediaCommentList(Long albumMediaUid, PageRequest pageRequest);
+    public Page<AlbumMediaCommentSimpleRes> getAlbumMediaCommentList(Long albumMediaUid, Pageable pageable);
 
     /**
      * 앨범 미디어 댓글 삭제
