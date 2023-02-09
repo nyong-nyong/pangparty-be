@@ -25,7 +25,7 @@ public class Event implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)    // Event를 영속화 할 때, Member의 PK가 영속화 되지 않아 오류 발생하게 됨 -> casecade 옵션을 CascadeType.ALL로 주어 해결
     private Member host;
     private String eventName;
     private String introduction;
