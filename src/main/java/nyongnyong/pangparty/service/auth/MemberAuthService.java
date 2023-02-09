@@ -47,6 +47,7 @@ public interface MemberAuthService {
     
     // TODO 비밀번호 변경
 
+    // TODO 토큰으로 memberUid 가져오기
     /**
      * 토큰으로 memberUid 가져오기
      *

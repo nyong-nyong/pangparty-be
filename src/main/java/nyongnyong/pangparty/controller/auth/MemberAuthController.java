@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
@@ -40,8 +41,17 @@ public class MemberAuthController {
 //            username = principal.toString();
 //            System.out.println(username);
 //        }
-//        System.out.println(httpServletRequest.getRemoteUser());
-        memberAuthService.logout(httpServletRequest.getRemoteUser());
+        System.out.println(httpServletRequest.getRemoteUser());
+        if (httpServletRequest.getRemoteUser() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            memberAuthService.logout(httpServletRequest.getRemoteUser());
+            httpServletRequest.logout();
+        } catch (ServletException e) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok().build();
     }
 
