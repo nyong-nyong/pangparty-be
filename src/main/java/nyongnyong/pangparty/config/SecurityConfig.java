@@ -1,6 +1,8 @@
 package nyongnyong.pangparty.config;
 
 import lombok.RequiredArgsConstructor;
+import nyongnyong.pangparty.jwt.JwtAccessDeniedHandler;
+import nyongnyong.pangparty.jwt.JwtAuthenticationEntryPoint;
 import nyongnyong.pangparty.jwt.JwtTokenFilterConfigurer;
 import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -17,14 +19,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity//(debug = true)
 public class SecurityConfig {
 
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtTokenProvider jwtTokenProvider;
-
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+//                .accessDeniedPage("/account/login")
+                .and()
+                .apply(new JwtTokenFilterConfigurer(jwtTokenProvider))
                 .and()
                 .authorizeRequests()
 //                .antMatchers("/account/login").permitAll()
@@ -37,14 +47,6 @@ public class SecurityConfig {
 //                .antMatchers("/member/**").hasRole("USER")
 //                .anyRequest().authenticated()
                 .anyRequest().permitAll() // TODO for testing purposes
-                .and()
-                .exceptionHandling().accessDeniedPage("/account/login")
-                .and()
-                .exceptionHandling()
-//                .accessDeniedHandler(accessDeniedHandler())
-//                .authenticationEntryPoint(authenticationEntryPoint())
-                .and()
-                .apply(new JwtTokenFilterConfigurer(jwtTokenProvider))
                 .and()
                 .build();
     }

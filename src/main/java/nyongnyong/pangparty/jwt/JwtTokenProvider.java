@@ -1,11 +1,11 @@
 package nyongnyong.pangparty.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.service.auth.CustomUserDetailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,18 +20,19 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
+    @Value("${security.jwt.token.refresh.expiration}")
+    public final long refreshTokenExpiration;
+    private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
+    @Value("${security.jwt.token.expiration}")
+    private final long tokenExpiration;
+    private final CustomUserDetailService customUserDetailService;
     @Value("${security.jwt.token.secret}")
     private String secret;
-    @Value("${security.jwt.token.expiration}")
-    private long tokenExpiration;
-    @Value("${security.jwt.token.refresh.expiration}")
-    public long refreshTokenExpiration;
-
-    private final CustomUserDetailService customUserDetailService;
 
     @PostConstruct
     protected void init() {
@@ -92,13 +93,42 @@ public class JwtTokenProvider {
         return null;
     }
 
+    public String resolveToken(String bearerToken) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public String resolveRefreshToken(HttpServletRequest req) {
+        String refreshToken = req.getHeader("RefreshToken");
+        if (refreshToken != null) {
+            return refreshToken.substring(7);
+        }
+        return null;
+    }
+
+    public String resolveRefreshToken(String refreshToken) {
+        if (refreshToken != null) {
+            return refreshToken.substring(7);
+        }
+        return null;
+    }
+
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
+        } catch (SecurityException | MalformedJwtException e) {
+            logger.info("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            logger.info("만료된 JWT 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            logger.info("지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            logger.info("JWT 토큰이 잘못되었습니다.");
         }
+        return false;
     }
 
 }
