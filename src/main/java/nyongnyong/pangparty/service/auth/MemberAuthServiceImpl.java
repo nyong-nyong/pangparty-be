@@ -9,6 +9,10 @@ import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.member.MemberPersonal;
 import nyongnyong.pangparty.entity.member.MemberProfile;
 import nyongnyong.pangparty.entity.member.MemberSetting;
+import nyongnyong.pangparty.exception.EmailAuthFailExcpetion;
+import nyongnyong.pangparty.exception.MemberAlreadyExistsException;
+import nyongnyong.pangparty.exception.MemberNotFoundException;
+import nyongnyong.pangparty.exception.TokenRefreshFailException;
 import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.repository.auth.MemberAuthInfoRepository;
 import nyongnyong.pangparty.repository.member.MemberPersonalRepository;
@@ -46,8 +50,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
     public Long register(MemberRegisterReq memberRegisterReq) {
         // check if duplicate email/id
         if (memberRepository.existsByEmail(memberRegisterReq.getEmail()) || memberProfileRepository.existsById(memberRegisterReq.getId())) {
-            // TODO 따로 Exception 처리해주기 DuplicateMemberException 등
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+            throw new MemberAlreadyExistsException();
         }
 
         // 비밀번호 암호화
@@ -82,13 +85,11 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         // email 존재하는지 확인
         MemberAuthInfo memberAuthInfo = memberAuthInfoRepository.findByEmail(memberLoginReq.getEmail());
         if (memberAuthInfo == null) {
-            // TODO 따로 Exception 처리해주기 MemberNotFoundException 등
-            throw new IllegalStateException("존재하지 않는 회원입니다.");
+            throw new MemberNotFoundException();
         }
 
         // 비밀번호 맞는지 확인
         if (!passwordEncoder.matches(memberLoginReq.getPassword(), memberAuthInfo.getPassword())) {
-            // TODO 따로 Exception 처리해주기 PasswordNotMatchException 등
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
 
@@ -96,8 +97,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         // TODO 이걸 이렇게 두번에 나눠서 넣는 게 맞는 걸까?
         Member member = memberRepository.findByEmail(memberLoginReq.getEmail());
         if (member == null) {
-            // TODO 따로 Exception 처리해주기 MemberNotFoundException 등
-            throw new IllegalStateException("존재하지 않는 회원입니다.");
+            throw new MemberNotFoundException();
         }
 
         String accessToken = jwtTokenProvider.generateToken(member.getEmail(), member.getMemberProfile().getId(), member.getUid(), memberAuthInfo.getAuthorities());
@@ -123,7 +123,6 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         if (redisUtil.getValue(email).equals(refreshToken) && jwtTokenProvider.validateToken(refreshToken)) {
             redisUtil.deleteValue(email);
 
-            // TODO maybe it's not the best idea to have id in the token
             String accessToken = jwtTokenProvider.generateToken(email, memberAuthInfo.getMember().getMemberProfile().getId(), memberAuthInfo.getMember().getUid(), roles);
             String newRefreshToken = jwtTokenProvider.generateRefreshToken();
 
@@ -132,8 +131,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
             return Map.of("accessToken", "Bearer " + accessToken,
                     "refreshToken", "Bearer " + newRefreshToken);
         } else {
-            // TODO 따로 Exception 처리
-            throw new IllegalStateException("refreshToken 재발급 실패");
+            throw new TokenRefreshFailException();
         }
     }
 
@@ -149,16 +147,25 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         if (redisUtil.getValue(email).equals(key)) {
             redisUtil.deleteValue(email);
         } else {
-            // TODO 따로 Exception 처리
-            throw new IllegalStateException("인증번호가 일치하지 않습니다.");
+            throw new EmailAuthFailExcpetion("인증번호가 일치하지 않습니다.");
         }
     }
 
     @Override
     public Long getMemberUid(String token) {
+        if (jwtTokenProvider.validateToken(token)) {
+            String email = jwtTokenProvider.getEmailFromToken(token);
+            Member member = memberRepository.findByEmail(email);
+
+            if (member == null) {
+                throw new MemberNotFoundException();
+            }
+
+            return member.getUid();
+        }
+
         return null;
     }
-
 
     Member fromMemberRegisterReqtoMember(MemberRegisterReq memberRegisterReq) {
         return Member.builder().email(memberRegisterReq.getEmail()).isSocial(false).build();

@@ -41,13 +41,13 @@ public interface MemberAuthService {
     
     // TODO 회원 탈퇴
 
+
     void sendAuthEmail(String email);
 
     void confirmAuthEmail(String email, String key);
     
     // TODO 비밀번호 변경
 
-    // TODO 토큰으로 memberUid 가져오기
     /**
      * 토큰으로 memberUid 가져오기
      *
