@@ -23,4 +23,17 @@ public interface RollingPaperPieceService {
      */
     Long addRollingPaperPiece(RollingPaperPieceReq rollingPaperPieceReq);
 
+    /**
+     * 롤링페이퍼 조각 삭제
+     *
+     * @param rollingPaperPieceUid 롤링페이퍼 조각 uid
+     */
+    void removeRollingPaperPiece(Long rollingPaperPieceUid);
+
+    /**
+     * 롤링페이퍼 조각 uid로 존재 여부 확인
+     * @param rollingPaperPieceUid 롤링페이퍼 조각 uid
+     * @return 존재 여부
+     */
+    boolean isExistByRollingPaperPieceUid(Long rollingPaperPieceUid);
 }

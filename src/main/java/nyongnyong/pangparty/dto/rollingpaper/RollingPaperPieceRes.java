@@ -11,7 +11,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @ToString
 public class RollingPaperPieceRes {
-    //    private Long uid;
+    @NotBlank
+    private Long uid;
     @NotBlank
     private Long rollingPaperUid;
     // TODO add memberId
@@ -30,7 +31,7 @@ public class RollingPaperPieceRes {
     private String textAlign;
 
     public RollingPaperPieceRes(RollingPaperPiece rollingPaperPiece) {
-//        this.uid = rollingPaperPiece.getUid();
+        this.uid = rollingPaperPiece.getUid();
         this.rollingPaperUid = rollingPaperPiece.getRollingPaper().getUid();
 //        this.memberId = rollingPaperPiece.getMemberProfile().getId();
         this.writerName = rollingPaperPiece.getWriterName();

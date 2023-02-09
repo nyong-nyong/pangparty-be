@@ -33,6 +33,18 @@ public class RollingPaperPieceServiceImpl implements RollingPaperPieceService {
         return rollingPaperPiece.getUid();
     }
 
+    @Override
+    @Transactional
+    public void removeRollingPaperPiece(Long rollingPaperPieceUid) {
+        rollingPaperPieceRepository.deleteById(rollingPaperPieceUid);
+    }
+
+    @Override
+    @Transactional
+    public boolean isExistByRollingPaperPieceUid(Long rollingPaperPieceUid) {
+        return rollingPaperPieceRepository.existsById(rollingPaperPieceUid);
+    }
+
     RollingPaperPiece toEntity(RollingPaperPieceReq rollingPaperPieceReq) {
         return RollingPaperPiece.builder().rollingPaper(rollingPaperRepository.findById(rollingPaperPieceReq.getRollingPaperUid()).orElseThrow(() -> new IllegalArgumentException("해당 롤링페이퍼가 존재하지 않습니다.")))
                 // TODO Member를 Id로 찾아서 넣어주기

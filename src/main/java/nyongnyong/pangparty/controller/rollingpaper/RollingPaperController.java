@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -41,14 +40,13 @@ public class RollingPaperController {
             return ResponseEntity.badRequest().build();
         }
 
-        Map<String, Object> response = new HashMap<>();
-
         Page<RollingPaperPieceRes> rollingPaperPiecePage = rollingPaperPieceService.findRollingPaperPieces(rollingPaperUid, pageable);
-        response.put("size", pageable.getPageSize());
-        response.put("page", pageable.getPageNumber());
-        response.put("itemCnt", rollingPaperPiecePage.getTotalElements());
-        response.put("totalPageCnt", rollingPaperPiecePage.getTotalPages());
-        response.put("rollingPaperPieces", rollingPaperPiecePage.getContent());
+
+        Map<String, Object> response = Map.of("size", pageable.getPageSize(),
+                "page", pageable.getPageNumber(),
+                "itemCnt", rollingPaperPiecePage.getTotalElements(),
+                "totalPageCnt", rollingPaperPiecePage.getTotalPages(),
+                "rollingPaperPieces", rollingPaperPiecePage.getContent());
 
         return ResponseEntity.ok(response);
     }
@@ -57,15 +55,17 @@ public class RollingPaperController {
     public ResponseEntity<?> addRollingPaperPiece(@PathVariable("eventUid") Long eventUid, @PathVariable("rollingPaperUid") Long rollingPaperUid, @RequestBody RollingPaperPieceReq rollingPaperPieceReq) {
         // TODO check login status
         // TODO if login, set as event participant
-
+        System.out.println("addRollingPaperPiece");
         // Validate Path Variable and Request Body
         if (eventUid < 0 || rollingPaperUid < 0) {
+            System.out.println("eventUid or rollingPaperUid is less than 0");
             return ResponseEntity.badRequest().build();
         }
 
         // Validate eventUid and rollingPaperUid
         // TODO validate eventUid
         if (!rollingPaperService.isExistRollingPaperByRollingPaperUid(rollingPaperUid)) {
+            System.out.println("rollingPaperUid is not exist");
             return ResponseEntity.badRequest().build();
         }
 
@@ -74,6 +74,29 @@ public class RollingPaperController {
         Long uid = rollingPaperPieceService.addRollingPaperPiece(rollingPaperPieceReq);
 
         return ResponseEntity.created(URI.create("/events/" + eventUid + "/rollingpaper/" + rollingPaperUid + "/pieces/" + uid)).build();
+    }
+
+    @DeleteMapping("/{rollingPaperUid}/pieces/{rollingPaperPieceUid}")
+    public ResponseEntity<?> removeRollingPaperPiece(@PathVariable("eventUid") Long eventUid, @PathVariable("rollingPaperUid") Long rollingPaperUid, @PathVariable("rollingPaperPieceUid") Long rollingPaperPieceUid) {
+        // TODO check login status
+        // TODO if login & remove from as event participant (Service 단에서 해야할듯)
+
+        // Validate Path Variable
+        if (eventUid < 0 || rollingPaperUid < 0 || rollingPaperPieceUid < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // Validate eventUid and rollingPaperUid
+        // TODO validate eventUid
+        if (!rollingPaperService.isExistRollingPaperByRollingPaperUid(rollingPaperUid)
+                || !rollingPaperPieceService.isExistByRollingPaperPieceUid(rollingPaperPieceUid)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // TODO get member
+        rollingPaperPieceService.removeRollingPaperPiece(rollingPaperPieceUid);
+
+        return ResponseEntity.noContent().build();
     }
 
 
@@ -90,8 +113,7 @@ public class RollingPaperController {
             return ResponseEntity.badRequest().build();
         }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("rollingPaperStickers", rollingPaperStickerService.findRollingPaperStickersByTopLoc(rollingPaperUid, topStart, topEnd));
+        Map<String, Object> response = Map.of("rollingPaperStickers", rollingPaperStickerService.findRollingPaperStickersByTopLoc(rollingPaperUid, topStart, topEnd));
         return ResponseEntity.ok(response);
     }
 
