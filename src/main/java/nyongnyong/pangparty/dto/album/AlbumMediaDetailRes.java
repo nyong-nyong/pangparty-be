@@ -1,7 +1,9 @@
 package nyongnyong.pangparty.dto.album;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nyongnyong.pangparty.entity.album.AlbumMedia;
 import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDateTime;
@@ -27,6 +29,7 @@ public class AlbumMediaDetailRes {
     private boolean isLiked;
     private LocalDateTime likeTime;
 
+    @Builder
     public AlbumMediaDetailRes(Long uid, Long eventUid, Long memberUid, String mediaUrl, String extension, LocalDateTime uploadTime, LocalDateTime takenTime, String takenLat, String takenLng, Long prevAlbumMediaUid, Long nextAlbumMediaUid, int likeCount, boolean isLiked, LocalDateTime likeTime) {
         this.uid = uid;
         this.eventUid = eventUid;
@@ -44,4 +47,21 @@ public class AlbumMediaDetailRes {
         this.likeTime = likeTime;
     }
 
+    @Builder
+    public AlbumMediaDetailRes(AlbumMedia albumMedia, Long prevAlbumMediaUid, Long nextAlbumMediaUid) {
+        this.uid = albumMedia.getUid();
+        this.eventUid = albumMedia.getAlbum().getEvent().getUid();
+        this.memberUid = albumMedia.getMember().getUid();
+        this.mediaUrl = albumMedia.getMediaUrl();
+        this.extension = albumMedia.getExtension();
+        this.uploadTime = albumMedia.getUploadTime();
+        this.takenTime = albumMedia.getTakenTime();
+        this.takenLat = albumMedia.getTakenLat();
+        this.takenLng = albumMedia.getTakenLng();
+        this.prevAlbumMediaUid = prevAlbumMediaUid;
+        this.nextAlbumMediaUid = nextAlbumMediaUid;
+        this.likeCount = albumMedia.getAlbumMediaLikes().size();
+        this.isLiked = albumMedia.getAlbumMediaLikes().stream().anyMatch(albumMediaLike -> albumMediaLike.getMember().getUid().equals(albumMedia.getMember().getUid()));
+        this.likeTime = albumMedia.getAlbumMediaLikes().stream().filter(albumMediaLike -> albumMediaLike.getMember().getUid().equals(albumMedia.getMember().getUid())).findFirst().map(albumMediaLike -> albumMediaLike.getLikeTime()).orElse(null);
+    }
 }

@@ -9,14 +9,16 @@ public interface AlbumMediaCommentService {
 
     /**
      * 앨범 미디어 댓글 생성
-     * @param albumMediaCommentDto
+     * @param memberUid
+     * @param comment
      * @return
      */
-    public AlbumMediaCommentSimpleRes createAlbumMediaComment(AlbumMediaCommentSimpleRes albumMediaCommentDto);
+    public AlbumMediaCommentSimpleRes createAlbumMediaComment(Long memberUid, String comment);
 
     /**
      * 앨범 미디어 댓글 목록 조회
      * @param albumMediaUid
+     * @param pageable
      * @return
      */
     public Page<AlbumMediaCommentSimpleRes> getAlbumMediaCommentList(Long albumMediaUid, Pageable pageable);

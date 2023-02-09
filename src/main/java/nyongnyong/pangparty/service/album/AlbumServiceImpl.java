@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class AlbumServiceImpl implements AlbumService{
 
     @Override
-    public Long createAlbum(Long eventUid) {
+    public Album createAlbum(Long eventUid) {
 
         return null;
     }

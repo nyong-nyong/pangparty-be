@@ -2,6 +2,7 @@ package nyongnyong.pangparty.controller.album;
 
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
+import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.service.album.*;
 import org.springframework.data.domain.Page;
@@ -27,17 +28,22 @@ public class AlbumController {
     private final AlbumMediaCommentService albumMediaCommentService;
     private final AlbumMediaLikeService albumMediaLikeService;
     private final MediaService mediaService;
+    private final MemberAuthService memberAuthService;
 
-    public AlbumController(AlbumService albumService, AlbumMediaService albumMediaService, AlbumMediaCommentService albumMediaCommentService, AlbumMediaLikeService albumMediaLikeService, MediaService mediaService) {
+    public AlbumController(AlbumService albumService, AlbumMediaService albumMediaService, AlbumMediaCommentService albumMediaCommentService, AlbumMediaLikeService albumMediaLikeService, MediaService mediaService, MemberAuthService memberAuthService) {
         this.albumService = albumService;
         this.albumMediaService = albumMediaService;
         this.albumMediaCommentService = albumMediaCommentService;
         this.albumMediaLikeService = albumMediaLikeService;
         this.mediaService = mediaService;
+        this.memberAuthService = memberAuthService;
     }
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAlbumMediaList(@PathVariable Long eventUid, Pageable pageable) {
+        if (eventUid < 0 || pageable.getPageNumber() < 0 || pageable.getPageSize() < 0) {
+            return ResponseEntity.badRequest().build();
+        }
         Long albumUid = albumService.getAlbumUid(eventUid);
         log.debug("albumUid: {}", albumUid);
         System.out.println("albumUid: "+albumUid);
@@ -52,7 +58,7 @@ public class AlbumController {
 
         return ResponseEntity.ok(response);
     }
-//
+
 //    @PostMapping("/")
 //    public ResponseEntity<AlbumMediaSimpleRes> createAlbumMedia(@PathVariable Long eventUid, @RequestPart MultipartFile file) {
 ////        // InputStream으로 file을 전달
@@ -80,42 +86,56 @@ public class AlbumController {
 //
 //        return new ResponseEntity<>(albumMedia, HttpStatus.CREATED);
 //    }
-//
-//    @GetMapping("/{mediaUid}")
-//    public ResponseEntity<?> getAlbumMedia(@PathVariable Long eventUid, @PathVariable Long mediaUid) {
-//        // TODO: memberUid
+
+    @GetMapping("/{mediaUid}")
+    public ResponseEntity<?> getAlbumMedia(@PathVariable Long eventUid, @PathVariable Long mediaUid) {
+        if (eventUid < 0 || mediaUid < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        // TODO: memberUid
+//        Long memberUid = memberAuthService.getMemberUid();
+        Long memberUid = 3L;
+        AlbumMediaDetailRes albumMediaDetailRes = albumMediaService.getAlbumMedia(mediaUid);
+        if (albumMediaDetailRes == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(albumMediaDetailRes);
+    }
+
+    @DeleteMapping("/{mediaUid}")
+    public ResponseEntity<?> deleteAlbumMedia(@PathVariable Long eventUid, @PathVariable Long mediaUid) {
+        if (eventUid < 0 || mediaUid < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        // TODO: memberUid
+//        Long memberUid = memberAuthService.getMemberUid();
+        Long memberUid = 3L;
+        if (!albumMediaService.isAlbumMediaOwner(memberUid, mediaUid)) {
+            return ResponseEntity.badRequest().build();
+        }
+        albumMediaService.deleteAlbumMedia(mediaUid);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{mediaUid}/comments")
+    public ResponseEntity<?> getAlbumMediaComments(@PathVariable Long eventUid, @PathVariable Long mediaUid, Pageable pageable) {
+        if (eventUid < 0 || pageable.getPageNumber() < 0 || pageable.getPageSize() < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        Page<AlbumMediaCommentSimpleRes> comments = albumMediaCommentService.getAlbumMediaCommentList(mediaUid, pageable);
+
+        return new ResponseEntity<>();
+    }
+
+    @PostMapping("/{mediaUid}/comments")
+    public ResponseEntity<AlbumMediaSimpleRes> createAlbumMediaComment(@PathVariable Long eventUid, @PathVariable Long mediaUid, @RequestBody String comment) {
+        // TODO: memberUid
 //        memberUid = memberAuthService.getMemberUid();
-//        return "album";
-//    }
-//
-//    @DeleteMapping("/{mediaUid}")
-//    public ResponseEntity<?> deleteAlbumMedia(@PathVariable Long eventUid, @PathVariable Long mediaUid) {
-//        // TODO: memberUid
-//        memberUid = memberAuthService.getMemberUid();
-//        if (!albumMediaService.isAlbumMediaOwner(memberUid, mediaUid)) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//        albumMediaService.deleteAlbumMedia(memberUid, mediaUid);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
-//
-//    @GetMapping("/{mediaUid}/comments")
-//    public ResponseEntity<?> getAlbumMediaComments(@PathVariable Long eventUid, @PathVariable Long mediaUid, Pageable pageable) {
-//        if (eventUid < 0 || pageable.getPageNumber() < 0 || pageable.getPageSize() < 0) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//        Page<AlbumMediaCommentSimpleRes> comments = albumMediaCommentService.getAlbumMediaCommentList(mediaUid, pageable);
-//        return new ResponseEntity<>();
-//    }
-//
-//    @PostMapping("/{mediaUid}/comments")
-//    public ResponseEntity<AlbumMediaSimpleRes> createAlbumMediaComment(@PathVariable Long eventUid, @PathVariable Long mediaUid, @RequestBody String comment) {
-//        // TODO: memberUid
-//        memberUid = memberAuthService.getMemberUid();
-//        albumMediaCommentService.createAlbumMediaComment(memberUid, comment);
-//        return "album";
-//    }
-//
+        Long memberUid = 3L;
+        albumMediaCommentService.createAlbumMediaComment(memberUid, comment);
+        return "album";
+    }
+
 //    @DeleteMapping("/{mediaUid}/comments/{commentUid}")
 //    public ResponseEntity<?> deleteAlbumMediaComment(@PathVariable Long eventUid, @PathVariable Long mediaUid, @PathVariable Long commentUid) {
 //        // TODO: memberUid

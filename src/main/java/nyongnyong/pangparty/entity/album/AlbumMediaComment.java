@@ -34,12 +34,16 @@ public class AlbumMediaComment implements Serializable {
 
     /**
      * 생성자
+     * @param member
+     * @param albumMedia
      * @param content
      * @param createTime
      * @param modifyTime
      */
     @Builder
-    public AlbumMediaComment(String content, LocalDateTime createTime, LocalDateTime modifyTime) {
+    public AlbumMediaComment(Member member, AlbumMedia albumMedia, String content, LocalDateTime createTime, LocalDateTime modifyTime) {
+        this.member = member;
+        this.albumMedia = albumMedia;
         this.content = content;
         this.createTime = createTime;
         this.modifyTime = modifyTime;
