@@ -30,6 +30,7 @@ public class EventHashtagRepositoryTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         // String to LocalDateTime: LocalDateTime.parse("2023-01-19 10:24:00", formatter);
 
+//        EventHashtag eventHashtag = new EventHashtag(LocalDateTime.parse("2023-01-18 10:24:00", formatter));
         EventHashtag eventHashtag = new EventHashtag(LocalDateTime.parse("2023-01-18 10:24:00", formatter));
         EventHashtag savedEventHashtag = eventHashtagRepository.save(eventHashtag);
 

@@ -27,14 +27,31 @@ public class EventHashtag implements Serializable {
 
     private LocalDateTime addTime;
 
+//    @Builder
+//    public EventHashtag(LocalDateTime addTime) {
+//        this.addTime = addTime;
+//    }
+
     @Builder
     public EventHashtag(LocalDateTime addTime) {
         this.addTime = addTime;
     }
 
-    public void changeEvent(Event event) {
-        this.event = event;
-    }
+//    @Builder
+//    public EventHashtag(Event event, Hashtag hashtag, LocalDateTime addTime) {
+////        if(event != null){
+////            changeEvent(event);
+////        }
+//        if(hashtag != null){
+//            changeHashtag(hashtag);
+//        }
+//        this.addTime = addTime;
+//    }
+
+//    public void changeEvent(Event event) {
+//        this.event = event;
+//        event.changeEventHashtags(this);
+//    }
 
     public void changeHashtag(Hashtag hashtag) {
         this.hashtag = hashtag;

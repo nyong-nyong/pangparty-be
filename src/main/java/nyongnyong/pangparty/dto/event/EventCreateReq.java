@@ -37,33 +37,4 @@ public class EventCreateReq {
         this.hashtags = hashtags;
         this.imgUrl = imgUrl;
     }
-
-
-
-//    @Builder
-//    public static EventIntroduceRequestDto from(Event event, EventTarget eventTarget, MemberProfile memberProfile){
-//        return EventIntroduceRequestDto.builder()
-//                .targetId(memberProfile.getId())
-//                .dDay(eventTarget.getDday())
-//                .eventName(event.getEventName())
-//                .isLiked(eventTarget.isLiked())
-//                .introduction(event.getIntroduction())
-//                .imgUrl(event.getImgUrl())
-//                .hashtags(event.getHashtags())
-//                .albumMedias()
-//                .build();
-//    }
-
-
-//    @Builder
-//    public ResEventIntroduceDto(Long targetId, LocalDateTime dDay, String eventName, boolean isLiked, String introduction, String imgUrl, List<Long> hashtags, List<Long> albumMedias) {
-//        this.targetId = targetId;
-//        this.dDay = dDay;
-//        this.eventName = eventName;
-//        this.isLiked = isLiked;
-//        this.introduction = introduction;
-//        this.imgUrl = imgUrl;
-//        this.hashtags = hashtags;
-//        this.albumMedias = albumMedias;
-//    }
 }

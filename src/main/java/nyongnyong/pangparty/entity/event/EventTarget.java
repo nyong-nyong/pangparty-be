@@ -32,17 +32,24 @@ public class EventTarget implements Serializable {
     @Column(updatable = false)
     private LocalDateTime addTime;
 
-    @Builder
+//    @Builder
     public EventTarget(LocalDateTime addTime) {
         this.addTime = addTime;
     }
 
-    public void changeEvent(Event event) {
+    @Builder
+    public EventTarget(Event event, Member targetMember, LocalDateTime addTime) {
         this.event = event;
-        // TODO Event에 participant 추가 시, 예외 처리 코드 필요
+        this.targetMember = targetMember;
+        this.addTime = addTime;
     }
 
-    public void changeTargetMember(Member targetMember) {
-        this.targetMember = targetMember;
-    }
+//    public void changeEvent(Event event) {
+//        this.event = event;
+//        // TODO Event에 participant 추가 시, 예외 처리 코드 필요
+//    }
+
+//    public void changeTargetMember(Member targetMember) {
+//        this.targetMember = targetMember;
+//    }
 }

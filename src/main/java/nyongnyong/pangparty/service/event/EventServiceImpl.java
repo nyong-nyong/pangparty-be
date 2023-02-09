@@ -11,6 +11,7 @@ import nyongnyong.pangparty.entity.event.EventTarget;
 import nyongnyong.pangparty.repository.event.EventHashtagRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.event.EventTargetRepository;
+import nyongnyong.pangparty.repository.member.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventTargetRepository eventTargetRepository;
     private final EventHashtagRepository eventHashtagRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public boolean isExistEventByEventUid(Long eventUid) {
@@ -32,13 +34,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Long addEvent(EventCreateReq eventCreateReq) {
+    public Long addEventAndEventTarget(EventCreateReq eventCreateReq) {
         Event event = toEventEntity(eventCreateReq);
-        EventTarget eventTarget = toEventTargetEntity(eventCreateReq);
         eventRepository.save(event);
-        eventTargetRepository.save(eventTarget);
-        eventHashtagRepository.saveAll();
-        return ;
+        eventTargetRepository.save(toEventTargetEntity(eventCreateReq, event));
+        return event.getUid();
     }
 
     private Event toEventEntity(EventCreateReq eventCreateReq){
@@ -49,8 +49,25 @@ public class EventServiceImpl implements EventService {
                 .dDay(eventCreateReq.getDDay()).build();
     }
 
-    private EventTarget toEventTargetEntity(EventCreateReq eventCreateReq){
+//    private List<EventHashtag> toEventHashtagEntity(EventCreateReq eventCreateReq){
+//        List<EventHashtag> eventHashtags;
+//        for (String hashtag : eventCreateReq.getHashtags()) {
+//            EventHashtag eventHashtag = EventHashtag.builder()
+//                    .hashtag(hashtag)
+//                    .build();
+//            eventHashtags.add(eventHashtag);
+//        }
+//        EventHashtag.builder()
+//                .event()
+//                .addTime(LocalDateTime.now()).build();
+//
+//        return
+//    }
+
+    private EventTarget toEventTargetEntity(EventCreateReq eventCreateReq, Event event){
         return EventTarget.builder()
+                .targetMember(memberRepository.findMemberById(eventCreateReq.getTargetId()))
+                .event(event)
                 .addTime(LocalDateTime.now()).build();
     }
 

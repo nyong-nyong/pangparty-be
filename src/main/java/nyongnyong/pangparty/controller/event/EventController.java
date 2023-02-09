@@ -24,21 +24,35 @@ public class EventController {
         return ResponseEntity.ok(eventService.findEventIntroduceByEventUid(memberUid, eventUid));
     }
 
-    @PostMapping("/{eventUid}/like")
-    public ResponseEntity<?> likeEvent(@PathVariable Long eventUid, @RequestBody EventCreateReq eventCreateReq){
+    @PostMapping
+    public ResponseEntity<?> createEvent(@RequestBody EventCreateReq eventCreateReq){
 
-        // Validate Path Variable and Request Body
-        if (eventUid < 0 || !eventService.isExistEventByEventUid(eventCreateReq.getEventUid())) {
+        try{
+
+
+            // TODO: eventHashtagService에서 addEventHashtag, hashtagService에서 addHashtag 필요. addHashtag에서는 해당 이름의 해시태그 있는지 확인 후 없으면 넣는다.
+            Long eventUid = eventService.addEventAndEventTarget(eventCreateReq);
+
+            eventCreateReq.setEventUid(eventUid);
+            return ResponseEntity.ok(eventUid);
+        } catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
+    }
 
-        eventCreateReq.setEventUid(eventUid);
+    @PostMapping("/{eventUid}/like")
+    public ResponseEntity<?> likeEvent(@PathVariable Long eventUid){
 
-        Long uid =
-
-        Long memberUid = 31L;
+        // Validate Path Variable and Request Body
 
 
+
+
+//        Long memberUid = 31L;
+
+
+        return null;
     }
 
 //    @GetMapping
