@@ -40,8 +40,10 @@ public interface MemberAuthService {
     Map<String, String> getRefreshToken(String email, String refreshToken);
     
     // TODO 회원 탈퇴
-    
-    // TODO 이메일 인증
+
+    void sendAuthEmail(String email);
+
+    void confirmAuthEmail(String email, String key);
     
     // TODO 비밀번호 변경
 

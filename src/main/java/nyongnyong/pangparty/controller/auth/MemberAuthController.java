@@ -2,6 +2,7 @@ package nyongnyong.pangparty.controller.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nyongnyong.pangparty.dto.auth.EmailSimple;
 import nyongnyong.pangparty.dto.auth.MemberLoginReq;
 import nyongnyong.pangparty.dto.auth.MemberRegisterReq;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
@@ -11,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Map;
 
 @Slf4j
@@ -64,5 +66,29 @@ public class MemberAuthController {
         String refreshToken = httpServletRequest.getHeader("RefreshToken");
         Map<String, String> response = memberAuthService.getRefreshToken(httpServletRequest.getRemoteUser(), refreshToken);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/auth-email")
+    public ResponseEntity<?> sendAuthEmail(@RequestBody @Valid EmailSimple email, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResult = {}", bindingResult);
+            return ResponseEntity.badRequest().build();
+        }
+
+        memberAuthService.sendAuthEmail(email.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/confirm-auth-email")
+    public ResponseEntity<?> confirmAuthEmail(@RequestBody @Valid EmailSimple email, @RequestBody String authCode, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResult = {}", bindingResult);
+            return ResponseEntity.badRequest().build();
+        }
+
+        memberAuthService.confirmAuthEmail(email.getEmail(), authCode);
+        return ResponseEntity.ok().build();
     }
 }

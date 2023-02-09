@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     @Value("${security.jwt.token.refresh.expiration}")
-    public final long refreshTokenExpiration;
+    public long refreshTokenExpiration;
     private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
     @Value("${security.jwt.token.expiration}")
-    private final long tokenExpiration;
+    private long tokenExpiration;
     private final CustomUserDetailService customUserDetailService;
     @Value("${security.jwt.token.secret}")
     private String secret;

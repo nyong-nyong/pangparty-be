@@ -33,6 +33,8 @@ public class MemberAuthServiceImpl implements MemberAuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisUtil redisUtil;
 
+    private final MailService mailService;
+
     private final MemberRepository memberRepository;
     private final MemberAuthInfoRepository memberAuthInfoRepository;
     private final MemberProfileRepository memberProfileRepository;
@@ -132,6 +134,23 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         } else {
             // TODO 따로 Exception 처리
             throw new IllegalStateException("refreshToken 재발급 실패");
+        }
+    }
+
+    @Override
+    public void sendAuthEmail(String email) {
+        String authCode = mailService.getKey(6);
+        redisUtil.setValueWithExpiration(email, authCode, 60 * 5);
+        mailService.sendMail(email, "팡파레 이메일 인증번호입니다.", "인증번호 : " + authCode);
+    }
+
+    @Override
+    public void confirmAuthEmail(String email, String key) {
+        if (redisUtil.getValue(email).equals(key)) {
+            redisUtil.deleteValue(email);
+        } else {
+            // TODO 따로 Exception 처리
+            throw new IllegalStateException("인증번호가 일치하지 않습니다.");
         }
     }
 
