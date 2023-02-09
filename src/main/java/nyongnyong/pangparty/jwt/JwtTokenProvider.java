@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.util;
+package nyongnyong.pangparty.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -42,7 +42,6 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("type", "access");
         claims.put("id", id);
-        claims.put("uid", uid);
         claims.put("auth", authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
         Date now = new Date();
@@ -78,10 +77,6 @@ public class JwtTokenProvider {
 
     public String getIdFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("id").toString();
-    }
-
-    public Long getUidFromToken(String token) {
-        return Long.parseLong(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("uid").toString());
     }
 
     public Authentication getAuthentication(String token) {

@@ -14,7 +14,7 @@ import nyongnyong.pangparty.repository.member.MemberPersonalRepository;
 import nyongnyong.pangparty.repository.member.MemberProfileRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import nyongnyong.pangparty.repository.member.MemberSettingRepository;
-import nyongnyong.pangparty.util.JwtTokenProvider;
+import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.util.RedisUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,41 +38,6 @@ public class MemberAuthServiceImpl implements MemberAuthService {
     private final MemberPersonalRepository memberPersonalRepository;
     private final MemberSettingRepository memberSettingRepository;
 
-    @Override
-    public Map<String, String> login(MemberLoginReq memberLoginReq) {
-        System.out.println(memberLoginReq);
-        // email 존재하는지 확인
-        MemberAuthInfo memberAuthInfo = memberAuthInfoRepository.findByEmail(memberLoginReq.getEmail());
-        if (memberAuthInfo == null) {
-            // TODO 따로 Exception 처리해주기 MemberNotFoundException 등
-            throw new IllegalStateException("존재하지 않는 회원입니다.");
-        }
-        
-        // 비밀번호 맞는지 확인
-        if (!passwordEncoder.matches(memberLoginReq.getPassword(), memberAuthInfo.getPassword())) {
-            // TODO 따로 Exception 처리해주기 PasswordNotMatchException 등
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
-        }
-
-        // TODO 유저 로그인 로그 남겨야지...
-        // TODO 이걸 이렇게 두번에 나눠서 넣는 게 맞는 걸까?
-        Member member = memberRepository.findByEmail(memberLoginReq.getEmail());
-        if (member == null) {
-            // TODO 따로 Exception 처리해주기 MemberNotFoundException 등
-            throw new IllegalStateException("존재하지 않는 회원입니다.");
-        }
-
-        String accessToken = jwtTokenProvider.generateToken(member.getEmail(), member.getMemberProfile().getId(), member.getUid(), memberAuthInfo.getAuthorities());
-        String refreshToken = jwtTokenProvider.generateRefreshToken();
-
-        redisUtil.deleteValue(memberLoginReq.getEmail());
-        redisUtil.setValueWithExpiration(memberLoginReq.getEmail(), refreshToken, jwtTokenProvider.refreshTokenExpiration);
-
-        Map<String, String> tokenMap = Map.of("accessToken", accessToken, "refreshToken", refreshToken);
-
-        return tokenMap;
-    }
-    
     @Override
     @Transactional
     public Long register(MemberRegisterReq memberRegisterReq) {
@@ -107,6 +72,52 @@ public class MemberAuthServiceImpl implements MemberAuthService {
 
         return member.getUid();
     }
+
+    @Override
+    @Transactional
+    public Map<String, String> login(MemberLoginReq memberLoginReq) {
+        // email 존재하는지 확인
+        MemberAuthInfo memberAuthInfo = memberAuthInfoRepository.findByEmail(memberLoginReq.getEmail());
+        if (memberAuthInfo == null) {
+            // TODO 따로 Exception 처리해주기 MemberNotFoundException 등
+            throw new IllegalStateException("존재하지 않는 회원입니다.");
+        }
+        
+        // 비밀번호 맞는지 확인
+        if (!passwordEncoder.matches(memberLoginReq.getPassword(), memberAuthInfo.getPassword())) {
+            // TODO 따로 Exception 처리해주기 PasswordNotMatchException 등
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        }
+
+        // TODO 유저 로그인 로그 남겨야지...
+        // TODO 이걸 이렇게 두번에 나눠서 넣는 게 맞는 걸까?
+        Member member = memberRepository.findByEmail(memberLoginReq.getEmail());
+        if (member == null) {
+            // TODO 따로 Exception 처리해주기 MemberNotFoundException 등
+            throw new IllegalStateException("존재하지 않는 회원입니다.");
+        }
+
+        String accessToken = jwtTokenProvider.generateToken(member.getEmail(), member.getMemberProfile().getId(), member.getUid(), memberAuthInfo.getAuthorities());
+        String refreshToken = jwtTokenProvider.generateRefreshToken();
+
+        redisUtil.deleteValue(memberLoginReq.getEmail());
+        redisUtil.setValueWithExpiration(memberLoginReq.getEmail(), refreshToken, jwtTokenProvider.refreshTokenExpiration);
+
+        Map<String, String> tokenMap = Map.of("accessToken", "Bearer " + accessToken, "refreshToken", "Bearer " + refreshToken);
+
+        return tokenMap;
+    }
+
+    @Override
+    public void logout(String email) {
+        redisUtil.deleteValue(email);
+    }
+
+    @Override
+    public Map<String, String> refreshToken(String refreshToken) {
+        return null;
+    }
+
 
     Member fromMemberRegisterReqtoMember(MemberRegisterReq memberRegisterReq) {
         return Member.builder().email(memberRegisterReq.getEmail()).isSocial(false).build();

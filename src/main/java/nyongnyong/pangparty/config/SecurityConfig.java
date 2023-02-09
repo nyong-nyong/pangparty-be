@@ -1,8 +1,8 @@
 package nyongnyong.pangparty.config;
 
 import lombok.RequiredArgsConstructor;
-import nyongnyong.pangparty.util.JwtTokenFilterConfigurer;
-import nyongnyong.pangparty.util.JwtTokenProvider;
+import nyongnyong.pangparty.jwt.JwtTokenFilterConfigurer;
+import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -38,6 +39,10 @@ public class SecurityConfig {
                 .anyRequest().permitAll() // TODO for testing purposes
                 .and()
                 .exceptionHandling().accessDeniedPage("/account/login")
+                .and()
+                .exceptionHandling()
+//                .accessDeniedHandler(accessDeniedHandler())
+//                .authenticationEntryPoint(authenticationEntryPoint())
                 .and()
                 .apply(new JwtTokenFilterConfigurer(jwtTokenProvider))
                 .and()

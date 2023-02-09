@@ -15,6 +15,7 @@ public interface MemberAuthService {
      */
     Long register(MemberRegisterReq memberRegisterReq);
 
+
     /**
      * 로그인
      *
@@ -23,4 +24,18 @@ public interface MemberAuthService {
      */
     Map<String, String> login(MemberLoginReq memberLoginReq);
 
+    /**
+     * 로그아웃
+     *
+     * @param email 로그아웃할 회원의 이메일
+     */
+    void logout(String email);
+
+    /**
+     * 토큰 갱신
+     *
+     * @param refreshToken 갱신할 토큰
+     * @return token
+     */
+    Map<String, String> refreshToken(String refreshToken);
 }

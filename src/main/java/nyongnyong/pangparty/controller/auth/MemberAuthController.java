@@ -8,11 +8,9 @@ import nyongnyong.pangparty.service.auth.MemberAuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Slf4j
@@ -24,15 +22,26 @@ public class MemberAuthController {
     private final MemberAuthService memberAuthService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Validated @RequestBody MemberLoginReq memberLoginReq) {
+    public ResponseEntity<?> login(@Validated @RequestBody MemberLoginReq memberLoginReq, BindingResult bindingResult) {
+
         Map<String, String> response = memberAuthService.login(memberLoginReq);
         return ResponseEntity.ok(response);
     }
 
-//    @PostMapping("/logout")
-//    public ResponseEntity<?> logout() {
-//        return ResponseEntity.ok().build();
-//    }
+    @DeleteMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest httpServletRequest) {
+//        System.out.println("LOGOUT========================");
+//        String username = null;
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        if(principal instanceof UserDetails) username = ((UserDetails) principal).getUsername();
+//        else{
+//            username = principal.toString();
+//            System.out.println(username);
+//        }
+//        System.out.println(httpServletRequest.getRemoteUser());
+        memberAuthService.logout(httpServletRequest.getRemoteUser());
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Validated @RequestBody MemberRegisterReq memberRegisterReq, BindingResult bindingResult) {
@@ -48,5 +57,12 @@ public class MemberAuthController {
             log.info("e = {}", e);
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest) {
+        String refreshToken = httpServletRequest.getHeader("refresh-token");
+        Map<String, String> response = memberAuthService.refreshToken(refreshToken);
+        return ResponseEntity.ok(response);
     }
 }

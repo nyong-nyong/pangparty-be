@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.util;
+package nyongnyong.pangparty.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

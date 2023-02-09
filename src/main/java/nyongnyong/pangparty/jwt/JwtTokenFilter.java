@@ -1,4 +1,4 @@
-package nyongnyong.pangparty.util;
+package nyongnyong.pangparty.jwt;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
