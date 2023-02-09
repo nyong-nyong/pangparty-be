@@ -9,18 +9,19 @@ import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.member.MemberPersonal;
 import nyongnyong.pangparty.entity.member.MemberProfile;
 import nyongnyong.pangparty.entity.member.MemberSetting;
+import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.repository.auth.MemberAuthInfoRepository;
 import nyongnyong.pangparty.repository.member.MemberPersonalRepository;
 import nyongnyong.pangparty.repository.member.MemberProfileRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import nyongnyong.pangparty.repository.member.MemberSettingRepository;
-import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.util.RedisUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -82,7 +83,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
             // TODO 따로 Exception 처리해주기 MemberNotFoundException 등
             throw new IllegalStateException("존재하지 않는 회원입니다.");
         }
-        
+
         // 비밀번호 맞는지 확인
         if (!passwordEncoder.matches(memberLoginReq.getPassword(), memberAuthInfo.getPassword())) {
             // TODO 따로 Exception 처리해주기 PasswordNotMatchException 등
@@ -103,9 +104,8 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         redisUtil.deleteValue(memberLoginReq.getEmail());
         redisUtil.setValueWithExpiration(memberLoginReq.getEmail(), refreshToken, jwtTokenProvider.refreshTokenExpiration);
 
-        Map<String, String> tokenMap = Map.of("accessToken", "Bearer " + accessToken, "refreshToken", "Bearer " + refreshToken);
-
-        return tokenMap;
+        return Map.of("accessToken", "Bearer " + accessToken,
+                "refreshToken", "Bearer " + refreshToken);
     }
 
     @Override
@@ -114,7 +114,29 @@ public class MemberAuthServiceImpl implements MemberAuthService {
     }
 
     @Override
-    public Map<String, String> refreshToken(String refreshToken) {
+    public Map<String, String> getRefreshToken(String email, String refreshToken) {
+        MemberAuthInfo memberAuthInfo = memberAuthInfoRepository.findByEmail(email);
+        List<Role> roles = memberAuthInfo.getRoles();
+
+        if (redisUtil.getValue(email).equals(refreshToken) && jwtTokenProvider.validateToken(refreshToken)) {
+            redisUtil.deleteValue(email);
+
+            // TODO maybe it's not the best idea to have id in the token
+            String accessToken = jwtTokenProvider.generateToken(email, memberAuthInfo.getMember().getMemberProfile().getId(), memberAuthInfo.getMember().getUid(), roles);
+            String newRefreshToken = jwtTokenProvider.generateRefreshToken();
+
+            redisUtil.setValueWithExpiration(email, newRefreshToken, jwtTokenProvider.refreshTokenExpiration);
+
+            return Map.of("accessToken", "Bearer " + accessToken,
+                    "refreshToken", "Bearer " + newRefreshToken);
+        } else {
+            // TODO 따로 Exception 처리
+            throw new IllegalStateException("refreshToken 재발급 실패");
+        }
+    }
+
+    @Override
+    public Long getMemberUid(String token) {
         return null;
     }
 

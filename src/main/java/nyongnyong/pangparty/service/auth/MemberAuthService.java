@@ -37,5 +37,20 @@ public interface MemberAuthService {
      * @param refreshToken 갱신할 토큰
      * @return token
      */
-    Map<String, String> refreshToken(String refreshToken);
+    Map<String, String> getRefreshToken(String email, String refreshToken);
+    
+    // TODO 회원 탈퇴
+    
+    // TODO 이메일 인증
+    
+    // TODO 비밀번호 변경
+
+    /**
+     * 토큰으로 memberUid 가져오기
+     *
+     * @param token access 토큰
+     * @return memberUid
+     */
+    Long getMemberUid(String token);
+
 }
