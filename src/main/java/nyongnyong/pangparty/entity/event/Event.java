@@ -59,7 +59,8 @@ public class Event implements Serializable {
     private List<EventHashtag> eventHashtags;
 
     @Builder
-    public Event(String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate) {
+    public Event(Member host, String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate) {
+        this.host = host;
         this.eventName = eventName;
         this.introduction = introduction;
         this.imgUrl = imgUrl;

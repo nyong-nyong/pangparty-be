@@ -34,18 +34,19 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Long addEventAndEventTarget(EventCreateReq eventCreateReq) {
-        Event event = toEventEntity(eventCreateReq);
+    public Long addEventAndEventTarget(Long hostUid, EventCreateReq eventCreateReq) {
+        Event event = toEventEntity(hostUid, eventCreateReq);
         eventRepository.save(event);
         eventTargetRepository.save(toEventTargetEntity(eventCreateReq, event));
         return event.getUid();
     }
 
-    private Event toEventEntity(EventCreateReq eventCreateReq){
+    private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){
         return Event.builder()
                 .eventName(eventCreateReq.getEventName())
                 .introduction(eventCreateReq.getIntroduction())
                 .imgUrl(eventCreateReq.getImgUrl())
+                .host(memberRepository.findMemberByUid(hostUid))
                 .dDay(eventCreateReq.getDDay()).build();
     }
 

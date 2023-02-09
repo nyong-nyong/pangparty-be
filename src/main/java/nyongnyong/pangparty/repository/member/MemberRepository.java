@@ -10,4 +10,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m left join fetch m.memberProfile mp where mp.id = :id")
     Member findMemberById(String id);
+
+    @Query("select m from Member m where m.uid = :uid")
+    Member findMemberByUid(Long uid);
 }

@@ -28,10 +28,10 @@ public class EventController {
     public ResponseEntity<?> createEvent(@RequestBody EventCreateReq eventCreateReq){
 
         try{
-
+            Long hostUid = 31L;
 
             // TODO: eventHashtagService에서 addEventHashtag, hashtagService에서 addHashtag 필요. addHashtag에서는 해당 이름의 해시태그 있는지 확인 후 없으면 넣는다.
-            Long eventUid = eventService.addEventAndEventTarget(eventCreateReq);
+            Long eventUid = eventService.addEventAndEventTarget(hostUid, eventCreateReq);
 
             eventCreateReq.setEventUid(eventUid);
             return ResponseEntity.ok(eventUid);
