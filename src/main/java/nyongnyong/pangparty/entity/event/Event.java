@@ -58,6 +58,22 @@ public class Event implements Serializable {
     @OneToMany(mappedBy = "event")
     private List<EventHashtag> eventHashtags;
 
+//    private boolean hasPlaylist;
+//    private boolean hasFunding;
+
+    public Event(String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate) {
+        this.eventName = eventName;
+        this.introduction = introduction;
+        this.imgUrl = imgUrl;
+        this.dDay = dDay;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.partyTime = partyTime;
+        this.isPrivate = isPrivate;
+    }
+
     @Builder
     public Event(Member host, String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate) {
         this.host = host;
@@ -73,26 +89,6 @@ public class Event implements Serializable {
         this.isPrivate = isPrivate;
     }
 
-//    @Builder
-//    public Event(String eventName, String introduction, String imgUrl, LocalDate dDay, LocalDateTime createTime, LocalDateTime modifyTime, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime partyTime, boolean isPrivate, EventTarget eventTarget, List<EventHashtag> eventHashtags) {
-//        this.eventName = eventName;
-//        this.introduction = introduction;
-//        this.imgUrl = imgUrl;
-//        this.dDay = dDay;
-//        this.createTime = createTime;
-//        this.modifyTime = modifyTime;
-//        this.startTime = startTime;
-//        this.endTime = endTime;
-//        this.partyTime = partyTime;
-//        this.isPrivate = isPrivate;
-//        if(eventTarget != null) {
-//            changeEventTarget(eventTarget);
-//        }
-////        if(eventHashtags != null || eventHashtags.size() > 0) {
-////            changeEventHashtags(eventHashtags);
-////        }
-//    }
-
     public void changeRollingPaper(RollingPaper rollingPaper) {
         this.rollingPaper = rollingPaper;
         if (rollingPaper.getEvent() != this) {
@@ -106,22 +102,4 @@ public class Event implements Serializable {
         }
     }
 
-//    public void changeEventTarget(EventTarget eventTarget) {
-//        this.eventTarget = eventTarget;
-//        eventTarget.changeEvent(this);
-//    }
-
-//    public void changeEventHashtags(List<EventHashtag> eventHashtags) {
-//        this.eventHashtags = eventHashtags;
-//        for (EventHashtag eventHashtag : eventHashtags) {
-//            eventHashtag.changeEvent(this);
-//        }
-//    }
-//    public void changeEventHashtag(EventHashtag eventHashtag) {
-//        this.eventHashtag = eventHashtag;
-//        eventHashtag.changeEvent(this);
-//        for (EventHashtag eventHashtag : eventHashtags) {
-//            eventHashtag.changeEvent(this);
-//        }
-//    }
 }

@@ -31,7 +31,7 @@ public class EventRepositoryTest {
 
         Member host = new Member("nyong@pang.party", false, LocalDateTime.now());
 
-        Event event = new Event(host, "영빈이생일파뤼", "2월 영빈이 생일인데~~~ 축하합시돠",
+        Event event = new Event("영빈이생일파뤼", "2월 영빈이 생일인데~~~ 축하합시돠",
                 "https://media.istockphoto.com/id/1298329918/photo/birthday-celebratory-toast-with-string-lights-and-champagne-silhouettes.jpg?s=612x612&w=0&k=20&c=PaDeMR5-r0NdlxghuVF9tRqR5XkCdNdTzxrkofv0Syk=",
                 LocalDate.parse("2023-02-19 00:00:00", formatter), LocalDateTime.parse("2023-01-19 10:24:00", formatter), LocalDateTime.parse("2023-02-08 10:24:00", formatter),
                 LocalDateTime.parse("2023-02-10 10:24:00", formatter), LocalDateTime.parse("2023-02-19 10:00:00", formatter), LocalDateTime.parse("2023-02-19 10:20:00", formatter), true);
@@ -58,11 +58,11 @@ public class EventRepositoryTest {
 
         Member host = new Member("nyong@pang.party", false, LocalDateTime.now());
 
-        Event event1 = new Event(host, "영빈이생일파뤼1", "2월 영빈이 생일인데~~~ 축하합시돠",
+        Event event1 = new Event("영빈이생일파뤼1", "2월 영빈이 생일인데~~~ 축하합시돠",
                 "https://media.istockphoto.com/id/1298329918/photo/birthday-celebratory-toast-with-string-lights-and-champagne-silhouettes.jpg?s=612x612&w=0&k=20&c=PaDeMR5-r0NdlxghuVF9tRqR5XkCdNdTzxrkofv0Syk=",
                 LocalDate.parse("2023-02-19 00:00:00", formatter), LocalDateTime.parse("2023-01-19 10:24:00", formatter), LocalDateTime.parse("2023-02-08 10:24:00", formatter),
                 LocalDateTime.parse("2023-02-10 10:24:00", formatter), LocalDateTime.parse("2023-02-19 10:00:00", formatter), LocalDateTime.parse("2023-02-19 10:20:00", formatter), true);
-        Event event2 = new Event(host, "영빈이생일파뤼2", "2월 영빈이 생일인데~~~ 축하합시돠",
+        Event event2 = new Event( "영빈이생일파뤼2", "2월 영빈이 생일인데~~~ 축하합시돠",
                 "https://media.istockphoto.com/id/1298329918/photo/birthday-celebratory-toast-with-string-lights-and-champagne-silhouettes.jpg?s=612x612&w=0&k=20&c=PaDeMR5-r0NdlxghuVF9tRqR5XkCdNdTzxrkofv0Syk=",
                 LocalDate.parse("2023-02-19 00:00:00", formatter), LocalDateTime.parse("2023-01-19 10:24:00", formatter), LocalDateTime.parse("2023-02-08 10:24:00", formatter),
                 LocalDateTime.parse("2023-02-10 10:24:00", formatter), LocalDateTime.parse("2023-02-19 10:00:00", formatter), LocalDateTime.parse("2023-02-19 10:20:00", formatter), true);
