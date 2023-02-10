@@ -79,7 +79,7 @@ sourceSets {
 
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
-
+}
 jar {
     enabled = false
 }
