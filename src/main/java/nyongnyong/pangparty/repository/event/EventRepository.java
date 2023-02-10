@@ -41,4 +41,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
             " left join e.eventParticipants p " +
             " where p.member.memberProfile.id = ?1 and e.dDay <= SYSDATE()")
     List<EventCard> findInvolvedEventsByMemberId(String memberId);
+
+    @Query("select e from Event e where e.uid = ?1")
+    Event findEventByUid(Long eventUid);
 }

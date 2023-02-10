@@ -34,9 +34,14 @@ public class RollingPaper implements Serializable {
 
     private String bgColor;
 
-    @Builder
+//    @Builder
     public RollingPaper(String bgColor) {
         this.bgColor = bgColor;
+    }
+
+    @Builder
+    public RollingPaper(Event event) {
+        this.event = event;
     }
 
     public void addRollingPaperPiece(RollingPaperPiece rollingPaperPiece) {

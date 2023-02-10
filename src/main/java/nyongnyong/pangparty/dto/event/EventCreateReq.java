@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.dto.event;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -21,11 +22,13 @@ public class EventCreateReq {
     @NotBlank
     private LocalDate dDay;
     private boolean isPrivate;
-    private List<Long> hashtags;
+
+    @JsonProperty("hashtags")
+    private List<SimpleHashtagName> hashtags;
     private String imgUrl;
 
     @Builder
-    public EventCreateReq(Long eventUid, Long hostUid, String targetId, String eventName, String introduction, LocalDate dDay, boolean isPrivate, List<Long> hashtags, String imgUrl) {
+    public EventCreateReq(Long eventUid, Long hostUid, String targetId, String eventName, String introduction, LocalDate dDay, boolean isPrivate, List<SimpleHashtagName> hashtags, String imgUrl) {
         this.eventUid = eventUid;
         this.hostUid = hostUid;
         this.targetId = targetId;

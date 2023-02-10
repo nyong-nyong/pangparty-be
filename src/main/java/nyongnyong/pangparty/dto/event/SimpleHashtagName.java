@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class EventIntroduceHashtags {
+public class SimpleHashtagName {
     private String name;
 
     @Builder
-    public EventIntroduceHashtags(String name) {
+    public SimpleHashtagName(String name) {
         this.name = name;
     }
 }

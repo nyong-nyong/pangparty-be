@@ -3,12 +3,14 @@ package nyongnyong.pangparty.repository.event;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nyongnyong.pangparty.dto.event.EventIntroduceHashtags;
+import nyongnyong.pangparty.dto.event.SimpleHashtagName;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.QEvent;
 import nyongnyong.pangparty.entity.event.QEventHashtag;
 import nyongnyong.pangparty.entity.event.QEventLike;
+import nyongnyong.pangparty.entity.rollingpaper.QRollingPaper;
+import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -26,7 +28,6 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
     public EventIntroduceRes findEventIntroduceByEventUid(Long memberUid, Long eventUid) {
         QEvent qEvent = QEvent.event;
         QEventLike eventLike = QEventLike.eventLike;
-        QEventHashtag eventHashtag = QEventHashtag.eventHashtag;
 
         Integer tempIsLiked = queryFactory.selectOne()      // select(qEvent.count()) 대신에 selectOne() 사용, count보다 성능이 빠름! 조건에 해당하는 row 1개만 찾으면 종료하기 때문 (exist라고 하는 듯)
                 .from(qEvent)
@@ -46,6 +47,15 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
                 .where(qEvent.uid.eq(eventUid))
                 .fetchOne();
 
+        QRollingPaper qRollingPaper = QRollingPaper.rollingPaper;
+        RollingPaper rollingPaper = queryFactory.select(qRollingPaper)
+                .where(qRollingPaper.event.uid.eq(eventUid))
+                .fetchOne();
+
+        Long rollingPaperCnt = queryFactory.select(qRollingPaper.count())
+                .where(qRollingPaper.event.uid.eq(eventUid))
+                .fetchOne();
+
 //        List<String> hashtagNames = queryFactory.select(qEvent.eventHashtags.any().hashtag.name)
 //                .from(qEvent)
 //                .where(qEvent.uid.eq(eventUid).and(qEvent.eventHashtags.any().event.uid.eq(eventUid)))
@@ -59,10 +69,10 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
 //        System.out.println(albumMediaUrls);
 
         List<String> hashtagNames = event.getEventHashtags().stream().map(eventHashtag1 -> eventHashtag1.getHashtag().getName()).collect(Collectors.toList());  // 이거 데이터 없을때 validation 해야할듯?
-        ArrayList<EventIntroduceHashtags> hashtags = new ArrayList<>();
+        ArrayList<SimpleHashtagName> hashtags = new ArrayList<>();
         for(String hashtagName : hashtagNames){
-            EventIntroduceHashtags eventIntroduceHashtags = new EventIntroduceHashtags(hashtagName);
-            hashtags.add(eventIntroduceHashtags);
+            SimpleHashtagName simpleHashtagName = new SimpleHashtagName(hashtagName);
+            hashtags.add(simpleHashtagName);
         }
         log.debug("hashtags: ", hashtags);
 //        List<String> albumMediaUrls = event.getAlbum().getAlbumMedia().stream().map(AlbumMedia::getMediaUrl).collect(Collectors.toList());
@@ -74,8 +84,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
 
         EventIntroduceRes eventIntroduceRes = new EventIntroduceRes(event.getEventTarget().getTargetMember().getMemberProfile().getId()
                 , event.getDDay(), event.getEventName(), isLiked, event.getIntroduction(), event.getImgUrl(),
-                hashtags, likeCnt);
-
+                hashtags, likeCnt, rollingPaperCnt, rollingPaper.getUid());
 
         return eventIntroduceRes;
     }

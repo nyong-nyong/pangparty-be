@@ -2,6 +2,7 @@ package nyongnyong.pangparty.service.event;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
+import nyongnyong.pangparty.entity.event.Event;
 
 import java.util.List;
 
@@ -19,4 +20,7 @@ public interface EventService {
     List<EventCard> findInvolvedEventsByMemberId(String memberId);
 
     EventIntroduceRes findEventIntroduceByEventUid(Long memberUid, Long eventUid);
+
+    Long addRollingPaper(Long eventUid);
+    Event getEventByEventUid(Long eventUid);
 }

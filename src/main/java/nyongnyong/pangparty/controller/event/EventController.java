@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.event.EventService;
+import nyongnyong.pangparty.service.rollingpaper.RollingPaperService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ public class EventController {
     @GetMapping("/{eventUid}")
     public ResponseEntity<?> findEventIntroduceByEventUid(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid){
         Long memberUid = memberAuthService.getMemberUid(token);   // Test: 31L -> isLiked가 true, 그 외 -> isLiked가 false
+//        Long rollingPaperUid = eventService.getEventByEventUid(eventUid).getRollingPaper().getUid();
         return ResponseEntity.ok(eventService.findEventIntroduceByEventUid(memberUid, eventUid));
     }
 
@@ -27,7 +29,13 @@ public class EventController {
             Long hostUid = memberAuthService.getMemberUid(token);
 
             // TODO: eventHashtagService에서 addEventHashtag, hashtagService에서 addHashtag 필요. addHashtag에서는 해당 이름의 해시태그 있는지 확인 후 없으면 넣는다.
+
+            // TODO: 대표사진 s3 업로드 로직 필요...
+
             Long eventUid = eventService.addEventAndEventTarget(hostUid, eventCreateReq);
+
+            // rollingPaperRepository에서 save
+            eventService.addRollingPaper(eventUid);
 
             eventCreateReq.setEventUid(eventUid);
             return ResponseEntity.ok(eventUid);
