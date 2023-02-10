@@ -2,6 +2,7 @@ package nyongnyong.pangparty.controller.event;
 
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
+import nyongnyong.pangparty.dto.event.EventCreateRes;
 import nyongnyong.pangparty.dto.event.SimpleHashtagName;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.hashtag.Hashtag;
@@ -10,8 +11,11 @@ import nyongnyong.pangparty.service.event.EventHashtagService;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.hashtag.HashtagService;
 import nyongnyong.pangparty.service.rollingpaper.RollingPaperService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/events")
@@ -53,7 +57,8 @@ public class EventController {
             // TODO: albumRepository에서 save
 
             eventCreateReq.setEventUid(eventUid);
-            return ResponseEntity.ok(eventUid);
+            EventCreateRes eventCreateRes = new EventCreateRes(eventUid);
+            return ResponseEntity.created(URI.create("/events/"+eventUid)).body(eventCreateRes);
         } catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
