@@ -11,7 +11,6 @@ import javax.validation.constraints.NotBlank;
 @ToString
 public class RollingPaperPieceReq {
     private Long rollingPaperUid;
-    // TODO add memberId
     private String memberId;
     @NotBlank
     private String writerName;
