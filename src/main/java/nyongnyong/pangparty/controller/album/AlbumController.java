@@ -5,7 +5,7 @@ import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
-import nyongnyong.pangparty.exception.InvalidTokenException;
+import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.service.album.*;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import org.springframework.data.domain.Page;
@@ -197,13 +197,13 @@ public class AlbumController {
         }
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
+            AlbumMediaCommentSimpleRes albumMediaCommentSimpleRes = albumMediaCommentService.createAlbumMediaComment(memberUid, mediaUid, comment);
+            return ResponseEntity.ok(albumMediaCommentSimpleRes);
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }catch (TokenInvalidException e){
             return ResponseEntity.badRequest().build();
         }
-        AlbumMediaCommentSimpleRes albumMediaCommentSimpleRes = albumMediaCommentService.createAlbumMediaComment(memberUid, mediaUid, comment);
-        return ResponseEntity.ok(albumMediaCommentSimpleRes);
     }
 
     /**
