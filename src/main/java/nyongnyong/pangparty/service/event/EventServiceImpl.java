@@ -1,21 +1,22 @@
 package nyongnyong.pangparty.service.event;
 
 import lombok.RequiredArgsConstructor;
-//import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.entity.event.Event;
-import nyongnyong.pangparty.entity.event.EventHashtag;
 import nyongnyong.pangparty.entity.event.EventTarget;
+import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
 import nyongnyong.pangparty.repository.event.EventHashtagRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.event.EventTargetRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
+import nyongnyong.pangparty.repository.rollingpaper.RollingPaperRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,6 +28,8 @@ public class EventServiceImpl implements EventService {
     private final EventTargetRepository eventTargetRepository;
     private final EventHashtagRepository eventHashtagRepository;
     private final MemberRepository memberRepository;
+
+    private final RollingPaperRepository rollingPaperRepository;
 
     @Override
     public boolean isExistEventByEventUid(Long eventUid) {
@@ -41,6 +44,18 @@ public class EventServiceImpl implements EventService {
         return event.getUid();
     }
 
+    @Override
+    public Long addRollingPaper(Long eventUid) {
+        RollingPaper rollingPaper = toRollingPaperEntity(eventRepository.findEventByUid(eventUid));
+        rollingPaperRepository.save(rollingPaper);
+        return rollingPaper.getUid();
+    }
+
+    @Override
+    public Event getEventByEventUid(Long eventUid) {
+        return eventRepository.findEventByUid(eventUid);
+    }
+
     private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){
         return Event.builder()
                 .eventName(eventCreateReq.getEventName())
@@ -48,6 +63,11 @@ public class EventServiceImpl implements EventService {
                 .imgUrl(eventCreateReq.getImgUrl())
                 .host(memberRepository.findMemberByUid(hostUid))
                 .dDay(eventCreateReq.getDDay()).build();
+    }
+
+    private RollingPaper toRollingPaperEntity(Event event) {
+        return RollingPaper.builder()
+                .event(event).build();
     }
 
 //    private List<EventHashtag> toEventHashtagEntity(EventCreateReq eventCreateReq){

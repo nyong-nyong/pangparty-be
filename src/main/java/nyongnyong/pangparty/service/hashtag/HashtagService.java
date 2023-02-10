@@ -1,4 +1,5 @@
 package nyongnyong.pangparty.service.hashtag;
 
-public class HashtagService {
+public interface HashtagService {
+    Long addHashtag(String hashtagName);
 }
