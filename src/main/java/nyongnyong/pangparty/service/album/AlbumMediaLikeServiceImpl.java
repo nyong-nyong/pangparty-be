@@ -1,12 +1,16 @@
 package nyongnyong.pangparty.service.album;
 
+import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.entity.album.AlbumMediaLike;
 import nyongnyong.pangparty.repository.album.AlbumMediaLikeRepository;
 import nyongnyong.pangparty.repository.album.AlbumMediaRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Slf4j
+@Service
 public class AlbumMediaLikeServiceImpl implements AlbumMediaLikeService {
 
     private final AlbumMediaLikeRepository albumMediaLikeRepository;

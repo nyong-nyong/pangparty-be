@@ -75,39 +75,39 @@ public class AlbumController {
      * @param file
      * @return
      */
-    @PostMapping("/")
-    public ResponseEntity<AlbumMediaSimpleRes> createAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @RequestPart MultipartFile file) {
-        // InputStream으로 file을 전달
-//        final String uri = "http://localhost:8080/media/"+eventUid+"/upload";
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-//        RestTemplate restTemplate = new RestTemplate();
-//        AlbumMediaDetailRes result = restTemplate.exchange(uri, AlbumMediaDetailRes.class);
-        //TODO: memberUid
-        try {
-            Long memberUid = memberAuthService.getMemberUid(token);
-            Path imgPath = Path.of(file.getOriginalFilename());
-            String contentType = Files.probeContentType(imgPath);
-            if (contentType.startsWith("video")) {  // video
-            } else if (contentType.startsWith("image")) {   // image
-                //TODO: 이미지
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
-            Long albumUid = albumService.getAlbum(eventUid).getUid();
-            mediaService.saveMedia(albumUid, memberUid, file);
-            AlbumMediaSimpleRes albumMedia = albumMediaService.createAlbumMedia(result);
-
-            return new ResponseEntity<>(albumMedia, HttpStatus.CREATED);
-        }catch (MemberNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (TokenInvalidException e){
-            return ResponseEntity.badRequest().build();
-        }catch (IOException e) {
-            log.debug(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
-    }
+//    @PostMapping("/")
+//    public ResponseEntity<AlbumMediaSimpleRes> createAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @RequestPart MultipartFile file) {
+//        // InputStream으로 file을 전달
+////        final String uri = "http://localhost:8080/media/"+eventUid+"/upload";
+////        HttpHeaders headers = new HttpHeaders();
+////        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+////        RestTemplate restTemplate = new RestTemplate();
+////        AlbumMediaDetailRes result = restTemplate.exchange(uri, AlbumMediaDetailRes.class);
+//        //TODO: memberUid
+//        try {
+//            Long memberUid = memberAuthService.getMemberUid(token);
+//            Path imgPath = Path.of(file.getOriginalFilename());
+//            String contentType = Files.probeContentType(imgPath);
+//            if (contentType.startsWith("video")) {  // video
+//            } else if (contentType.startsWith("image")) {   // image
+//                //TODO: 이미지
+//            } else {
+//                return ResponseEntity.badRequest().build();
+//            }
+//            Long albumUid = albumService.getAlbum(eventUid).getUid();
+//            mediaService.saveMedia(albumUid, memberUid, file);
+//            AlbumMediaSimpleRes albumMedia = albumMediaService.createAlbumMedia(result);
+//
+//            return new ResponseEntity<>(albumMedia, HttpStatus.CREATED);
+//        }catch (MemberNotFoundException e){
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }catch (TokenInvalidException e){
+//            return ResponseEntity.badRequest().build();
+//        }catch (IOException e) {
+//            log.debug(e.getMessage());
+//            return ResponseEntity.badRequest().build();
+//        }
+//    }
 
     /**
      * 앨범 미디어 상세 조회
