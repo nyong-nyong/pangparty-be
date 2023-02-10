@@ -153,8 +153,10 @@ public class MemberAuthServiceImpl implements MemberAuthService {
 
     @Override
     public Long getMemberUid(String token) {
-        if (jwtTokenProvider.validateToken(token)) {
-            String email = jwtTokenProvider.getEmailFromToken(token);
+        String jwtToken = jwtTokenProvider.resolveToken(token);
+
+        if (jwtTokenProvider.validateToken(jwtToken)) {
+            String email = jwtTokenProvider.getEmailFromToken(jwtToken);
             Member member = memberRepository.findByEmail(email);
 
             if (member == null) {
