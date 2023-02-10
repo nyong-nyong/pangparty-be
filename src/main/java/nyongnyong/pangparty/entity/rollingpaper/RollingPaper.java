@@ -53,9 +53,6 @@ public class RollingPaper implements Serializable {
     }
     public void changeEvent(Event event) {
         this.event = event;
-        if (event.getRollingPaper() != this) {
-            event.changeRollingPaper(this);
-        }
     }
 
 }

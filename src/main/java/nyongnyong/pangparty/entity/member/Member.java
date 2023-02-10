@@ -19,6 +19,8 @@ public class Member implements Serializable {
     private String email;
     private boolean isSocial;
     private LocalDateTime withdrawTime;
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private MemberProfile memberProfile;
 
     @Builder
     public Member(String email, boolean isSocial, LocalDateTime withdrawTime) {
@@ -26,5 +28,4 @@ public class Member implements Serializable {
         this.isSocial = isSocial;
         this.withdrawTime = withdrawTime;
     }
-
 }

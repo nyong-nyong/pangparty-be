@@ -11,11 +11,15 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class AlbumDto {
+public class SimpleAlbum {
 
     @Id
     private Long uid;
-    private String eventUid;
+//    private String eventUid;
     private List<String> albumMediaUid;
 
+    public SimpleAlbum(Long uid, List<String> albumMediaUid) {
+        this.uid = uid;
+        this.albumMediaUid = albumMediaUid;
+    }
 }

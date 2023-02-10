@@ -2,12 +2,15 @@ package nyongnyong.pangparty.entity.event;
 
 import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"uid", "addTime"})
@@ -17,27 +20,36 @@ public class EventTarget implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_uid")
     private Event event;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
-    private Member member;
+    private Member targetMember;
 
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime addTime;
 
-    @Builder
+//    @Builder
     public EventTarget(LocalDateTime addTime) {
         this.addTime = addTime;
     }
 
-    public void changeEvent(Event event) {
+    @Builder
+    public EventTarget(Event event, Member targetMember, LocalDateTime addTime) {
         this.event = event;
-        // TODO Event에 participant 추가 시, 예외 처리 코드 필요
+        this.targetMember = targetMember;
+        this.addTime = addTime;
     }
 
-    public void changeMember(Member member) {
-        this.member = member;
-    }
+//    public void changeEvent(Event event) {
+//        this.event = event;
+//        // TODO Event에 participant 추가 시, 예외 처리 코드 필요
+//    }
+
+//    public void changeTargetMember(Member targetMember) {
+//        this.targetMember = targetMember;
+//    }
 }

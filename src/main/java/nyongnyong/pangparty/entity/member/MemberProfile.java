@@ -1,15 +1,18 @@
 package nyongnyong.pangparty.entity.member;
 
 import lombok.*;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"memberUid", "id", "name","imgUrl", "introduction", "updateTime"})
+@ToString
 public class MemberProfile implements Serializable {
 
     @Id
@@ -18,12 +21,14 @@ public class MemberProfile implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "member_uid")
+    @ToString.Exclude
     private Member member;
     @Column(unique = true)
     private String id;
     private String name;
     private String imgUrl;
     private String introduction;
+    @LastModifiedDate
     private LocalDateTime updateTime;
 
     @Builder

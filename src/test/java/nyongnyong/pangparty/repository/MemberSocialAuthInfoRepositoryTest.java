@@ -2,7 +2,7 @@ package nyongnyong.pangparty.repository;
 
 import nyongnyong.pangparty.common.SocialAuthType;
 import nyongnyong.pangparty.entity.member.Member;
-import nyongnyong.pangparty.entity.member.MemberSocialAuthInfo;
+import nyongnyong.pangparty.entity.auth.MemberSocialAuthInfo;
 import nyongnyong.pangparty.repository.member.MemberSocialAuthInfoRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
