@@ -22,7 +22,7 @@ public class EventIntroduceRes {
 
     private Long likeCnt;
 
-    private Long rollingPaperParticipantCnt;    // TODO: rollingPaper 쪽에서 가져와야 함
+    private Long rollingPaperCnt;    // TODO: rollingPaper 쪽에서 가져와야 함
     private Long rollingPaperUid;
 
     @JsonProperty("hashtags")
@@ -31,7 +31,7 @@ public class EventIntroduceRes {
 
     @Builder
     public EventIntroduceRes(String targetId, LocalDate dDay, String eventName, boolean isLiked,
-                             String introduction, String imgUrl, List<SimpleHashtagName> hashtags, Long likeCnt, Long rollingPaperParticipantCnt, Long rollingPaperUid) {
+                             String introduction, String imgUrl, List<SimpleHashtagName> hashtags, Long likeCnt, Long rollingPaperCnt, Long rollingPaperUid) {
         this.targetId = targetId;
         this.dDay = dDay;
         this.eventName = eventName;
@@ -40,7 +40,7 @@ public class EventIntroduceRes {
         this.imgUrl = imgUrl;
         this.hashtags = hashtags;
         this.likeCnt = likeCnt;
-        this.rollingPaperParticipantCnt = rollingPaperParticipantCnt;
+        this.rollingPaperCnt = rollingPaperCnt;
         this.rollingPaperUid = rollingPaperUid;
 //        this.albumMediaUrls = albumMediaUrls;
     }

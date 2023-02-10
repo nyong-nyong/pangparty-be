@@ -10,6 +10,7 @@ import nyongnyong.pangparty.entity.event.QEvent;
 import nyongnyong.pangparty.entity.event.QEventHashtag;
 import nyongnyong.pangparty.entity.event.QEventLike;
 import nyongnyong.pangparty.entity.rollingpaper.QRollingPaper;
+import nyongnyong.pangparty.entity.rollingpaper.QRollingPaperPiece;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
 import org.springframework.stereotype.Repository;
 
@@ -48,12 +49,15 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
                 .fetchOne();
 
         QRollingPaper qRollingPaper = QRollingPaper.rollingPaper;
-        RollingPaper rollingPaper = queryFactory.select(qRollingPaper)
+        RollingPaper rollingPaper = queryFactory.select(qRollingPaper).from(qRollingPaper)
                 .where(qRollingPaper.event.uid.eq(eventUid))
                 .fetchOne();
 
-        Long rollingPaperCnt = queryFactory.select(qRollingPaper.count())
-                .where(qRollingPaper.event.uid.eq(eventUid))
+        QRollingPaperPiece qRollingPaperPiece = QRollingPaperPiece.rollingPaperPiece;
+
+        Long rollingPaperCnt = queryFactory.select(qRollingPaperPiece.count())
+                .from(qRollingPaperPiece)
+                .where(qRollingPaperPiece.rollingPaper.uid.eq(rollingPaper.getUid()))
                 .fetchOne();
 
 //        List<String> hashtagNames = queryFactory.select(qEvent.eventHashtags.any().hashtag.name)
