@@ -7,16 +7,16 @@ public interface AlbumService {
     /**
      * 앨범 생성
      * @param eventUid
-     * @return albumUid
+     * @return Album
      */
-    public Long createAlbum(Long eventUid);
+    public Album createAlbum(Long eventUid);
 
     /**
      * 앨범 조회
      * @param eventUid
-     * @return albumUid
+     * @return Album
      */
-    public Long getAlbumUid(Long eventUid);
+    public Album getAlbum(Long eventUid);
 
     /**
      * 앨범 삭제

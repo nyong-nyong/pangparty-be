@@ -2,6 +2,7 @@ package nyongnyong.pangparty.dto.album;
 
 
 import lombok.*;
+import nyongnyong.pangparty.entity.album.AlbumMediaComment;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
@@ -28,6 +29,16 @@ public class AlbumMediaCommentSimpleRes {
         this.content = content;
         this.createTime = createTime;
         this.modifyTime = modifyTime;
+    }
+
+    public AlbumMediaCommentSimpleRes(AlbumMediaComment albumMediaComment) {
+        this.uid = albumMediaComment.getUid();
+        this.eventUid = albumMediaComment.getAlbumMedia().getAlbum().getEvent().getUid();
+        this.memberUid = albumMediaComment.getMember().getUid();
+        this.albumMediaUid = albumMediaComment.getAlbumMedia().getUid();
+        this.content = albumMediaComment.getContent();
+        this.createTime = albumMediaComment.getCreateTime();
+        this.modifyTime = albumMediaComment.getModifyTime();
     }
 
 }
