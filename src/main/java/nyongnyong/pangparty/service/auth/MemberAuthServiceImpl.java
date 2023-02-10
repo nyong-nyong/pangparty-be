@@ -160,7 +160,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
             Member member = memberRepository.findByEmail(email);
 
             if (member == null) {
-                throw new MemberNotFoundException();
+                return null;
             }
 
             return member.getUid();
