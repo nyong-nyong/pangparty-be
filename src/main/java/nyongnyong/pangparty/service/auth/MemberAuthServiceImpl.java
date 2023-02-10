@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.service.auth;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.auth.MemberLoginReq;
 import nyongnyong.pangparty.dto.auth.MemberRegisterReq;
 import nyongnyong.pangparty.entity.auth.MemberAuthInfo;
@@ -31,8 +32,8 @@ import java.util.Map;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class MemberAuthServiceImpl implements MemberAuthService {
-
     private final PasswordEncoder passwordEncoder; // B2CryptPasswordEncoder
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisUtil redisUtil;
@@ -159,9 +160,11 @@ public class MemberAuthServiceImpl implements MemberAuthService {
             String email = jwtTokenProvider.getEmailFromToken(jwtToken);
             Member member = memberRepository.findByEmail(email);
 
+            log.debug("jwtToken : " + jwtToken);
             if (member == null) {
                 throw new MemberNotFoundException();
             }
+            log.debug("memberUid : " + member.getUid());
 
             return member.getUid();
         }

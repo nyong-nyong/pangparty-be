@@ -29,10 +29,7 @@ public class EventController {
     public ResponseEntity<?> createEvent(@RequestHeader(value = "Authorization") String token, @RequestBody EventCreateReq eventCreateReq){
 
         try{
-            System.out.println("token: " + token);
             Long hostUid = memberAuthService.getMemberUid(token);
-
-
 
             // TODO: eventHashtagService에서 addEventHashtag, hashtagService에서 addHashtag 필요. addHashtag에서는 해당 이름의 해시태그 있는지 확인 후 없으면 넣는다.
             Long eventUid = eventService.addEventAndEventTarget(hostUid, eventCreateReq);
