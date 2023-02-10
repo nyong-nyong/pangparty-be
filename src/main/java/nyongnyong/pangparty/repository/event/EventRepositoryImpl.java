@@ -2,6 +2,8 @@ package nyongnyong.pangparty.repository.event;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import nyongnyong.pangparty.dto.event.EventIntroduceHashtags;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.entity.event.Event;
@@ -10,9 +12,12 @@ import nyongnyong.pangparty.entity.event.QEventHashtag;
 import nyongnyong.pangparty.entity.event.QEventLike;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class EventRepositoryImpl implements EventRepositoryCustom{
@@ -30,6 +35,11 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
                 .leftJoin(eventLike)
                 .on(eventLike.event.uid.eq(qEvent.uid))
                 .where(qEvent.uid.eq(eventUid).and(eventLike.member.uid.eq(memberUid)))
+                .fetchOne();
+
+        Long likeCnt = queryFactory.select(eventLike.count())
+                .from(eventLike)
+                .where(eventLike.event.uid.eq(eventUid))
                 .fetchOne();
 
         Event event = queryFactory.selectFrom(qEvent)
@@ -51,6 +61,12 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
 //        System.out.println(albumMediaUrls);
 
         List<String> hashtagNames = event.getEventHashtags().stream().map(eventHashtag1 -> eventHashtag1.getHashtag().getName()).collect(Collectors.toList());  // 이거 데이터 없을때 validation 해야할듯?
+        ArrayList<EventIntroduceHashtags> hashtags = new ArrayList<>();
+        for(String hashtagName : hashtagNames){
+            EventIntroduceHashtags eventIntroduceHashtags = new EventIntroduceHashtags(hashtagName);
+            hashtags.add(eventIntroduceHashtags);
+        }
+        log.debug("hashtags: ", hashtags);
 //        List<String> albumMediaUrls = event.getAlbum().getAlbumMedia().stream().map(AlbumMedia::getMediaUrl).collect(Collectors.toList());
 
         boolean isLiked = true;
@@ -60,7 +76,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
 
         EventIntroduceRes eventIntroduceRes = new EventIntroduceRes(event.getEventTarget().getTargetMember().getMemberProfile().getId()
                 , event.getDDay(), event.getEventName(), isLiked, event.getIntroduction(), event.getImgUrl(),
-                hashtagNames);
+                hashtags, likeCnt);
 
 
         return eventIntroduceRes;
