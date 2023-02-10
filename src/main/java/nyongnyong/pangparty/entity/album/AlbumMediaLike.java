@@ -28,8 +28,14 @@ public class AlbumMediaLike implements Serializable {
 
     private LocalDateTime likeTime;
 
-    @Builder
     public AlbumMediaLike(LocalDateTime likeTime) {
+        this.likeTime = likeTime;
+    }
+
+    @Builder
+    public AlbumMediaLike(Member member, AlbumMedia albumMedia, LocalDateTime likeTime) {
+        this.member = member;
+        this.albumMedia = albumMedia;
         this.likeTime = likeTime;
     }
 

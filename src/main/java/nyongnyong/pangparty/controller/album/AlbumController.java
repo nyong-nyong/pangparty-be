@@ -6,10 +6,8 @@ import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.InvalidTokenException;
-import nyongnyong.pangparty.service.album.AlbumMediaCommentService;
-import nyongnyong.pangparty.service.album.AlbumMediaService;
-import nyongnyong.pangparty.service.album.AlbumService;
-import nyongnyong.pangparty.service.album.MediaService;
+import nyongnyong.pangparty.service.album.*;
+import nyongnyong.pangparty.service.auth.MemberAuthService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -238,19 +236,19 @@ public class AlbumController {
      * @param mediaUid
      * @return
      */
-//    @PostMapping("/{mediaUid}/like")
-//    public ResponseEntity<?> likeAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid) {
-//        // TODO: memberUid
-//        try {
-//            Long memberUid = memberAuthService.getMemberUid(token);
-//            albumMediaLikeService.likeAlbumMedia(memberUid, mediaUid);
-//            return "album";
-//        }catch (MemberNotFoundException e){
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }catch (TokenInvalidException e){
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
+    @PostMapping("/{mediaUid}/like")
+    public ResponseEntity<?> likeAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid) {
+        // TODO: memberUid
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            albumMediaLikeService.likeAlbumMedia(memberUid, mediaUid);
+            return ResponseEntity.ok().build();
+        }catch (MemberNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }catch (TokenInvalidException e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
     /**
      * 앨범 미디어 좋아요 취소
@@ -258,17 +256,17 @@ public class AlbumController {
      * @param mediaUid
      * @return
      */
-//    @DeleteMapping("/{mediaUid}/like")
-//    public ResponseEntity<?> unlikeAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid) {
-//        // TODO: memberUid
-//        try {
-//            Long memberUid = memberAuthService.getMemberUid(token);
-//            albumMediaLikeService.unlikeAlbumMedia(memberUid, mediaUid);
-//            return ResponseEntity.noContent().build();
-//        }catch (MemberNotFoundException e){
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }catch (TokenInvalidException e){
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
+    @DeleteMapping("/{mediaUid}/like")
+    public ResponseEntity<?> unlikeAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid) {
+        // TODO: memberUid
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            albumMediaLikeService.unlikeAlbumMedia(memberUid, mediaUid);
+            return ResponseEntity.noContent().build();
+        }catch (MemberNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }catch (TokenInvalidException e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
