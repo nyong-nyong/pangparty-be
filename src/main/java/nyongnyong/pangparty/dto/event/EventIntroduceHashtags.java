@@ -7,12 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class EventIntroduceHashtags {
-//    private Long uid;
     private String name;
 
     @Builder
     public EventIntroduceHashtags(String name) {
-//        this.uid = uid;
         this.name = name;
     }
 }

@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.EventIntroduceHashtags;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
-import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.QEvent;
 import nyongnyong.pangparty.entity.event.QEventHashtag;
@@ -13,7 +12,6 @@ import nyongnyong.pangparty.entity.event.QEventLike;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

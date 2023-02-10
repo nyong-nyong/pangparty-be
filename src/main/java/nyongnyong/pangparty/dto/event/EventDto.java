@@ -1,9 +1,7 @@
 package nyongnyong.pangparty.dto.event;
 
 import lombok.*;
-import nyongnyong.pangparty.entity.event.Event;
 
-import javax.persistence.Id;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 

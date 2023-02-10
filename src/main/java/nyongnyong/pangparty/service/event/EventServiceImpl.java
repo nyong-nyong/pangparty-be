@@ -1,12 +1,10 @@
 package nyongnyong.pangparty.service.event;
 
 import lombok.RequiredArgsConstructor;
-//import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.entity.event.Event;
-import nyongnyong.pangparty.entity.event.EventHashtag;
 import nyongnyong.pangparty.entity.event.EventTarget;
 import nyongnyong.pangparty.repository.event.EventHashtagRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
