@@ -3,6 +3,7 @@ package nyongnyong.pangparty.jwt;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.service.auth.CustomUserDetailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +26,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
+    private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
+    private final CustomUserDetailService customUserDetailService;
     @Value("${security.jwt.token.refresh.expiration}")
     public long refreshTokenExpiration;
-    private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
     @Value("${security.jwt.token.expiration}")
     private long tokenExpiration;
-    private final CustomUserDetailService customUserDetailService;
     @Value("${security.jwt.token.secret}")
     private String secret;
 
@@ -72,16 +73,22 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getEmailFromToken(String token) {
+    public String getUsernameFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
+    public String getEmailFromToken(String token) {
+        String resolvedToken = resolveToken(token);
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(resolvedToken).getBody().getSubject();
+    }
+
     public String getIdFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("id").toString();
+        String resolvedToken = resolveToken(token);
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(resolvedToken).getBody().get("id").toString();
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = customUserDetailService.loadUserByUsername(getEmailFromToken(token));
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(getUsernameFromToken(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -90,14 +97,14 @@ public class JwtTokenProvider {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        return null;
+        throw new TokenInvalidException();
     }
 
     public String resolveToken(String bearerToken) {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        return null;
+        throw new TokenInvalidException();
     }
 
     public String resolveRefreshToken(HttpServletRequest req) {
@@ -105,14 +112,14 @@ public class JwtTokenProvider {
         if (refreshToken != null) {
             return refreshToken.substring(7);
         }
-        return null;
+        throw new TokenInvalidException();
     }
 
     public String resolveRefreshToken(String refreshToken) {
         if (refreshToken != null) {
             return refreshToken.substring(7);
         }
-        return null;
+        throw new TokenInvalidException();
     }
 
     public boolean validateToken(String token) {
