@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @Service
@@ -28,23 +29,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RollingPaperPieceServiceImpl implements RollingPaperPieceService {
 
+    private final EventRepository eventRepository;
+    private final MemberRepository memberRepository;
     private final EventParticipantRepository eventParticipantRepository;
     private final RollingPaperRepository rollingPaperRepository;
     private final RollingPaperPieceRepository rollingPaperPieceRepository;
-    private final EventRepository eventRepository;
-    private final MemberRepository memberRepository;
 
     @Override
     @Transactional
     public Page<RollingPaperPieceRes> findRollingPaperPieces(Long eventUid, Long rollingPaperUid, Pageable pageable) {
         // check if the event exists
         Optional<Event> event = eventRepository.findById(eventUid);
-        if (!event.isPresent()) {
+        if (event.isEmpty()) {
             throw new EventNotFoundException();
         }
 
         // check if rollingpaper exists
-        if (event.get().getRollingPaper().getUid() != rollingPaperUid || !rollingPaperRepository.existsById(rollingPaperUid)) {
+        if (event.get().getRollingPaper().getUid().equals(rollingPaperUid) || !rollingPaperRepository.existsById(rollingPaperUid)) {
             throw new RollingPaperNotFoundException();
         }
 
@@ -53,19 +54,19 @@ public class RollingPaperPieceServiceImpl implements RollingPaperPieceService {
 
     @Override
     @Transactional
-    public Long addRollingPaperPiece(Long memberUid, Long eventUid, RollingPaperPieceReq rollingPaperPieceReq) {
+    public Long addRollingPaperPiece(Long memberUid, Long eventUid, @Valid final RollingPaperPieceReq rollingPaperPieceReq) {
         Optional<Event> event = eventRepository.findById(eventUid);
-        if (!event.isPresent()) {
+        if (event.isEmpty()) {
             throw new EventNotFoundException();
         }
 
         Optional<Member> member = memberRepository.findById(memberUid);
-        if (!member.isPresent()) {
+        if (member.isEmpty()) {
             throw new MemberNotFoundException();
         }
 
         Optional<RollingPaper> rollingPaper = rollingPaperRepository.findById(rollingPaperPieceReq.getRollingPaperUid());
-        if (!rollingPaper.isPresent()) {
+        if (rollingPaper.isEmpty()) {
             throw new RollingPaperNotFoundException();
         }
 
@@ -82,14 +83,14 @@ public class RollingPaperPieceServiceImpl implements RollingPaperPieceService {
 
     @Override
     @Transactional
-    public Long addRollingPaperPiece(Long eventUid, RollingPaperPieceReq rollingPaperPieceReq) {
+    public Long addRollingPaperPiece(Long eventUid, @Valid final RollingPaperPieceReq rollingPaperPieceReq) {
         Optional<Event> event = eventRepository.findById(eventUid);
-        if (!event.isPresent()) {
+        if (event.isEmpty()) {
             throw new EventNotFoundException();
         }
 
         Optional<RollingPaper> rollingPaper = rollingPaperRepository.findById(rollingPaperPieceReq.getRollingPaperUid());
-        if (!rollingPaper.isPresent()) {
+        if (rollingPaper.isEmpty()) {
             throw new RollingPaperNotFoundException();
         }
 

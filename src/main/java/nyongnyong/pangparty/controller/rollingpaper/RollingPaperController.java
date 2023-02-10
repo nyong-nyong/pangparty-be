@@ -8,11 +8,10 @@ import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerReq;
 import nyongnyong.pangparty.exception.EventNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.RollingPaperNotFoundException;
+import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.rollingpaper.RollingPaperPieceService;
-import nyongnyong.pangparty.service.rollingpaper.RollingPaperService;
 import nyongnyong.pangparty.service.rollingpaper.RollingPaperStickerService;
-import nyongnyong.pangparty.service.rollingpaper.StickerService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +27,9 @@ import java.util.Map;
 public class RollingPaperController {
 
     private final MemberAuthService memberAuthService;
-    private final StickerService stickerService;
-    private final RollingPaperService rollingPaperService;
     private final RollingPaperPieceService rollingPaperPieceService;
     private final RollingPaperStickerService rollingPaperStickerService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/{rollingPaperUid}/pieces")
     public ResponseEntity<?> findRollingPaperPieces(@PathVariable("eventUid") Long eventUid,
@@ -68,15 +66,14 @@ public class RollingPaperController {
 
         try {
             Long uid;
-            if (token == null) {
-                rollingPaperPieceReq.setRollingPaperUid(rollingPaperUid);
+            rollingPaperPieceReq.setRollingPaperUid(rollingPaperUid);
+
+            if (jwtTokenProvider.resolveToken(token) == null) {
                 uid = rollingPaperPieceService.addRollingPaperPiece(eventUid, rollingPaperPieceReq);
             } else {
                 // check login status (token)
                 Long memberUid = memberAuthService.getMemberUid(token);
 
-                // set rolling paper
-                rollingPaperPieceReq.setRollingPaperUid(rollingPaperUid);
                 uid = rollingPaperPieceService.addRollingPaperPiece(memberUid, eventUid, rollingPaperPieceReq);
             }
 
@@ -106,35 +103,32 @@ public class RollingPaperController {
     }
 
     @PostMapping("/{rollingPaperUid}/stickers")
-    public ResponseEntity<?> addRollingPaperSticker
-            (@RequestHeader(required = false, value = "Authorization") String token,
-             @PathVariable("eventUid") Long eventUid,
-             @PathVariable("rollingPaperUid") Long rollingPaperUid,
-             @RequestBody RollingPaperStickerReq rollingPaperStickerReq) {
+    public ResponseEntity<?> addRollingPaperSticker(@RequestHeader(required = false, value = "Authorization") String token,
+                                                    @PathVariable("eventUid") Long eventUid,
+                                                    @PathVariable("rollingPaperUid") Long rollingPaperUid,
+                                                    @RequestBody RollingPaperStickerReq rollingPaperStickerReq) {
+
         // validate path variable & request body
         if (eventUid < 0 || rollingPaperUid < 0 || rollingPaperStickerReq.getLeftLoc() < 0 || rollingPaperStickerReq.getTopLoc() < 0) {
             return ResponseEntity.badRequest().build();
         }
 
-
         try {
-            // check login status (token)
-            Long memberUid = memberAuthService.getMemberUid(token);
+            Long uid;
+            rollingPaperStickerReq.setRollingPaperUid(rollingPaperUid);
 
+            if (jwtTokenProvider.resolveToken(token) == null) {
+                uid = rollingPaperStickerService.addRollingPaperSticker(eventUid, rollingPaperStickerReq);
+            } else {
+                // check login status (token)
+                Long memberUid = memberAuthService.getMemberUid(token);
+                System.out.println(token);
+                uid = rollingPaperStickerService.addRollingPaperSticker(memberUid, eventUid, rollingPaperStickerReq);
+            }
+            return ResponseEntity.created(URI.create("/events/" + eventUid + "/rollingpaper/" + rollingPaperUid + "/stickers/" + uid)).build();
         } catch (MemberNotFoundException | EventNotFoundException | RollingPaperNotFoundException |
                  IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
-        // Validate eventUid and rollingPaperUid, stickerUid
-        // TODO validate eventUid
-        if (!rollingPaperService.isExistRollingPaperByRollingPaperUid(rollingPaperUid) || !stickerService.isExistStickerByStickerUid(rollingPaperStickerReq.getStickerUid())) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        rollingPaperStickerReq.setRollingPaperUid(rollingPaperUid);
-        // TODO set member
-        Long uid = rollingPaperStickerService.addRollingPaperSticker(rollingPaperStickerReq);
-
-        return ResponseEntity.created(URI.create("/events/" + eventUid + "/rollingpaper/" + rollingPaperUid + "/stickers/" + uid)).build();
     }
 }
