@@ -9,10 +9,7 @@ import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.member.MemberPersonal;
 import nyongnyong.pangparty.entity.member.MemberProfile;
 import nyongnyong.pangparty.entity.member.MemberSetting;
-import nyongnyong.pangparty.exception.EmailAuthFailExcpetion;
-import nyongnyong.pangparty.exception.MemberAlreadyExistsException;
-import nyongnyong.pangparty.exception.MemberNotFoundException;
-import nyongnyong.pangparty.exception.TokenRefreshFailException;
+import nyongnyong.pangparty.exception.*;
 import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.repository.auth.MemberAuthInfoRepository;
 import nyongnyong.pangparty.repository.member.MemberPersonalRepository;
@@ -152,7 +149,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
     }
 
     @Override
-    public Long getMemberUid(String token) {
+    public Long getMemberUid(String token) throws MemberNotFoundException {
         String jwtToken = jwtTokenProvider.resolveToken(token);
 
         if (jwtTokenProvider.validateToken(jwtToken)) {
@@ -160,7 +157,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
             Member member = memberRepository.findByEmail(email);
 
             if (member == null) {
-                return null;
+                throw new MemberNotFoundException();
             }
 
             return member.getUid();
