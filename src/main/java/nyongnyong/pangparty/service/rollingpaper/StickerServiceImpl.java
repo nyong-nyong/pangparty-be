@@ -1,7 +1,7 @@
 package nyongnyong.pangparty.service.rollingpaper;
 
 import lombok.RequiredArgsConstructor;
-import nyongnyong.pangparty.dto.rollingpaper.StickerDto;
+import nyongnyong.pangparty.dto.rollingpaper.StickerSimple;
 import nyongnyong.pangparty.repository.rollingpaper.StickerRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +17,8 @@ public class StickerServiceImpl implements StickerService {
 
     @Override
     @Transactional
-    public Page<StickerDto> findStickerList(Pageable pageable) {
-        return stickerRepository.findAll(pageable).map(StickerDto::new);
+    public Page<StickerSimple> findStickerList(Pageable pageable) {
+        return stickerRepository.findAll(pageable).map(StickerSimple::new);
     }
 
     @Override

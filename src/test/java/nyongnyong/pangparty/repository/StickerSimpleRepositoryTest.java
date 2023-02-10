@@ -2,7 +2,6 @@ package nyongnyong.pangparty.repository;
 
 import nyongnyong.pangparty.entity.rollingpaper.Sticker;
 import nyongnyong.pangparty.repository.rollingpaper.StickerRepository;
-import nyongnyong.pangparty.service.rollingpaper.StickerService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-public class StickerRepositoryTest {
+public class StickerSimpleRepositoryTest {
 
     @Autowired
     StickerRepository stickerRepository;

@@ -2,15 +2,19 @@ package nyongnyong.pangparty.entity.member;
 
 import lombok.*;
 import nyongnyong.pangparty.common.AuthorityType;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"memberUid", "phoneNo", "email", "birthday", "gender", "address", "postalCode", "emailAuthTime", "phoneAuthTime", "joinTime", "updateTime", "authority"})
+@ToString
 public class MemberPersonal implements Serializable {
 
     @Id
@@ -19,6 +23,7 @@ public class MemberPersonal implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "member_uid")
+    @ToString.Exclude
     private Member member;
     @Column(unique = true)
     private String phoneNo;
@@ -30,7 +35,10 @@ public class MemberPersonal implements Serializable {
     private String postalCode;
     private LocalDateTime emailAuthTime;
     private LocalDateTime phoneAuthTime;
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime joinTime;
+    @LastModifiedDate
     private LocalDateTime updateTime;
 
     @Enumerated(EnumType.STRING)

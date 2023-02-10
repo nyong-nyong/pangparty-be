@@ -3,12 +3,16 @@ package nyongnyong.pangparty.entity.rollingpaper;
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 import nyongnyong.pangparty.entity.member.Member;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
@@ -30,7 +34,12 @@ public class RollingPaperPiece implements Serializable {
     private Member member;
 
     private String writerName;
+
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createTime;
+
+    @LastModifiedDate
     private LocalDateTime modifyTime;
     @Lob
     private String content;
@@ -42,6 +51,20 @@ public class RollingPaperPiece implements Serializable {
     private String textAlign;
 
     @Builder
+    public RollingPaperPiece(RollingPaper rollingPaper, Member member, String writerName, String content, String bgColor, String bgImgUrl, String bgImgAlt, String fontFamily, String textColor, String textAlign) {
+        this.rollingPaper = rollingPaper;
+        this.member = member;
+        this.writerName = writerName;
+        this.content = content;
+        this.bgColor = bgColor;
+        this.bgImgUrl = bgImgUrl;
+        this.bgImgAlt = bgImgAlt;
+        this.fontFamily = fontFamily;
+        this.textColor = textColor;
+        this.textAlign = textAlign;
+    }
+
+    //    @Builder
     public RollingPaperPiece(String writerName, LocalDateTime createTime, LocalDateTime modifyTime, String content, String bgColor, String bgImgUrl, String bgImgAlt, String fontFamily, String textColor, String textAlign) {
         this.writerName = writerName;
         this.createTime = createTime;
