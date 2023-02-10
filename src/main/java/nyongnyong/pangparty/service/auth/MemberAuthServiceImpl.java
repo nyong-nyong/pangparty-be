@@ -117,7 +117,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         MemberAuthInfo memberAuthInfo = memberAuthInfoRepository.findByEmail(email);
         List<Role> roles = memberAuthInfo.getRoles();
 
-        if (redisUtil.getValue(email).equals(refreshToken) && jwtTokenProvider.validateToken(refreshToken)) {
+        if (redisUtil.getValue(email).equals(jwtTokenProvider.resolveToken(refreshToken)) && jwtTokenProvider.validateToken(refreshToken)) {
             redisUtil.deleteValue(email);
 
             String id = memberAuthInfo.getMember().getMemberProfile().getId();

@@ -66,7 +66,7 @@ public class MemberAuthController {
         }
     }
 
-    @GetMapping("/refresh-token")
+    @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest) {
         String refreshToken = httpServletRequest.getHeader("RefreshToken");
         Map<String, String> response = memberAuthService.getRefreshToken(httpServletRequest.getRemoteUser(), refreshToken);
