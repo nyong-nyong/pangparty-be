@@ -23,4 +23,8 @@ public interface EventService {
 
     Long addRollingPaper(Long eventUid);
     Event getEventByEventUid(Long eventUid);
+
+    void likeEvent(Long memberUid, Long eventUid);
+
+    void dislikeEvent(Long memberUid, Long eventUid);
 }

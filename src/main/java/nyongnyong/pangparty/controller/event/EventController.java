@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.controller.event;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
 import nyongnyong.pangparty.dto.event.EventCreateRes;
 import nyongnyong.pangparty.dto.event.SimpleHashtagName;
@@ -20,6 +21,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
+@Slf4j
 public class EventController {
     private final EventService eventService;
     private final MemberAuthService memberAuthService;
@@ -38,13 +40,10 @@ public class EventController {
 
         try{
             Long hostUid = memberAuthService.getMemberUid(token);
-
-            // TODO: 대표사진 s3 업로드 로직 필요...
-
             Event event = eventService.addEventAndEventTarget(hostUid, eventCreateReq);
             Long eventUid = event.getUid();
 
-            // TODO: eventHashtagService에서 addEventHashtag, hashtagService에서 addHashtag 필요. addHashtag에서는 해당 이름의 해시태그 있는지 확인 후 없으면 넣는다.
+            // eventHashtagService에서 addEventHashtag, hashtagService에서 addHashtag 필요. addHashtag에서는 해당 이름의 해시태그 있는지 확인 후 없으면 넣는다.
             for(SimpleHashtagName hashtag : eventCreateReq.getHashtags()){
                 SimpleHashtagName simpleHashtagName = hashtag;
                 Hashtag simpleHashtag = hashtagService.addHashtagIfHashtagNameExists(simpleHashtagName.getName());  // 사용자가 작성한 해시태그가 존재하는지 확인, 없으면 hashtag 테이블에 추가
@@ -66,17 +65,40 @@ public class EventController {
     }
 
     @PostMapping("/{eventUid}/like")
-    public ResponseEntity<?> likeEvent(@PathVariable Long eventUid){
-
+    public ResponseEntity<?> likeEvent(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid){
         // Validate Path Variable and Request Body
+        if(eventUid == null){
+            return ResponseEntity.badRequest().build();
+        }
+        try{
+            Long memberUid = memberAuthService.getMemberUid(token);
+            eventService.likeEvent(memberUid, eventUid);
+            return ResponseEntity.created(URI.create("/events/"+eventUid+"/like")).build();
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
-
-
-
-//        Long memberUid = 31L;
-
-
-        return null;
+    @DeleteMapping("/{eventUid}/dislike")
+    public ResponseEntity<?> dislikeEvent(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid){
+            // Validate Path Variable and Request Body
+            log.debug("dislikeEvent");
+            if(eventUid == null){
+                log.debug("eventUid is null");
+                return ResponseEntity.badRequest().build();
+            }
+            try{
+                System.out.println("eventUid: " + eventUid);
+                Long memberUid = memberAuthService.getMemberUid(token);
+                log.debug("memberUid: " + memberUid);
+                eventService.dislikeEvent(memberUid, eventUid);
+                return ResponseEntity.noContent().build();
+            } catch (Exception e){
+                log.debug("dislikeEvent error");
+                e.printStackTrace();
+                return ResponseEntity.badRequest().build();
+            }
     }
 
 //    @GetMapping
