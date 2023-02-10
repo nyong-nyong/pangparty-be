@@ -8,7 +8,7 @@ import java.io.File;
 
 public interface MediaService {
 
-    public AlbumMedia saveMedia(MultipartFile file);
+    public AlbumMedia saveMedia(Long albumUid, Long memberUid, MultipartFile file);
 
     public void deleteMedia(Long albumMediaUid);
 
