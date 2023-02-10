@@ -165,7 +165,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
             return member.getUid();
         }
 
-        return null;
+        throw new TokenInvalidException();
     }
 
     Member fromMemberRegisterReqtoMember(MemberRegisterReq memberRegisterReq) {
