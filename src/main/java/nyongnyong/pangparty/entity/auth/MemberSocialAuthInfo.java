@@ -1,7 +1,8 @@
-package nyongnyong.pangparty.entity.member;
+package nyongnyong.pangparty.entity.auth;
 
 import lombok.*;
 import nyongnyong.pangparty.common.SocialAuthType;
+import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"memberUid", "socialType", "externalId", "updateTime"})
+@ToString
 public class MemberSocialAuthInfo implements Serializable {
 
     @Id
@@ -19,6 +20,7 @@ public class MemberSocialAuthInfo implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "member_uid")
+    @ToString.Exclude
     private Member member;
 
     @Enumerated(EnumType.STRING)

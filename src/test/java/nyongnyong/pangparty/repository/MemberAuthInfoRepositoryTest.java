@@ -1,8 +1,8 @@
 package nyongnyong.pangparty.repository;
 
 import nyongnyong.pangparty.entity.member.Member;
-import nyongnyong.pangparty.entity.member.MemberAuthInfo;
-import nyongnyong.pangparty.repository.member.MemberAuthInfoRepository;
+import nyongnyong.pangparty.entity.auth.MemberAuthInfo;
+import nyongnyong.pangparty.repository.auth.MemberAuthInfoRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,13 +29,13 @@ public class MemberAuthInfoRepositoryTest {
         memberRepository.save(member);
 
         System.out.println("MEMBER AUTH INFO ================");
-        MemberAuthInfo memberAuthInfo = new MemberAuthInfo(member, "f1nd1ngn3m0", "07dbb6e6832da0841dd79701200e4b179f1a94a7b3dd26f612817f3c03117434", LocalDateTime.now());
+        MemberAuthInfo memberAuthInfo = new MemberAuthInfo(member, "f1nd1ngn3m0", LocalDateTime.now());
         MemberAuthInfo savedMemberAuthInfo = memberAuthInfoRepository.save(memberAuthInfo);
 
         MemberAuthInfo findMemberAuthInfo = memberAuthInfoRepository.findById(savedMemberAuthInfo.getMemberUid()).get();
 
         Assertions.assertThat(findMemberAuthInfo.getMember()).isEqualTo(memberAuthInfo.getMember());
-        Assertions.assertThat(findMemberAuthInfo.getSalt()).isEqualTo(memberAuthInfo.getSalt());
+//        Assertions.assertThat(findMemberAuthInfo.getSalt()).isEqualTo(memberAuthInfo.getSalt());
         Assertions.assertThat(findMemberAuthInfo.getPassword()).isEqualTo(memberAuthInfo.getPassword());
         Assertions.assertThat(findMemberAuthInfo.getUpdateTime()).isEqualTo(memberAuthInfo.getUpdateTime());
         Assertions.assertThat(findMemberAuthInfo).isEqualTo(memberAuthInfo);
@@ -51,8 +51,8 @@ public class MemberAuthInfoRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        MemberAuthInfo memberAuthInfo1 = new MemberAuthInfo(member1, "f1nd1ngn3m0", "07dbb6e6832da0841dd79701200e4b179f1a94a7b3dd26f612817f3c03117434", LocalDateTime.now());
-        MemberAuthInfo memberAuthInfo2 = new MemberAuthInfo(member2, "f1nd1ngd0ry", "11c150eb6c1b776f390be60a0a5933a2a2f8c0a0ce766ed92fea5bfd9313c8f6", LocalDateTime.now());
+        MemberAuthInfo memberAuthInfo1 = new MemberAuthInfo(member1, "f1nd1ngn3m0", LocalDateTime.now());
+        MemberAuthInfo memberAuthInfo2 = new MemberAuthInfo(member2, "f1nd1ngd0ry", LocalDateTime.now());
         memberAuthInfoRepository.save(memberAuthInfo1);
         memberAuthInfoRepository.save(memberAuthInfo2);
 
