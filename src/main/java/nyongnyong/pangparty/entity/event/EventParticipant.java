@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "joinTime"})
+@ToString
 public class EventParticipant implements Serializable {
 
     @Id
@@ -19,15 +19,23 @@ public class EventParticipant implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_uid")
+    @ToString.Exclude
     private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
+    @ToString.Exclude
     private Member member;
 
     private LocalDateTime joinTime;
 
     @Builder
+    public EventParticipant(Event event, Member member, LocalDateTime joinTime) {
+        this.event = event;
+        this.member = member;
+        this.joinTime = joinTime;
+    }
+
     public EventParticipant(LocalDateTime joinTime) {
         this.joinTime = joinTime;
     }

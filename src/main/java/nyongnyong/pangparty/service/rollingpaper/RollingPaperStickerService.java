@@ -16,7 +16,7 @@ public interface RollingPaperStickerService {
      * @param topEnd top 끝 위치
      * @return List<RollingPaperStickerRes>
      */
-    List<RollingPaperStickerRes> findRollingPaperStickersByTopLoc(Long rollingPaperUid, int topStart, int topEnd);
+    List<RollingPaperStickerRes> findRollingPaperStickersByTopLoc(Long eventUid, Long rollingPaperUid, int topStart, int topEnd);
 
     /**
      * 스티커 생성
