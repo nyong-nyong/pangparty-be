@@ -120,12 +120,14 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         if (redisUtil.getValue(email).equals(refreshToken) && jwtTokenProvider.validateToken(refreshToken)) {
             redisUtil.deleteValue(email);
 
-            String accessToken = jwtTokenProvider.generateToken(email, memberAuthInfo.getMember().getMemberProfile().getId(), memberAuthInfo.getMember().getUid(), roles);
+            String id = memberAuthInfo.getMember().getMemberProfile().getId();
+            String accessToken = jwtTokenProvider.generateToken(email, id, memberAuthInfo.getMember().getUid(), roles);
             String newRefreshToken = jwtTokenProvider.generateRefreshToken();
 
             redisUtil.setValueWithExpiration(email, newRefreshToken, jwtTokenProvider.refreshTokenExpiration);
 
-            return Map.of("accessToken", "Bearer " + accessToken,
+            return Map.of("id", id,
+                    "accessToken", "Bearer " + accessToken,
                     "refreshToken", "Bearer " + newRefreshToken);
         } else {
             throw new TokenRefreshFailException();
