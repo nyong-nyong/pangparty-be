@@ -37,11 +37,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Long addEventAndEventTarget(Long hostUid, EventCreateReq eventCreateReq) {
+    public Event addEventAndEventTarget(Long hostUid, EventCreateReq eventCreateReq) {
         Event event = toEventEntity(hostUid, eventCreateReq);
         eventRepository.save(event);
         eventTargetRepository.save(toEventTargetEntity(eventCreateReq, event));
-        return event.getUid();
+        return event;
     }
 
     @Override

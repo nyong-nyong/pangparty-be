@@ -1,5 +1,7 @@
 package nyongnyong.pangparty.service.hashtag;
 
+import nyongnyong.pangparty.entity.hashtag.Hashtag;
+
 public interface HashtagService {
-    Long addHashtag(String hashtagName);
+    Hashtag addHashtagIfHashtagNameExists(String hashtagName);
 }

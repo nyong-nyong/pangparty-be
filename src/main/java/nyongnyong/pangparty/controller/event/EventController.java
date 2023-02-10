@@ -2,8 +2,13 @@ package nyongnyong.pangparty.controller.event;
 
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
+import nyongnyong.pangparty.dto.event.SimpleHashtagName;
+import nyongnyong.pangparty.entity.event.Event;
+import nyongnyong.pangparty.entity.hashtag.Hashtag;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
+import nyongnyong.pangparty.service.event.EventHashtagService;
 import nyongnyong.pangparty.service.event.EventService;
+import nyongnyong.pangparty.service.hashtag.HashtagService;
 import nyongnyong.pangparty.service.rollingpaper.RollingPaperService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class EventController {
     private final EventService eventService;
     private final MemberAuthService memberAuthService;
+    private final HashtagService hashtagService;
+    private final EventHashtagService eventHashtagService;
 
     @GetMapping("/{eventUid}")
     public ResponseEntity<?> findEventIntroduceByEventUid(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid){
@@ -28,14 +35,22 @@ public class EventController {
         try{
             Long hostUid = memberAuthService.getMemberUid(token);
 
-            // TODO: eventHashtagService에서 addEventHashtag, hashtagService에서 addHashtag 필요. addHashtag에서는 해당 이름의 해시태그 있는지 확인 후 없으면 넣는다.
-
             // TODO: 대표사진 s3 업로드 로직 필요...
 
-            Long eventUid = eventService.addEventAndEventTarget(hostUid, eventCreateReq);
+            Event event = eventService.addEventAndEventTarget(hostUid, eventCreateReq);
+            Long eventUid = event.getUid();
+
+            // TODO: eventHashtagService에서 addEventHashtag, hashtagService에서 addHashtag 필요. addHashtag에서는 해당 이름의 해시태그 있는지 확인 후 없으면 넣는다.
+            for(SimpleHashtagName hashtag : eventCreateReq.getHashtags()){
+                SimpleHashtagName simpleHashtagName = hashtag;
+                Hashtag simpleHashtag = hashtagService.addHashtagIfHashtagNameExists(simpleHashtagName.getName());  // 사용자가 작성한 해시태그가 존재하는지 확인, 없으면 hashtag 테이블에 추가
+                eventHashtagService.addEventHashtag(event, simpleHashtag);      // hashtagName에 해당하는 hashtagUid를 가져와서 eventHashtag 테이블에 추가
+            }
 
             // rollingPaperRepository에서 save
             eventService.addRollingPaper(eventUid);
+
+            // TODO: albumRepository에서 save
 
             eventCreateReq.setEventUid(eventUid);
             return ResponseEntity.ok(eventUid);

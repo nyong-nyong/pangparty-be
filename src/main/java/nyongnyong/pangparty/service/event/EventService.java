@@ -10,7 +10,7 @@ public interface EventService {
 
     boolean isExistEventByEventUid(Long eventUid);
 
-    Long addEventAndEventTarget(Long hostUid, EventCreateReq eventCreateReq);
+    Event addEventAndEventTarget(Long hostUid, EventCreateReq eventCreateReq);
     List<EventCard> findReceivedEventsByMemberId(String memberId);
 
     List<EventCard> findHostEventsByMemberId(String memberId);
