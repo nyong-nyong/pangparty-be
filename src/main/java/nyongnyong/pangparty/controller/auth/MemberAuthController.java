@@ -25,23 +25,17 @@ public class MemberAuthController {
     private final MemberAuthService memberAuthService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Validated @RequestBody MemberLoginReq memberLoginReq, BindingResult bindingResult) {
-
-        Map<String, String> response = memberAuthService.login(memberLoginReq);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> login(@Validated @RequestBody MemberLoginReq memberLoginReq) {
+        try {
+            Map<String, String> response = memberAuthService.login(memberLoginReq);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest httpServletRequest) {
-//        System.out.println("LOGOUT========================");
-//        String username = null;
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if(principal instanceof UserDetails) username = ((UserDetails) principal).getUsername();
-//        else{
-//            username = principal.toString();
-//            System.out.println(username);
-//        }
-        System.out.println(httpServletRequest.getRemoteUser());
         if (httpServletRequest.getRemoteUser() == null) {
             return ResponseEntity.notFound().build();
         }
@@ -56,7 +50,8 @@ public class MemberAuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Validated @RequestBody MemberRegisterReq memberRegisterReq, BindingResult bindingResult) {
+    public ResponseEntity<?> register(@Validated @RequestBody MemberRegisterReq memberRegisterReq, BindingResult
+            bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return ResponseEntity.badRequest().build();
@@ -91,7 +86,8 @@ public class MemberAuthController {
     }
 
     @PostMapping("/confirm-auth-email")
-    public ResponseEntity<?> confirmAuthEmail(@RequestBody @Valid EmailSimple email, @RequestBody String authCode, BindingResult bindingResult) {
+    public ResponseEntity<?> confirmAuthEmail(@RequestBody @Valid EmailSimple email, @RequestBody String
+            authCode, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
