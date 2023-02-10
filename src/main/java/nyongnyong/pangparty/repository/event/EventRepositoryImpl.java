@@ -50,7 +50,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
 
 //        System.out.println(albumMediaUrls);
 
-        List<String> hashtagNames = event.getEventHashtags().stream().map(eventHashtag1 -> eventHashtag1.getHashtag().getName()).collect(Collectors.toList());
+        List<String> hashtagNames = event.getEventHashtags().stream().map(eventHashtag1 -> eventHashtag1.getHashtag().getName()).collect(Collectors.toList());  // 이거 데이터 없을때 validation 해야할듯?
 //        List<String> albumMediaUrls = event.getAlbum().getAlbumMedia().stream().map(AlbumMedia::getMediaUrl).collect(Collectors.toList());
 
         boolean isLiked = true;

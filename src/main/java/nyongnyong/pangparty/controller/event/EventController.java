@@ -3,6 +3,7 @@ package nyongnyong.pangparty.controller.event;
 import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
+import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.event.EventService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +17,22 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EventController {
     private final EventService eventService;
+    private final MemberAuthService memberAuthService;
 
     @GetMapping("/{eventUid}")
-    public ResponseEntity<?> findEventIntroduceByEventUid(@PathVariable Long eventUid){
-        Long memberUid = 31L;   // Test: 31L -> isLiked가 true, 그 외 -> isLiked가 false
-        // TODO: memberUid를 어떻게 받아올지 고민해보기 memberUid = memberAuthService.getMemberUid();
+    public ResponseEntity<?> findEventIntroduceByEventUid(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid){
+        Long memberUid = memberAuthService.getMemberUid(token);   // Test: 31L -> isLiked가 true, 그 외 -> isLiked가 false
         return ResponseEntity.ok(eventService.findEventIntroduceByEventUid(memberUid, eventUid));
     }
 
     @PostMapping
-    public ResponseEntity<?> createEvent(@RequestBody EventCreateReq eventCreateReq){
+    public ResponseEntity<?> createEvent(@RequestHeader(value = "Authorization") String token, @RequestBody EventCreateReq eventCreateReq){
 
         try{
-            Long hostUid = 31L;
+            System.out.println("token: " + token);
+            Long hostUid = memberAuthService.getMemberUid(token);
+
+
 
             // TODO: eventHashtagService에서 addEventHashtag, hashtagService에서 addHashtag 필요. addHashtag에서는 해당 이름의 해시태그 있는지 확인 후 없으면 넣는다.
             Long eventUid = eventService.addEventAndEventTarget(hostUid, eventCreateReq);
