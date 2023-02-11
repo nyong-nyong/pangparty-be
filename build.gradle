@@ -45,12 +45,15 @@ dependencies {
 	// querydsl
 	implementation 'com.querydsl:querydsl-jpa:5.0.0'
 	implementation 'com.querydsl:querydsl-apt:5.0.0'
+	// aws
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.109'
 	// lombok
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'redis.clients:jedis'
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	testImplementation 'org.springframework.security:spring-security-test'

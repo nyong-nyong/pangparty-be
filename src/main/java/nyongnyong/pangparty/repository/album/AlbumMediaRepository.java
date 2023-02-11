@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface AlbumMediaRepository extends JpaRepository<AlbumMedia, Long> {
     Page<AlbumMedia> findByAlbumUid(Long albumUid, Pageable pageable);
-    Page<AlbumMedia> findByUidGreaterThanOrderByAesc(Long uid, Pageable pageable);
+    Page<AlbumMedia> findByUidGreaterThanOrderByUidAsc(Long uid, Pageable pageable);
 
     @Query(value = "select * from (SELECT LAG(uid, 1) OVER(ORDER BY uid)," +
             "LEAD(uid, 1) OVER(ORDER BY uid)" +
