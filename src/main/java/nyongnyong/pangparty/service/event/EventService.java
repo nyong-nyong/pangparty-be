@@ -1,10 +1,8 @@
 package nyongnyong.pangparty.service.event;
 import nyongnyong.pangparty.dto.event.EventCard;
-import nyongnyong.pangparty.dto.event.EventCardInterface;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.entity.event.Event;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 

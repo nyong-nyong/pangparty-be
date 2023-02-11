@@ -3,27 +3,21 @@ package nyongnyong.pangparty.service.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.EventCard;
-import nyongnyong.pangparty.dto.event.EventCardInterface;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.EventLike;
 import nyongnyong.pangparty.entity.event.EventTarget;
-import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
-import nyongnyong.pangparty.repository.event.EventHashtagRepository;
 import nyongnyong.pangparty.repository.event.EventLikeRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.event.EventTargetRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import nyongnyong.pangparty.repository.rollingpaper.RollingPaperRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -89,24 +83,12 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventCard> findTodayStartEvents() {
-        List<EventCardInterface> eventCardInterfaces = eventRepository.findTodayStartEvents();
-        ArrayList<EventCard> eventCards = new ArrayList<>();
-        for(EventCardInterface eventCardInterface : eventCardInterfaces){
-            EventCard eventCard = new EventCard(eventCardInterface.getEventUid(), eventCardInterface.getEventName(), eventCardInterface.getTargetId(), eventCardInterface.getImgUrl(), eventCardInterface.getDDay());
-            eventCards.add(eventCard);
-        }
-        return eventCards;
+        return eventRepository.findTodayStartEvents();
     }
 
     @Override
     public List<EventCard> findTodayEndEvents() {
-        List<EventCardInterface> eventCardInterfaces = eventRepository.findTodayEndEvents();
-        ArrayList<EventCard> eventCards = new ArrayList<>();
-        for(EventCardInterface eventCardInterface : eventCardInterfaces){
-            EventCard eventCard = new EventCard(eventCardInterface.getEventUid(), eventCardInterface.getEventName(), eventCardInterface.getTargetId(), eventCardInterface.getImgUrl(), eventCardInterface.getDDay());
-            eventCards.add(eventCard);
-        }
-        return eventCards;
+        return eventRepository.findTodayEndEvents();
     }
 
     private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){

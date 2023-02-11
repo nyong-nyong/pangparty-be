@@ -1,11 +1,7 @@
 package nyongnyong.pangparty.repository.event;
 
-import io.lettuce.core.Value;
 import nyongnyong.pangparty.dto.event.EventCard;
-import nyongnyong.pangparty.dto.event.EventCardInterface;
 import nyongnyong.pangparty.entity.event.Event;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -49,9 +45,15 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
     @Query("select e from Event e where e.uid = ?1")
     Event findEventByUid(Long eventUid);
 
-    @Query(value = "select e.uid, e.event_name, mp.id, e.img_url, e.d_day from event e left join event_target et on e.uid = et.event_uid left join member_profile mp on et.member_uid = mp.member_uid where date(e.create_time) = current_date limit 3", nativeQuery = true)
-    List<EventCardInterface> findTodayEndEvents();
+    @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
+            " from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " where e.dDay = CURRENT_DATE")
+    List<EventCard> findTodayEndEvents();
 
-    @Query(value = "select e.uid, e.event_name, mp.id, e.img_url, e.d_day from event e left join event_target et on e.uid = et.event_uid left join member_profile mp on et.member_uid = mp.member_uid where e.d_day = current_date limit 3", nativeQuery = true)
-    List<EventCardInterface> findTodayStartEvents();
+    @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
+            " from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " where date(e.createTime) = CURRENT_DATE")
+    List<EventCard> findTodayStartEvents();
 }

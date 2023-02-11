@@ -1,5 +1,8 @@
 package nyongnyong.pangparty.controller.event;
 
+import com.amazonaws.util.json.Jackson;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.*;
@@ -9,9 +12,6 @@ import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.event.EventHashtagService;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.hashtag.HashtagService;
-import nyongnyong.pangparty.service.rollingpaper.RollingPaperService;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -118,6 +118,9 @@ public class EventController {
 
             if(type.equals("start")) {
                 List<EventCard> todayStartEvents = eventService.findTodayStartEvents();
+                for(EventCard eventCard : todayStartEvents){
+                    System.out.println(eventCard.getEventUid() + "/ " + eventCard.getEventName() + "/ " + eventCard.getDDay());
+                }
                 response.put("startEvents", todayStartEvents);
             } else if(type.equals("end")){
                 List<EventCard> todayEndEvents = eventService.findTodayEndEvents();
