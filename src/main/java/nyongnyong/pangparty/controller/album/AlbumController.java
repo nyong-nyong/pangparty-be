@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
+import nyongnyong.pangparty.entity.album.AlbumMediaComment;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.service.album.*;
@@ -191,13 +192,14 @@ public class AlbumController {
      * @return
      */
     @PostMapping("/{mediaUid}/comments")
-    public ResponseEntity<AlbumMediaCommentSimpleRes> createAlbumMediaComment(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid, @RequestBody String comment) {
-        if (eventUid < 0 || mediaUid < 0 || comment == null || comment.isEmpty()) {
+    public ResponseEntity<AlbumMediaCommentSimpleRes> createAlbumMediaComment(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid, @RequestBody AlbumMediaCommentSimpleRes comment) {
+        log.debug("comment: {}", comment.getContent());
+        if (eventUid < 0 || mediaUid < 0 || comment.getContent() == null || comment.getContent().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
-            AlbumMediaCommentSimpleRes albumMediaCommentSimpleRes = albumMediaCommentService.createAlbumMediaComment(memberUid, mediaUid, comment);
+            AlbumMediaCommentSimpleRes albumMediaCommentSimpleRes = albumMediaCommentService.createAlbumMediaComment(memberUid, mediaUid, comment.getContent());
             return ResponseEntity.ok(albumMediaCommentSimpleRes);
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -225,9 +227,7 @@ public class AlbumController {
             return ResponseEntity.noContent().build();
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (TokenInvalidException e){
-            return ResponseEntity.badRequest().build();
-        }catch (NoSuchElementException e) {
+        }catch (TokenInvalidException | NoSuchElementException e){
             return ResponseEntity.badRequest().build();
         }
     }
@@ -238,7 +238,7 @@ public class AlbumController {
      * @param mediaUid
      * @return
      */
-    @PostMapping("/{mediaUid}/like")
+    @PostMapping("/{mediaUid}/likes")
     public ResponseEntity<?> likeAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid) {
         // TODO: memberUid
         try {
@@ -247,7 +247,7 @@ public class AlbumController {
             return ResponseEntity.ok().build();
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (TokenInvalidException e){
+        }catch (TokenInvalidException | NoSuchElementException e){
             return ResponseEntity.badRequest().build();
         }
     }
@@ -258,16 +258,18 @@ public class AlbumController {
      * @param mediaUid
      * @return
      */
-    @DeleteMapping("/{mediaUid}/like")
+    @DeleteMapping("/{mediaUid}/likes")
     public ResponseEntity<?> unlikeAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid) {
         // TODO: memberUid
         try {
-            Long memberUid = memberAuthService.getMemberUid(token);
+//            Long memberUid = memberAuthService.getMemberUid(token);
+            Long memberUid = 37L;
+            log.debug("memberUid: {}, mediaUid: {}", memberUid, mediaUid);
             albumMediaLikeService.unlikeAlbumMedia(memberUid, mediaUid);
             return ResponseEntity.noContent().build();
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (TokenInvalidException e){
+        }catch (TokenInvalidException | NoSuchElementException e){
             return ResponseEntity.badRequest().build();
         }
     }

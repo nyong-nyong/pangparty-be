@@ -4,10 +4,10 @@ public interface AlbumMediaLikeService {
 
     /**
      * 앨범 미디어 좋아요
-     * @param albumMediaUid
      * @param memberUid
+     * @param albumMediaUid
      */
-    public void likeAlbumMedia(Long albumMediaUid, Long memberUid);
+    public void likeAlbumMedia(Long memberUid, Long albumMediaUid);
 
     /**
      * 앨범 미디어 좋아요 취소

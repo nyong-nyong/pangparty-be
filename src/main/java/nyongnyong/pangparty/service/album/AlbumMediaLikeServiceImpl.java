@@ -2,10 +2,12 @@ package nyongnyong.pangparty.service.album;
 
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.entity.album.AlbumMediaLike;
+import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.repository.album.AlbumMediaLikeRepository;
 import nyongnyong.pangparty.repository.album.AlbumMediaRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -24,18 +26,19 @@ public class AlbumMediaLikeServiceImpl implements AlbumMediaLikeService {
     }
 
     @Override
-    public void likeAlbumMedia(Long albumMediaUid, Long memberUid) {
+    public void likeAlbumMedia(Long memberUid, Long albumMediaUid) {
         albumMediaLikeRepository.save(
                 AlbumMediaLike.builder()
-                        .member(memberRepository.findById(memberUid).get())
-                        .albumMedia(albumMediaRepository.findById(albumMediaUid).get())
+                        .member(memberRepository.findById(memberUid).orElseThrow(MemberNotFoundException::new))
+                        .albumMedia(albumMediaRepository.findById(albumMediaUid).orElseThrow())
                         .likeTime(LocalDateTime.now())
                         .build()
         );
     }
 
     @Override
-    public void unlikeAlbumMedia(Long albumMediaUid, Long memberUid) {
+    @Transactional
+    public void unlikeAlbumMedia(Long memberUid, Long albumMediaUid) {
         albumMediaLikeRepository.deleteByAlbumMediaUidAndMemberUid(albumMediaUid, memberUid);
     }
 }
