@@ -13,8 +13,11 @@ import java.util.Optional;
 
 public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
 
-    Long countByFollowee(Member followee);
-    Long countByFollower(Member follower);
+    @Query(value = "select count(f) from Friendship f where f.followee.uid = :followee")
+    Long countByFollowee(Long followee);
+
+    @Query(value = "select count(f) from Friendship f where f.follower.uid = :follower")
+    Long countByFollower(Long follower);
 
     @Query(value = "select f from Friendship f where f.follower.uid = :follower and f.followee.uid = :followee")
     Optional<Friendship> findByFollowerAndFollowee(Long follower, Long followee);

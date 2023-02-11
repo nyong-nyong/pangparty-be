@@ -125,7 +125,7 @@ public class FollowServiceImpl implements FollowService {
             throw new MemberNotFoundException();
         }
 
-        return friendshipRepository.countByFollower(member);
+        return friendshipRepository.countByFollower(member.getUid());
     }
 
     @Override
@@ -135,6 +135,6 @@ public class FollowServiceImpl implements FollowService {
             throw new MemberNotFoundException();
         }
 
-        return friendshipRepository.countByFollowee(member);
+        return friendshipRepository.countByFollowee(member.getUid());
     }
 }
