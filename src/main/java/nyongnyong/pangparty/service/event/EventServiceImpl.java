@@ -72,6 +72,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public void dislikeEvent(Long memberUid, Long eventUid) {
         log.info("memberUid = " + memberUid + " eventUid = " + eventUid);
 //        Long eventLikeUid = eventLikeRepository.findEventLikeUidByMemberUidAndEventUid(memberUid, eventUid);
