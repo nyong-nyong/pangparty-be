@@ -78,13 +78,11 @@ public class JwtTokenProvider {
     }
 
     public String getEmailFromToken(String token) {
-        String resolvedToken = resolveToken(token);
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(resolvedToken).getBody().getSubject();
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
     public String getIdFromToken(String token) {
-        String resolvedToken = resolveToken(token);
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(resolvedToken).getBody().get("id").toString();
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("id").toString();
     }
 
     public Authentication getAuthentication(String token) {

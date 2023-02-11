@@ -2,17 +2,23 @@ package nyongnyong.pangparty.repository.event;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import nyongnyong.pangparty.dto.event.SimpleHashtagName;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
-import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.QEvent;
 import nyongnyong.pangparty.entity.event.QEventHashtag;
 import nyongnyong.pangparty.entity.event.QEventLike;
+import nyongnyong.pangparty.entity.rollingpaper.QRollingPaper;
+import nyongnyong.pangparty.entity.rollingpaper.QRollingPaperPiece;
+import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class EventRepositoryImpl implements EventRepositoryCustom{
@@ -23,7 +29,6 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
     public EventIntroduceRes findEventIntroduceByEventUid(Long memberUid, Long eventUid) {
         QEvent qEvent = QEvent.event;
         QEventLike eventLike = QEventLike.eventLike;
-        QEventHashtag eventHashtag = QEventHashtag.eventHashtag;
 
         Integer tempIsLiked = queryFactory.selectOne()      // select(qEvent.count()) 대신에 selectOne() 사용, count보다 성능이 빠름! 조건에 해당하는 row 1개만 찾으면 종료하기 때문 (exist라고 하는 듯)
                 .from(qEvent)
@@ -32,10 +37,27 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
                 .where(qEvent.uid.eq(eventUid).and(eventLike.member.uid.eq(memberUid)))
                 .fetchOne();
 
+        Long likeCnt = queryFactory.select(eventLike.count())
+                .from(eventLike)
+                .where(eventLike.event.uid.eq(eventUid))
+                .fetchOne();
+
         Event event = queryFactory.selectFrom(qEvent)
                 .leftJoin(qEvent.eventHashtags).fetchJoin()
                 .leftJoin(qEvent.album).fetchJoin()
                 .where(qEvent.uid.eq(eventUid))
+                .fetchOne();
+
+        QRollingPaper qRollingPaper = QRollingPaper.rollingPaper;
+        RollingPaper rollingPaper = queryFactory.select(qRollingPaper).from(qRollingPaper)
+                .where(qRollingPaper.event.uid.eq(eventUid))
+                .fetchOne();
+
+        QRollingPaperPiece qRollingPaperPiece = QRollingPaperPiece.rollingPaperPiece;
+
+        Long rollingPaperCnt = queryFactory.select(qRollingPaperPiece.count())
+                .from(qRollingPaperPiece)
+                .where(qRollingPaperPiece.rollingPaper.uid.eq(rollingPaper.getUid()))
                 .fetchOne();
 
 //        List<String> hashtagNames = queryFactory.select(qEvent.eventHashtags.any().hashtag.name)
@@ -50,7 +72,13 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
 
 //        System.out.println(albumMediaUrls);
 
-        List<String> hashtagNames = event.getEventHashtags().stream().map(eventHashtag1 -> eventHashtag1.getHashtag().getName()).collect(Collectors.toList());
+        List<String> hashtagNames = event.getEventHashtags().stream().map(eventHashtag1 -> eventHashtag1.getHashtag().getName()).collect(Collectors.toList());  // 이거 데이터 없을때 validation 해야할듯?
+        ArrayList<SimpleHashtagName> hashtags = new ArrayList<>();
+        for(String hashtagName : hashtagNames){
+            SimpleHashtagName simpleHashtagName = new SimpleHashtagName(hashtagName);
+            hashtags.add(simpleHashtagName);
+        }
+        log.debug("hashtags: ", hashtags);
 //        List<String> albumMediaUrls = event.getAlbum().getAlbumMedia().stream().map(AlbumMedia::getMediaUrl).collect(Collectors.toList());
 
         boolean isLiked = true;
@@ -60,8 +88,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
 
         EventIntroduceRes eventIntroduceRes = new EventIntroduceRes(event.getEventTarget().getTargetMember().getMemberProfile().getId()
                 , event.getDDay(), event.getEventName(), isLiked, event.getIntroduction(), event.getImgUrl(),
-                hashtagNames);
-
+                hashtags, likeCnt, rollingPaperCnt, rollingPaper.getUid());
 
         return eventIntroduceRes;
     }

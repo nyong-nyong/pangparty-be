@@ -27,8 +27,15 @@ public class EventLike implements Serializable {
 
     private LocalDateTime likeTime;
 
-    @Builder
+//    @Builder
     public EventLike(LocalDateTime likeTime) {
+        this.likeTime = likeTime;
+    }
+
+    @Builder
+    public EventLike(Event event, Member member, LocalDateTime likeTime) {
+        this.event = event;
+        this.member = member;
         this.likeTime = likeTime;
     }
 
