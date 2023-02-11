@@ -23,6 +23,12 @@ public class FriendshipRes {
 
     boolean isFollowing;
 
+    public FriendshipRes(Long uid, String id, String imgUrl) {
+        this.uid = uid;
+        this.id = id;
+        this.imgUrl = imgUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

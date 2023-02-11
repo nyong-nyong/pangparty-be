@@ -7,10 +7,11 @@ import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.repository.member.FriendshipRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +26,8 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     @Transactional
-    public void addFollow(Long memberUid, String followeeId) {
-        Member follower = memberRepository.findMemberByUid(memberUid);
+    public void addFollow(String memberId, String followeeId) {
+        Member follower = memberRepository.findMemberById(memberId);
         Member followee = memberRepository.findMemberById(followeeId);
         if (follower == null || followee == null) {
             throw new MemberNotFoundException();
@@ -51,8 +52,8 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     @Transactional
-    public void unFollow(Long memberUid, String followeeId) {
-        Member follower = memberRepository.findMemberByUid(memberUid);
+    public void unFollow(String memberId, String followeeId) {
+        Member follower = memberRepository.findMemberById(memberId);
         Member followee = memberRepository.findMemberById(followeeId);
         if (follower == null || followee == null) {
             throw new MemberNotFoundException();
@@ -71,17 +72,17 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    public List<FriendshipRes> getFollowingList(String memberId, String targetId, Pageable pageable) {
+    public Page<FriendshipRes> getFollowingList(String memberId, String targetId, Pageable pageable) {
         Member member = memberRepository.findMemberById(memberId);
         Member target = memberRepository.findMemberById(targetId);
         if (member == null || target == null) {
             throw new MemberNotFoundException();
         }
 
-        List<FriendshipRes> followingList = friendshipRepository.findAllByFollower(target.getUid(), pageable);
+        Page<FriendshipRes> followingList = friendshipRepository.findAllByFollower(target.getUid(), pageable);
         if (memberId.equals(targetId)) {
             // 본인이면 팔로우 관계 여부 표시
-            for (FriendshipRes friendshipRes : followingList) {
+            for (FriendshipRes friendshipRes : followingList.getContent()) {
                 friendshipRes.setFollowing(true);
             }
         } else {
@@ -98,17 +99,17 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    public List<FriendshipRes> getFollowerList(String memberId, String targetId, Pageable pageable) {
+    public Page<FriendshipRes> getFollowerList(String memberId, String targetId, Pageable pageable) {
         Member member = memberRepository.findMemberById(memberId);
         Member target = memberRepository.findMemberById(targetId);
         if (member == null || target == null) {
             throw new MemberNotFoundException();
         }
 
-        List<FriendshipRes> followerList = friendshipRepository.findAllByFollowee(target.getUid(), pageable);
+        Page<FriendshipRes> followerList = friendshipRepository.findAllByFollowee(target.getUid(), pageable);
         List<FriendshipRes> memberFollowingList = friendshipRepository.findAllByFollower(member.getUid());
 
-        for (FriendshipRes friendshipRes : followerList) {
+        for (FriendshipRes friendshipRes : followerList.getContent()) {
             if (memberFollowingList.contains(friendshipRes)) {
                 friendshipRes.setFollowing(true);
             }

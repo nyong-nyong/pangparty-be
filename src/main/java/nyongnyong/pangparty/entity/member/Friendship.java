@@ -2,12 +2,15 @@ package nyongnyong.pangparty.entity.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
@@ -29,6 +32,8 @@ public class Friendship implements Serializable {
     @ToString.Exclude
     private Member followee;
 
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime followTime;
 
     @Builder
