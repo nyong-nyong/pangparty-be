@@ -14,6 +14,8 @@ import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.event.EventTargetRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import nyongnyong.pangparty.repository.rollingpaper.RollingPaperRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,12 +85,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventCard> findTodayStartEvents() {
-        return eventRepository.findTodayStartEvents();
+        Pageable top3 = PageRequest.of(0, 3);
+        return eventRepository.findTodayStartEvents(top3);
     }
 
     @Override
     public List<EventCard> findTodayEndEvents() {
-        return eventRepository.findTodayEndEvents();
+        Pageable top3 = PageRequest.of(0, 3);
+        return eventRepository.findTodayEndEvents(top3);
     }
 
     private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){

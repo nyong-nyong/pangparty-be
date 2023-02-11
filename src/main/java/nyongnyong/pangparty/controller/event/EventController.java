@@ -118,9 +118,6 @@ public class EventController {
 
             if(type.equals("start")) {
                 List<EventCard> todayStartEvents = eventService.findTodayStartEvents();
-                for(EventCard eventCard : todayStartEvents){
-                    System.out.println(eventCard.getEventUid() + "/ " + eventCard.getEventName() + "/ " + eventCard.getDDay());
-                }
                 response.put("startEvents", todayStartEvents);
             } else if(type.equals("end")){
                 List<EventCard> todayEndEvents = eventService.findTodayEndEvents();

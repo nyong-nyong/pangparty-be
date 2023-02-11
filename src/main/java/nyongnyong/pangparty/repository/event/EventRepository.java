@@ -2,6 +2,7 @@ package nyongnyong.pangparty.repository.event;
 
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.entity.event.Event;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -49,11 +50,11 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
             " from Event e" +
             " left join e.eventTarget.targetMember.memberProfile mp" +
             " where e.dDay = CURRENT_DATE")
-    List<EventCard> findTodayEndEvents();
+    List<EventCard> findTodayEndEvents(Pageable pageable);
 
     @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
             " from Event e" +
             " left join e.eventTarget.targetMember.memberProfile mp" +
             " where date(e.createTime) = CURRENT_DATE")
-    List<EventCard> findTodayStartEvents();
+    List<EventCard> findTodayStartEvents(Pageable pageable);
 }
