@@ -8,7 +8,6 @@ import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerReq;
 import nyongnyong.pangparty.exception.EventNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.RollingPaperNotFoundException;
-import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.rollingpaper.RollingPaperPieceService;
 import nyongnyong.pangparty.service.rollingpaper.RollingPaperStickerService;
@@ -29,7 +28,6 @@ public class RollingPaperController {
     private final MemberAuthService memberAuthService;
     private final RollingPaperPieceService rollingPaperPieceService;
     private final RollingPaperStickerService rollingPaperStickerService;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/{rollingPaperUid}/pieces")
     public ResponseEntity<?> findRollingPaperPieces(@PathVariable("eventUid") Long eventUid,
@@ -68,7 +66,7 @@ public class RollingPaperController {
             Long uid;
             rollingPaperPieceReq.setRollingPaperUid(rollingPaperUid);
 
-            if (jwtTokenProvider.resolveToken(token) == null) {
+            if (token == null) {
                 uid = rollingPaperPieceService.addRollingPaperPiece(eventUid, rollingPaperPieceReq);
             } else {
                 // check login status (token)
@@ -117,7 +115,7 @@ public class RollingPaperController {
             Long uid;
             rollingPaperStickerReq.setRollingPaperUid(rollingPaperUid);
 
-            if (jwtTokenProvider.resolveToken(token) == null) {
+            if (token == null) {
                 uid = rollingPaperStickerService.addRollingPaperSticker(eventUid, rollingPaperStickerReq);
             } else {
                 // check login status (token)
