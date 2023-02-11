@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -34,10 +36,11 @@ public class AlbumMediaServiceImpl implements AlbumMediaService {
     @Override
     public AlbumMediaDetailRes getAlbumMedia(Long mediaUid) {
         try {
-            Long[] prevAndNext = albumMediaRepository.findPrevAndNextByUid(mediaUid);
+            List<List<Long>> prevAndNext = albumMediaRepository.findPrevAndNextByUid(mediaUid);
+            log.debug("get prevAndNext = " + prevAndNext.get(0));
             Optional<AlbumMedia> medium = albumMediaRepository.findById(mediaUid);
             if(medium.isPresent()){
-                AlbumMediaDetailRes albumMediaDetailRes = new AlbumMediaDetailRes(medium.get(), prevAndNext[0], prevAndNext[1]);
+                AlbumMediaDetailRes albumMediaDetailRes = new AlbumMediaDetailRes(medium.get(), prevAndNext.get(0).get(0), prevAndNext.get(0).get(1));
                 log.debug("get albumMediaDetailRes = " + albumMediaDetailRes);
                 return albumMediaDetailRes;
             } else{
