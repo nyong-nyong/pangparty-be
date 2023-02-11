@@ -97,7 +97,7 @@ public class JwtTokenProvider {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        throw new TokenInvalidException();
+        return null;
     }
 
     public String resolveToken(String bearerToken) {
