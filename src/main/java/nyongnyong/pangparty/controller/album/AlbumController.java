@@ -82,7 +82,6 @@ public class AlbumController {
 //        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 //        RestTemplate restTemplate = new RestTemplate();
 //        AlbumMediaDetailRes result = restTemplate.exchange(uri, AlbumMediaDetailRes.class);
-        //TODO: memberUid
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
             String fileName = file.getOriginalFilename();
@@ -94,7 +93,6 @@ public class AlbumController {
             if (contentType.startsWith("video")) {  // video
                 mediaService.uploadMedia(file, "media/"+fileName, contentType, file.getSize());
             } else if (contentType.startsWith("image")) {   // image
-                //TODO: 이미지 s3에 저장
 //                MultipartFile webpMedia = mediaService.reformatMedia(file);
 //                MultipartFile thumbnail = mediaService.resizeMediaToThumbnail(webpMedia);
 //                MultipartFile media = mediaService.resizeMediaToAlbumSize(webpMedia);
@@ -209,7 +207,7 @@ public class AlbumController {
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
             AlbumMediaCommentSimpleRes albumMediaCommentSimpleRes = albumMediaCommentService.createAlbumMediaComment(memberUid, mediaUid, comment.getContent());
-            return ResponseEntity.ok(albumMediaCommentSimpleRes);
+            return new ResponseEntity<>(albumMediaCommentSimpleRes, HttpStatus.CREATED);
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }catch (TokenInvalidException e){
