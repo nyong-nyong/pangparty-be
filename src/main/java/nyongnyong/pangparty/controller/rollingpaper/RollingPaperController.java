@@ -106,8 +106,8 @@ public class RollingPaperController {
                                                     @PathVariable("rollingPaperUid") Long rollingPaperUid,
                                                     @RequestBody RollingPaperStickerReq rollingPaperStickerReq) {
 
-        // validate path variable & request body
-        if (eventUid < 0 || rollingPaperUid < 0 || rollingPaperStickerReq.getLeftLoc() < 0 || rollingPaperStickerReq.getTopLoc() < 0) {
+        // validate path variable
+        if (eventUid < 0 || rollingPaperUid < 0) {
             return ResponseEntity.badRequest().build();
         }
 
