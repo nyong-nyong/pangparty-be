@@ -8,19 +8,18 @@ import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.EventLike;
 import nyongnyong.pangparty.entity.event.EventTarget;
-import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
-import nyongnyong.pangparty.repository.event.EventHashtagRepository;
 import nyongnyong.pangparty.repository.event.EventLikeRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.event.EventTargetRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import nyongnyong.pangparty.repository.rollingpaper.RollingPaperRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -33,7 +32,6 @@ public class EventServiceImpl implements EventService {
     private final EventTargetRepository eventTargetRepository;
     private final EventLikeRepository eventLikeRepository;
     private final MemberRepository memberRepository;
-
     private final RollingPaperRepository rollingPaperRepository;
 
     @Override
@@ -74,6 +72,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public void dislikeEvent(Long memberUid, Long eventUid) {
         log.info("memberUid = " + memberUid + " eventUid = " + eventUid);
 //        Long eventLikeUid = eventLikeRepository.findEventLikeUidByMemberUidAndEventUid(memberUid, eventUid);
@@ -83,6 +82,18 @@ public class EventServiceImpl implements EventService {
 //        eventLikeRepository.delete(eventLikeRepository.findEventLikeByMemberAndEvent(member, event));
         eventLikeRepository.deleteByEventUidAndMemberUid(eventUid, memberUid);
 //        eventLikeRepository.deleteByUid(eventLikeUid);
+    }
+
+    @Override
+    public List<EventCard> findTodayStartEvents() {
+        Pageable top3 = PageRequest.of(0, 3);
+        return eventRepository.findTodayStartEvents(top3);
+    }
+
+    @Override
+    public List<EventCard> findTodayEndEvents() {
+        Pageable top3 = PageRequest.of(0, 3);
+        return eventRepository.findTodayEndEvents(top3);
     }
 
     private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){
@@ -98,21 +109,6 @@ public class EventServiceImpl implements EventService {
         return RollingPaper.builder()
                 .event(event).build();
     }
-
-//    private List<EventHashtag> toEventHashtagEntity(EventCreateReq eventCreateReq){
-//        List<EventHashtag> eventHashtags;
-//        for (String hashtag : eventCreateReq.getHashtags()) {
-//            EventHashtag eventHashtag = EventHashtag.builder()
-//                    .hashtag(hashtag)
-//                    .build();
-//            eventHashtags.add(eventHashtag);
-//        }
-//        EventHashtag.builder()
-//                .event()
-//                .addTime(LocalDateTime.now()).build();
-//
-//        return
-//    }
 
     private EventTarget toEventTargetEntity(EventCreateReq eventCreateReq, Event event){
         return EventTarget.builder()

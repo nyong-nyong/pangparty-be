@@ -1,22 +1,25 @@
 package nyongnyong.pangparty.controller.event;
 
+import com.amazonaws.util.json.Jackson;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nyongnyong.pangparty.dto.event.EventCreateReq;
-import nyongnyong.pangparty.dto.event.EventCreateRes;
-import nyongnyong.pangparty.dto.event.SimpleHashtagName;
+import nyongnyong.pangparty.dto.event.*;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.hashtag.Hashtag;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.event.EventHashtagService;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.hashtag.HashtagService;
-import nyongnyong.pangparty.service.rollingpaper.RollingPaperService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/events")
@@ -101,20 +104,30 @@ public class EventController {
             }
     }
 
-//    @GetMapping
-//    public ResponseEntity<?> findEventList(Pageable pageable){
-//        return ResponseEntity.ok(eventService.findEvents(pageable));
-//    }
+    @GetMapping
+    public ResponseEntity<?> findHomeEvents(@RequestParam String type){
+        try{
+            // Validate Path Variable
+            String[] types = { "start", "end" };
+            List<String> typeList = Arrays.asList(types);
+            if(!typeList.contains(type)){ // type이 start, end가 아니면 bad request
+                return ResponseEntity.badRequest().build();
+            }
 
-//    @GetMapping
-//    public ResponseEntity<?> findHomeEvents(){
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("popularEvents", eventService.findPopularEvents());
-//        response.put("createdTodayEvents", eventService.findCreatedTodayEvents());
-//        response.put("dDayEvents", eventService.findDDayEvents());
-//
-//
-//        return ResponseEntity.ok(eventService.findHomeEvents());
-//    }
+            Map<String, Object> response = new HashMap<>();
+
+            if(type.equals("start")) {
+                List<EventCard> todayStartEvents = eventService.findTodayStartEvents();
+                response.put("startEvents", todayStartEvents);
+            } else if(type.equals("end")){
+                List<EventCard> todayEndEvents = eventService.findTodayEndEvents();
+                response.put("endEvents", todayEndEvents);
+            }
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

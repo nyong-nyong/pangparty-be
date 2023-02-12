@@ -3,9 +3,11 @@ package nyongnyong.pangparty.controller.auth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.auth.EmailSimple;
+import nyongnyong.pangparty.dto.auth.IdSimple;
 import nyongnyong.pangparty.dto.auth.MemberLoginReq;
 import nyongnyong.pangparty.dto.auth.MemberRegisterReq;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -58,10 +60,9 @@ public class MemberAuthController {
         }
 
         try {
-            Long uid = memberAuthService.register(memberRegisterReq);
-            return ResponseEntity.created(null).build();
+            memberAuthService.register(memberRegisterReq);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
-            log.info("e = {}", e);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -96,5 +97,35 @@ public class MemberAuthController {
 
         memberAuthService.confirmAuthEmail(email.getEmail(), authCode);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/check-email")
+    public ResponseEntity<?> checkEmail(@RequestBody @Valid EmailSimple email, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResult = {}", bindingResult);
+            return ResponseEntity.badRequest().build();
+        }
+
+        boolean result = memberAuthService.checkExistingEmail(email.getEmail());
+
+        Map<String, Object> response = Map.of("isExisting", result);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/check-id")
+    public ResponseEntity<?> checkId(@RequestBody @Valid IdSimple id, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResult = {}", bindingResult);
+            return ResponseEntity.badRequest().build();
+        }
+
+        boolean result = memberAuthService.checkExistingId(id.getId());
+
+        Map<String, Object> response = Map.of("isExisting", result);
+
+        return ResponseEntity.ok(response);
     }
 }

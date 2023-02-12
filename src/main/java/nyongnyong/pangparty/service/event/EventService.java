@@ -27,4 +27,8 @@ public interface EventService {
     void likeEvent(Long memberUid, Long eventUid);
 
     void dislikeEvent(Long memberUid, Long eventUid);
+
+    List<EventCard> findTodayStartEvents();
+
+    List<EventCard> findTodayEndEvents();
 }
