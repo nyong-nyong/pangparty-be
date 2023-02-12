@@ -7,6 +7,7 @@ import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
+import nyongnyong.pangparty.repository.album.AlbumMediaRepository;
 import nyongnyong.pangparty.repository.event.EventParticipantRepository;
 import nyongnyong.pangparty.service.album.*;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
@@ -31,6 +32,7 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 @RequestMapping("/events/{eventUid}/album")
 public class AlbumController {
+    private final AlbumMediaRepository albumMediaRepository;
     private final EventParticipantRepository eventParticipantRepository;
 
     private final AlbumService albumService;
@@ -248,8 +250,11 @@ public class AlbumController {
     public ResponseEntity<?> likeAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid) {
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
+            if (albumMediaLikeService.likedAlbumMedia(memberUid, mediaUid)) {
+                return ResponseEntity.badRequest().build();
+            }
             albumMediaLikeService.likeAlbumMedia(memberUid, mediaUid);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }catch (TokenInvalidException | NoSuchElementException e){
@@ -268,6 +273,9 @@ public class AlbumController {
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
             log.debug("memberUid: {}, mediaUid: {}", memberUid, mediaUid);
+            if (!albumMediaLikeService.likedAlbumMedia(memberUid, mediaUid)) {
+                return ResponseEntity.badRequest().build();
+            }
             albumMediaLikeService.unlikeAlbumMedia(memberUid, mediaUid);
             return ResponseEntity.noContent().build();
         }catch (MemberNotFoundException e){

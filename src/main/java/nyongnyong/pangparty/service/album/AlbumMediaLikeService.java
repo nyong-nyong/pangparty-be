@@ -15,4 +15,13 @@ public interface AlbumMediaLikeService {
      * @param memberUid
      */
     public void unlikeAlbumMedia(Long albumMediaUid, Long memberUid);
+
+    /**
+     * 앨범 미디어 좋아요 여부 확인
+     * @param memberUid
+     * @param mediaUid
+     * @return
+     */
+    boolean likedAlbumMedia(Long memberUid, Long mediaUid);
+
 }
