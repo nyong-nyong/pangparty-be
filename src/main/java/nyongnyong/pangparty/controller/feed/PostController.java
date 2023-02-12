@@ -60,6 +60,24 @@ public class PostController {
         }
     }
 
+    @DeleteMapping("/{postUid}")
+    public ResponseEntity<?> deletePost(@RequestHeader("Authorization") String token,
+                                        @PathVariable Long postUid) {
+        if (token == null || token.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            postService.deletePost(postUid, memberUid);
+            return ResponseEntity.noContent().build();
+        } catch (PostNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (MemberNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     @GetMapping("/{postUid}/comments")
     public ResponseEntity<?> getComments(@PathVariable Long postUid,
                                          @RequestParam(required = false, defaultValue = "recent") String type,

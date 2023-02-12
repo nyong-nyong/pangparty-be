@@ -78,6 +78,26 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
+    public void deletePost(Long postUid, Long memberUid) {
+        Optional<Post> post = postRepository.findByUid(postUid);
+        if (post.isEmpty()) {
+            throw new PostNotFoundException();
+        }
+
+        Member member = memberRepository.findMemberByUid(memberUid);
+        if (member == null) {
+            throw new MemberNotFoundException();
+        }
+
+        if (!post.get().getMember().getUid().equals(memberUid)) {
+            throw new IllegalArgumentException("사용자가 작성하지 않은 게시물");
+        }
+
+        postRepository.delete(post.get());
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Page<PostCommentRes> getPostCommentList(Long postUid, Pageable pageable) {
         // check if post exists

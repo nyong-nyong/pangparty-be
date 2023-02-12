@@ -33,10 +33,10 @@ public class Post implements Serializable {
     @ToString.Exclude
     private Member member;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostComment> postComments;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostLike> postLikes;
 
     @Lob
