@@ -39,6 +39,7 @@ public class Post implements Serializable {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostLike> postLikes;
 
+    private String title;
     @Lob
     private String content;
 
@@ -55,9 +56,10 @@ public class Post implements Serializable {
     private int hit;
 
     @Builder
-    public Post(Event event, Member member, String content, String imgUrl) {
+    public Post(Event event, Member member, String title, String content, String imgUrl) {
         this.event = event;
         this.member = member;
+        this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;
     }
