@@ -8,14 +8,14 @@ import lombok.*;
 @ToString
 public class PostReq {
 
-    private String id; // 작성자 id
+//    private String id; // 작성자 id
     private String content;
     private String imgUrl;
     private Long eventUid; // 이벤트 연동
 
     @Builder
-    public PostReq(String id, String content, String imgUrl, Long eventUid) {
-        this.id = id;
+    public PostReq(String content, String imgUrl, Long eventUid) {
+//        this.id = id;
         this.content = content;
         this.imgUrl = imgUrl;
         this.eventUid = eventUid;

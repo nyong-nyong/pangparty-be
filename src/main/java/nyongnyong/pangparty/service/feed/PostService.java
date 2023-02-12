@@ -14,6 +14,8 @@ public interface PostService {
 
     void deletePost(Long postUid, Long memberUid);
 
+    void updatePost(Long postUid, Long memberUid, PostReq postReq);
+
     Page<PostCommentRes> getPostCommentList(Long postUid, Pageable pageable);
 
     Page<PostCommentRes> getRecentCommentList(Long postUid, int count);
@@ -21,5 +23,4 @@ public interface PostService {
     Long createPostComment(Long postUid, Long memberUid, String content);
 
     void deletePostComment(Long postUid, Long commentUid, Long memberUid);
-
 }
