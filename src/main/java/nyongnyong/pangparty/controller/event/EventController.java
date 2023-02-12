@@ -7,6 +7,7 @@ import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.hashtag.Hashtag;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
+import nyongnyong.pangparty.service.album.AlbumService;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.event.EventHashtagService;
 import nyongnyong.pangparty.service.event.EventService;
@@ -27,6 +28,7 @@ public class EventController {
     private final MemberAuthService memberAuthService;
     private final HashtagService hashtagService;
     private final EventHashtagService eventHashtagService;
+    private final AlbumService albumService;
 
     @GetMapping("/{eventUid}")
     public ResponseEntity<?> findEventIntroduceByEventUid(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid){
@@ -72,7 +74,8 @@ public class EventController {
             // rollingPaperRepository에서 save
             eventService.addRollingPaper(eventUid);
 
-            // TODO: albumRepository에서 save
+            // albumRepository에서 save
+            albumService.createAlbum(eventUid);
 
             eventCreateReq.setEventUid(eventUid);
             EventCreateRes eventCreateRes = new EventCreateRes(eventUid);
