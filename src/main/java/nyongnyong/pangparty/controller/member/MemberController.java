@@ -2,17 +2,18 @@ package nyongnyong.pangparty.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.event.EventCard;
+<<<<<<< backend/pangparty/src/main/java/nyongnyong/pangparty/controller/member/MemberController.java
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
+import nyongnyong.pangparty.dto.member.MemberProfileReq;
+import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.member.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,55 @@ import java.util.NoSuchElementException;
 public class MemberController {
     private final EventService eventService;
     private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+
+    @GetMapping("/profile/{targetId}")
+    public ResponseEntity<?> findMemberProfile(@RequestHeader(required = false, value = "Authorization") String token,
+                                               @PathVariable("targetId") String targetId) {
+        // 로그인 안 한 상태
+        if (token == null || token.isEmpty()) {
+            try {
+                return ResponseEntity.ok(memberService.findMemberProfile(null, targetId));
+            } catch (MemberNotFoundException e) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        // 로그인 상태
+        try {
+            String memberId = jwtTokenProvider.getIdFromToken(jwtTokenProvider.resolveToken(token));
+
+            return ResponseEntity.ok(memberService.findMemberProfile(memberId, targetId));
+        } catch (MemberNotFoundException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateMemberProfile(@RequestHeader("Authorization") String token,
+                                                 @RequestBody @Valid MemberProfileReq memberProfileReq)
+    {
+        // Validate Token
+        if (token == null || token.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        // Validate Request Body
+        if (memberProfileReq == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            String memberId = jwtTokenProvider.getIdFromToken(jwtTokenProvider.resolveToken(token));
+
+            memberService.updateMemberProfile(memberId, memberProfileReq);
+
+            return ResponseEntity.ok().build();
+        } catch (MemberNotFoundException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
     @GetMapping("/{memberId}/received-events")
     public ResponseEntity<?> findReceivedEvent(@PathVariable("memberId") String memberId){

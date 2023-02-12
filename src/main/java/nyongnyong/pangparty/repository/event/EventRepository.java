@@ -67,4 +67,22 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
             " left join Album a on e.uid = a.event.uid" +
             " left join AlbumMedia am on a.uid = am.album.uid where e.uid = ?1")
     List<EventExportRes> findExportStatistics(Long eventUid);
+
+    @Query("select count(e) from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " left join e.host.memberProfile hmp where hmp.id = ?1")
+    Long countHostEventsByMemberId(String memberId);
+
+    @Query("select count(e) from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " left join e.eventParticipants p " +
+            " where p.member.memberProfile.id = ?1 and e.dDay > SYSDATE()")
+    Long countInvolvingEventsByMemberId(String memberId);
+
+    @Query("select count(e) from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " left join e.eventParticipants p " +
+            " where p.member.memberProfile.id = ?1 and e.dDay <= SYSDATE()")
+    Long countInvolvedEventsByMemberId(String memberId);
+
 }

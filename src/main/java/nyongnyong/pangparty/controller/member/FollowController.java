@@ -30,7 +30,6 @@ public class FollowController {
 
         try {
             String memberId = jwtTokenProvider.getIdFromToken(jwtTokenProvider.resolveToken(token));
-            System.out.println("memberId = " + memberId);
 
             followService.addFollow(memberId, followeeId);
             return new ResponseEntity<>(HttpStatus.CREATED);
