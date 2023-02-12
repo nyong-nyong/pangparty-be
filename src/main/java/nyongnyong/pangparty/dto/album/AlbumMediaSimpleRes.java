@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.URL;
 public class AlbumMediaSimpleRes {
 
     private Long uid;
-    private Long memberUid;
+    private String memberId;
     @URL(message = "URL 형식이 아닙니다.")
     private String thumbnailUrl;
     private String extension;
@@ -17,7 +17,7 @@ public class AlbumMediaSimpleRes {
     // Entity -> Dto
     public AlbumMediaSimpleRes(AlbumMedia albumMedia) {
         this.uid = albumMedia.getUid();
-        this.memberUid = albumMedia.getMember().getUid();
+        this.memberId = albumMedia.getMember().getMemberProfile().getId();
         this.thumbnailUrl = albumMedia.getThumbnailUrl();
         this.extension = albumMedia.getExtension();
     }
