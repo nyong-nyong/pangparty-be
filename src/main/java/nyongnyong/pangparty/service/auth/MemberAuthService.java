@@ -56,4 +56,18 @@ public interface MemberAuthService {
      */
     Long getMemberUid(String token);
 
+    /**
+     * 이메일 중복 체크
+     * @param email 이메일
+     * @return 중복 여부
+     */
+    boolean checkExistingEmail(String email);
+
+    /**
+     * 아이디 중복 체크
+     * @param id 아이디
+     * @return 중복 여부
+     */
+    boolean checkExistingId(String id);
+
 }
