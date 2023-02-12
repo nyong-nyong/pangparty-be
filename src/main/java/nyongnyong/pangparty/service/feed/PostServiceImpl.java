@@ -119,7 +119,7 @@ public class PostServiceImpl implements PostService {
             event = eventRepository.findEventByUid(postReq.getEventUid());
         }
 
-        postRepository.updatePost(postUid, event, postReq.getContent(), postReq.getImgUrl());
+        postRepository.updatePost(postUid, event, postReq.getTitle(), postReq.getContent(), postReq.getImgUrl());
     }
 
     @Override
@@ -183,6 +183,7 @@ public class PostServiceImpl implements PostService {
     Post toPostEntity(PostReq postReq, Member member) {
         return Post.builder()
                 .member(member)
+                .title(postReq.getTitle())
                 .imgUrl(postReq.getImgUrl())
                 .content(postReq.getContent())
                 .build();
@@ -192,6 +193,7 @@ public class PostServiceImpl implements PostService {
         return Post.builder()
                 .member(member)
                 .event(event)
+                .title(postReq.getTitle())
                 .imgUrl(postReq.getImgUrl())
                 .content(postReq.getContent())
                 .build();

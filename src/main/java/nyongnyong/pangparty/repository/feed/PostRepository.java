@@ -15,11 +15,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<Post> findByUid(Long uid);
 
-    @Query("select new nyongnyong.pangparty.dto.feed.PostRes(p.uid, p.event.uid, p.member.memberProfile.id, p.content, " +
+    @Query("select new nyongnyong.pangparty.dto.feed.PostRes(p.uid, p.event.uid, p.member.memberProfile.id, p.title, p.content, " +
             "p.imgUrl, p.createTime, p.modifyTime) from Post p where p.uid = :postUid")
     PostRes findPostResByUid(Long postUid);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("update Post p set p.event = :event, p.content = :content, p.imgUrl = :imgUrl where p.uid = :postUid")
-    int updatePost(Long postUid, Event event, String content, String imgUrl);
+    @Query("update Post p set p.event = :event, p.title = :title, p.content = :content, p.imgUrl = :imgUrl where p.uid = :postUid")
+    int updatePost(Long postUid, Event event, String title, String content, String imgUrl);
 }

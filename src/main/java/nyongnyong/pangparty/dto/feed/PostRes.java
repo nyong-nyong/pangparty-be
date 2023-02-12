@@ -3,7 +3,6 @@ package nyongnyong.pangparty.dto.feed;
 import lombok.*;
 import org.hibernate.validator.constraints.UniqueElements;
 
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -24,6 +23,7 @@ public class PostRes {
 
     private Long likeCount;
     private boolean isLiked;
+    private String title;
     private String content;
     private String imgUrl;
     private LocalDateTime createTime;
@@ -45,10 +45,11 @@ public class PostRes {
 //        this.hit = hit;
     }
 
-    public PostRes(Long uid, Long eventUid, String memberId, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
+    public PostRes(Long uid, Long eventUid, String memberId, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.uid = uid;
         this.eventUid = eventUid;
         this.memberId = memberId;
+        this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;
         this.createTime = createTime;
