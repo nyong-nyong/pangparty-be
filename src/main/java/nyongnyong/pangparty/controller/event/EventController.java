@@ -1,8 +1,5 @@
 package nyongnyong.pangparty.controller.event;
 
-import com.amazonaws.util.json.Jackson;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.*;
@@ -186,8 +183,25 @@ public class EventController {
         }
     }
 
-//    @GetMapping("/export")
-//    public ResponseEntity<?> findExportStatistics(){
-//        try
-//    }
+    @GetMapping("/{eventUid}/export")
+    public ResponseEntity<?> findExportStatistics(@PathVariable Long eventUid){
+        try{
+            Map<String, Object> response = new HashMap<>();
+            List<EventExportRes> eventExportRes = eventService.findExportStatistics(eventUid);
+            response.put("eventExports", eventExportRes);
+            return ResponseEntity.ok(response);
+        } catch (MemberNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (TokenInvalidException e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
