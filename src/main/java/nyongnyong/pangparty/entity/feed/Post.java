@@ -51,7 +51,7 @@ public class Post implements Serializable {
     @LastModifiedDate
     private LocalDateTime modifyTime;
 
-    @Column(columnDefinition = "int default 0")
+    @Column(columnDefinition = "int default 0", nullable = false)
     private int hit;
 
     @Builder

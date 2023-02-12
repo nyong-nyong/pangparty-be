@@ -2,10 +2,13 @@ package nyongnyong.pangparty.service.feed;
 
 import nyongnyong.pangparty.dto.feed.PostCommentRes;
 import nyongnyong.pangparty.dto.feed.PostReq;
+import nyongnyong.pangparty.dto.feed.PostRes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PostService {
+
+    PostRes getPost(Long postUid, Long memberUid);
 
     Long addPost(PostReq postReq, Long memberUid);
 
@@ -16,5 +19,4 @@ public interface PostService {
     Long createPostComment(Long postUid, Long memberUid, String content);
 
     void deletePostComment(Long postUid, Long commentUid, Long memberUid);
-
 }

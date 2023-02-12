@@ -3,15 +3,18 @@ package nyongnyong.pangparty.service.feed;
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.feed.PostCommentRes;
 import nyongnyong.pangparty.dto.feed.PostReq;
+import nyongnyong.pangparty.dto.feed.PostRes;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.feed.Post;
 import nyongnyong.pangparty.entity.feed.PostComment;
+import nyongnyong.pangparty.entity.feed.PostLike;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.exception.CommentNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.feed.PostCommentRepository;
+import nyongnyong.pangparty.repository.feed.PostLikeRepository;
 import nyongnyong.pangparty.repository.feed.PostRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,7 +33,30 @@ public class PostServiceImpl implements PostService {
     private final EventRepository eventRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
     private final PostCommentRepository postCommentRepository;
+
+    @Override
+    @Transactional
+    public PostRes getPost(Long postUid, Long memberUid) {
+        PostRes postRes = postRepository.findPostResByUid(postUid);
+        if (postRes != null) {
+            List<PostCommentRes> postCommentResList = postCommentRepository.findAllByPostUid(postUid, Pageable.ofSize(5)).getContent();
+            postRes.setPostComments(postCommentResList);
+            postRes.setLikeCount(postLikeRepository.countByPostUid(postUid));
+
+            if (memberUid != null) {
+                PostLike postLike = postLikeRepository.findByPostUidAndMemberUid(postUid, memberUid);
+                if (postLike != null) {
+                    postRes.setLiked(true);
+                }
+            }
+
+            return postRes;
+        } else {
+            throw new PostNotFoundException();
+        }
+    }
 
     @Override
     @Transactional
@@ -127,9 +154,13 @@ public class PostServiceImpl implements PostService {
 
     PostComment toPostCommentEntity(Long postUid, Long memberUid, String content) {
         return PostComment.builder()
-                .post(postRepository.findByUid(postUid))
+                .post(postRepository.findByUid(postUid).get())
                 .member(memberRepository.findMemberByUid(memberUid))
                 .content(content)
                 .build();
+    }
+
+    PostRes toPostRes(Post post) {
+        return PostRes.builder().build();
     }
 }

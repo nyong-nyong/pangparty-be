@@ -43,12 +43,28 @@ public class PostController {
         }
     }
 
+    @GetMapping("/{postUid}")
+    public ResponseEntity<?> getPost(@RequestHeader(value = "Authorization", required = false) String token,
+                                     @PathVariable Long postUid) {
+        try {
+            if (token != null && !token.isEmpty()) {
+                Long memberUid = memberAuthService.getMemberUid(token);
+                return ResponseEntity.ok(postService.getPost(postUid, memberUid));
+            }
+
+            return ResponseEntity.ok(postService.getPost(postUid, null));
+        } catch (PostNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (MemberNotFoundException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @GetMapping("/{postUid}/comments")
     public ResponseEntity<?> getComments(@PathVariable Long postUid,
                                          @RequestParam(required = false, defaultValue = "recent") String type,
                                          Pageable pageable) {
         try {
-            System.out.println("type: " + type);
             if (type.equals("recent")) {
                 Page<PostCommentRes> postCommentResPage = postService.getRecentCommentList(postUid, 5);
 
