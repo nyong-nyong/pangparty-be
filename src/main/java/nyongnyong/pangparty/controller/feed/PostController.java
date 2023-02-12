@@ -9,6 +9,7 @@ import nyongnyong.pangparty.exception.CommentNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
+import nyongnyong.pangparty.service.feed.PostCommentService;
 import nyongnyong.pangparty.service.feed.PostLikeService;
 import nyongnyong.pangparty.service.feed.PostService;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+    private final PostCommentService postCommentService;
     private final PostLikeService postLikeService;
     private final MemberAuthService memberAuthService;
 
@@ -118,7 +120,7 @@ public class PostController {
             return ResponseEntity.notFound().build();
         } catch (MemberNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }  catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -150,7 +152,7 @@ public class PostController {
                                          Pageable pageable) {
         try {
             if (type.equals("recent")) {
-                Page<PostCommentRes> postCommentResPage = postService.getRecentCommentList(postUid, 5);
+                Page<PostCommentRes> postCommentResPage = postCommentService.getRecentCommentList(postUid, 5);
 
                 Map<String, Object> response = Map.of("size", 5,
                         "itemCnt", postCommentResPage.getTotalElements(),
@@ -158,7 +160,7 @@ public class PostController {
 
                 return ResponseEntity.ok(response);
             } else {
-                Page<PostCommentRes> postCommentResPage = postService.getPostCommentList(postUid, pageable);
+                Page<PostCommentRes> postCommentResPage = postCommentService.getPostCommentList(postUid, pageable);
 
                 Map<String, Object> response = Map.of("size", pageable.getPageSize(),
                         "page", pageable.getPageNumber(),
@@ -184,7 +186,7 @@ public class PostController {
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
 
-            Long commentUid = postService.createPostComment(postUid, memberUid, postCommentReq.getContent());
+            Long commentUid = postCommentService.createPostComment(postUid, memberUid, postCommentReq.getContent());
 
             return ResponseEntity.created(URI.create("/posts/" + postUid + "/comments/" + commentUid)).build();
         } catch (PostNotFoundException e) {
@@ -205,7 +207,7 @@ public class PostController {
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
 
-            postService.deletePostComment(postUid, commentUid, memberUid);
+            postCommentService.deletePostComment(postUid, commentUid, memberUid);
 
             return ResponseEntity.noContent().build();
         } catch (PostNotFoundException | CommentNotFoundException e) {
