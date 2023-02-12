@@ -1,13 +1,17 @@
 package nyongnyong.pangparty.controller.album;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
+import nyongnyong.pangparty.repository.event.EventParticipantRepository;
 import nyongnyong.pangparty.service.album.*;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
+import nyongnyong.pangparty.service.event.EventParticipantService;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,8 +28,10 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/events/{eventUid}/album")
 public class AlbumController {
+    private final EventParticipantRepository eventParticipantRepository;
 
     private final AlbumService albumService;
     private final AlbumMediaService albumMediaService;
@@ -34,14 +40,7 @@ public class AlbumController {
     private final MediaService mediaService;
     private final MemberAuthService memberAuthService;
 
-    public AlbumController(AlbumService albumService, AlbumMediaService albumMediaService, AlbumMediaCommentService albumMediaCommentService, AlbumMediaLikeService albumMediaLikeService, MediaService mediaService, MemberAuthService memberAuthService) {
-        this.albumService = albumService;
-        this.albumMediaService = albumMediaService;
-        this.albumMediaCommentService = albumMediaCommentService;
-        this.albumMediaLikeService = albumMediaLikeService;
-        this.mediaService = mediaService;
-        this.memberAuthService = memberAuthService;
-    }
+    private final EventParticipantService eventParticipantService;
 
     /**
      * 앨범 미디어 전체 조회
@@ -75,39 +74,49 @@ public class AlbumController {
      * @param file
      * @return
      */
-//    @PostMapping("/")
-//    public ResponseEntity<AlbumMediaSimpleRes> createAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @RequestPart MultipartFile file) {
-//        // InputStream으로 file을 전달
-////        final String uri = "http://localhost:8080/media/"+eventUid+"/upload";
-////        HttpHeaders headers = new HttpHeaders();
-////        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-////        RestTemplate restTemplate = new RestTemplate();
-////        AlbumMediaDetailRes result = restTemplate.exchange(uri, AlbumMediaDetailRes.class);
-//        //TODO: memberUid
-//        try {
-//            Long memberUid = memberAuthService.getMemberUid(token);
-//            Path imgPath = Path.of(file.getOriginalFilename());
-//            String contentType = Files.probeContentType(imgPath);
-//            if (contentType.startsWith("video")) {  // video
-//            } else if (contentType.startsWith("image")) {   // image
-//                //TODO: 이미지
-//            } else {
-//                return ResponseEntity.badRequest().build();
-//            }
-//            Long albumUid = albumService.getAlbum(eventUid).getUid();
-//            mediaService.saveMedia(albumUid, memberUid, file);
-//            AlbumMediaSimpleRes albumMedia = albumMediaService.createAlbumMedia(result);
-//
-//            return new ResponseEntity<>(albumMedia, HttpStatus.CREATED);
-//        }catch (MemberNotFoundException e){
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }catch (TokenInvalidException e){
-//            return ResponseEntity.badRequest().build();
-//        }catch (IOException e) {
-//            log.debug(e.getMessage());
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
+    @PostMapping
+    public ResponseEntity<AlbumMediaSimpleRes> createAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @RequestPart(value = "file", required = false) MultipartFile file) {
+        // InputStream으로 file을 전달
+//        final String uri = "http://localhost:8080/media/"+eventUid+"/upload";
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+//        RestTemplate restTemplate = new RestTemplate();
+//        AlbumMediaDetailRes result = restTemplate.exchange(uri, AlbumMediaDetailRes.class);
+        //TODO: memberUid
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            String fileName = file.getOriginalFilename();
+            if (fileName == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            fileName = String.valueOf(System.currentTimeMillis()).concat(fileName);
+            String contentType = Files.probeContentType(Path.of(fileName));
+            if (contentType.startsWith("video")) {  // video
+                mediaService.uploadMedia(file, "media/"+fileName, contentType, file.getSize());
+            } else if (contentType.startsWith("image")) {   // image
+                //TODO: 이미지 s3에 저장
+//                MultipartFile webpMedia = mediaService.reformatMedia(file);
+//                MultipartFile thumbnail = mediaService.resizeMediaToThumbnail(webpMedia);
+//                MultipartFile media = mediaService.resizeMediaToAlbumSize(webpMedia);
+//                String originalUrl = mediaService.uploadMedia(webpMedia, "webp/"+fileName, contentType, webpMedia.getSize());
+//                String thumbnailUrl = mediaService.uploadMedia(thumbnail, "thumbnail/"+fileName, contentType, thumbnail.getSize());
+//                String mediaUrl = mediaService.uploadMedia(media, "album/"+fileName, contentType, media.getSize());
+                String originalUrl = mediaService.uploadMedia(file, "original/"+fileName, contentType, file.getSize());
+                String thumbnailUrl = originalUrl;
+                String mediaUrl = originalUrl;
+                AlbumMediaSimpleRes albumMediaSimpleRes = albumMediaService.createAlbumMedia(eventUid, memberUid, thumbnailUrl, mediaUrl);
+                return new ResponseEntity<>(albumMediaSimpleRes, HttpStatus.CREATED);
+            }
+        }catch (FileSizeLimitExceededException e){
+            return new ResponseEntity<>(HttpStatus.PAYLOAD_TOO_LARGE);
+        }catch (MemberNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }catch (TokenInvalidException | NoSuchElementException | IOException e){
+            log.debug(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
 
     /**
      * 앨범 미디어 상세 조회
@@ -139,22 +148,23 @@ public class AlbumController {
         if (eventUid < 0 || mediaUid < 0) {
             return ResponseEntity.badRequest().build();
         }
-        // TODO: memberUid
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
             if (!albumMediaService.isAlbumMediaOwner(memberUid, mediaUid)) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
-            albumMediaService.deleteAlbumMedia(mediaUid);
+            albumMediaService.deleteAlbumMedia(memberUid, mediaUid);
+            if (!eventParticipantService.isEventParticipant(memberUid, eventUid)){
+                eventParticipantService.deleteEventParticipant(memberUid, eventUid);
+            }
             return ResponseEntity.noContent().build();
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (TokenInvalidException e){
-            return ResponseEntity.badRequest().build();
-        }catch (NoSuchElementException e) {
+        }catch (TokenInvalidException | NoSuchElementException e){
             return ResponseEntity.badRequest().build();
         }
     }
+
 
     /**
      * 앨범 미디어 댓글 전체 조회
@@ -191,13 +201,14 @@ public class AlbumController {
      * @return
      */
     @PostMapping("/{mediaUid}/comments")
-    public ResponseEntity<AlbumMediaCommentSimpleRes> createAlbumMediaComment(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid, @RequestBody String comment) {
-        if (eventUid < 0 || mediaUid < 0 || comment == null || comment.isEmpty()) {
+    public ResponseEntity<AlbumMediaCommentSimpleRes> createAlbumMediaComment(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid, @RequestBody AlbumMediaCommentSimpleRes comment) {
+        log.debug("comment: {}", comment.getContent());
+        if (eventUid < 0 || mediaUid < 0 || comment.getContent() == null || comment.getContent().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
-            AlbumMediaCommentSimpleRes albumMediaCommentSimpleRes = albumMediaCommentService.createAlbumMediaComment(memberUid, mediaUid, comment);
+            AlbumMediaCommentSimpleRes albumMediaCommentSimpleRes = albumMediaCommentService.createAlbumMediaComment(memberUid, mediaUid, comment.getContent());
             return ResponseEntity.ok(albumMediaCommentSimpleRes);
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -215,7 +226,6 @@ public class AlbumController {
      */
     @DeleteMapping("/{mediaUid}/comments/{commentUid}")
     public ResponseEntity<?> deleteAlbumMediaComment(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid, @PathVariable Long commentUid) {
-        // TODO: memberUid
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
             if (!albumMediaCommentService.isAlbumMediaCommentOwner(memberUid, commentUid)) {
@@ -225,9 +235,7 @@ public class AlbumController {
             return ResponseEntity.noContent().build();
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (TokenInvalidException e){
-            return ResponseEntity.badRequest().build();
-        }catch (NoSuchElementException e) {
+        }catch (TokenInvalidException | NoSuchElementException e){
             return ResponseEntity.badRequest().build();
         }
     }
@@ -238,16 +246,15 @@ public class AlbumController {
      * @param mediaUid
      * @return
      */
-    @PostMapping("/{mediaUid}/like")
+    @PostMapping("/{mediaUid}/likes")
     public ResponseEntity<?> likeAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid) {
-        // TODO: memberUid
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
             albumMediaLikeService.likeAlbumMedia(memberUid, mediaUid);
             return ResponseEntity.ok().build();
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (TokenInvalidException e){
+        }catch (TokenInvalidException | NoSuchElementException e){
             return ResponseEntity.badRequest().build();
         }
     }
@@ -258,16 +265,16 @@ public class AlbumController {
      * @param mediaUid
      * @return
      */
-    @DeleteMapping("/{mediaUid}/like")
+    @DeleteMapping("/{mediaUid}/likes")
     public ResponseEntity<?> unlikeAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @PathVariable Long mediaUid) {
-        // TODO: memberUid
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
+            log.debug("memberUid: {}, mediaUid: {}", memberUid, mediaUid);
             albumMediaLikeService.unlikeAlbumMedia(memberUid, mediaUid);
             return ResponseEntity.noContent().build();
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (TokenInvalidException e){
+        }catch (TokenInvalidException | NoSuchElementException e){
             return ResponseEntity.badRequest().build();
         }
     }

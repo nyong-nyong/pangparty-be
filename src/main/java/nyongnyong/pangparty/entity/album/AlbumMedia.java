@@ -6,6 +6,7 @@ import nyongnyong.pangparty.entity.member.Member;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,12 +31,13 @@ public class AlbumMedia implements Serializable {
 
     @OneToMany(mappedBy = "albumMedia")
     @ToString.Exclude
-    private List<AlbumMediaComment> albumMediaComments;
+    private List<AlbumMediaComment> albumMediaComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "albumMedia")
     @ToString.Exclude
     private List<AlbumMediaLike> albumMediaLikes;
 
+    private String thumbnailUrl;
     private String mediaUrl;
     private String extension;
     private LocalDateTime uploadTime;
@@ -44,11 +46,12 @@ public class AlbumMedia implements Serializable {
     private String takenLng;
 
     @Builder
-    public AlbumMedia(Album album, Member member, List<AlbumMediaComment> albumMediaComments, List<AlbumMediaLike> albumMediaLikes, String mediaUrl, String extension, LocalDateTime uploadTime, LocalDateTime takenTime, String takenLat, String takenLng) {
+    public AlbumMedia(Album album, Member member, List<AlbumMediaComment> albumMediaComments, List<AlbumMediaLike> albumMediaLikes, String thumbnailUrl, String mediaUrl, String extension, LocalDateTime uploadTime, LocalDateTime takenTime, String takenLat, String takenLng) {
         this.album = album;
         this.member = member;
         this.albumMediaComments = albumMediaComments;
         this.albumMediaLikes = albumMediaLikes;
+        this.thumbnailUrl = thumbnailUrl;
         this.mediaUrl = mediaUrl;
         this.extension = extension;
         this.uploadTime = uploadTime;
@@ -56,6 +59,23 @@ public class AlbumMedia implements Serializable {
         this.takenLat = takenLat;
         this.takenLng = takenLng;
     }
+
+    @Builder
+    public AlbumMedia(Album album, Member member, String thumbnailUrl, String mediaUrl, String extension, LocalDateTime uploadTime, LocalDateTime takenTime, String takenLat, String takenLng) {
+        this.album = album;
+        this.member = member;
+        this.albumMediaComments = new ArrayList<>();
+        this.albumMediaLikes = new ArrayList<>();
+        this.thumbnailUrl = thumbnailUrl;
+        this.mediaUrl = mediaUrl;
+        this.extension = extension;
+        this.uploadTime = uploadTime;
+        this.takenTime = takenTime;
+        this.takenLat = takenLat;
+        this.takenLng = takenLng;
+    }
+
+
 
     /**
      * 연관관계 편의 메서드

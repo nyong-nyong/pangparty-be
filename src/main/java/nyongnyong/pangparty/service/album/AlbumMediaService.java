@@ -7,14 +7,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.NoSuchElementException;
+
 public interface AlbumMediaService {
 
     /**
      * 앨범 미디어 생성
-     * @param albumMedia
+     * @param eventUid
+     * @param memberUid
+     * @param thumbnailUrl
+     * @param mediaUrl
      * @return AlbumMediaSimpleRes
      */
-    public AlbumMediaSimpleRes createAlbumMedia(AlbumMedia albumMedia);
+    public AlbumMediaSimpleRes createAlbumMedia(Long eventUid, Long memberUid, String thumbnailUrl, String mediaUrl) throws NoSuchElementException;
 
     /**
      * 앨범 미디어 상세 조회
@@ -35,7 +40,7 @@ public interface AlbumMediaService {
      * 앨범 미디어 삭제
      * @param albumMediaUid
      */
-    public void deleteAlbumMedia(Long albumMediaUid);
+    public void deleteAlbumMedia(Long memberUid, Long albumMediaUid) throws NoSuchElementException;
 
     /**
      * 앨범 미디어 소유자 확인
