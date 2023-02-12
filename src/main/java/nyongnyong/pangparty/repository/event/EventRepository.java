@@ -2,6 +2,7 @@ package nyongnyong.pangparty.repository.event;
 
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.entity.event.Event;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -44,4 +45,34 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
 
     @Query("select e from Event e where e.uid = ?1")
     Event findEventByUid(Long eventUid);
+
+    @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
+            " from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " where e.dDay = CURRENT_DATE")
+    List<EventCard> findTodayEndEvents(Pageable pageable);
+
+    @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
+            " from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " where date(e.createTime) = CURRENT_DATE")
+    List<EventCard> findTodayStartEvents(Pageable pageable);
+
+    @Query("select count(e) from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " left join e.host.memberProfile hmp where hmp.id = ?1")
+    Long countHostEventsByMemberId(String memberId);
+
+    @Query("select count(e) from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " left join e.eventParticipants p " +
+            " where p.member.memberProfile.id = ?1 and e.dDay > SYSDATE()")
+    Long countInvolvingEventsByMemberId(String memberId);
+
+    @Query("select count(e) from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " left join e.eventParticipants p " +
+            " where p.member.memberProfile.id = ?1 and e.dDay <= SYSDATE()")
+    Long countInvolvedEventsByMemberId(String memberId);
+
 }

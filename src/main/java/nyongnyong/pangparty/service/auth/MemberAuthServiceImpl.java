@@ -47,7 +47,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
     @Transactional
     public Long register(MemberRegisterReq memberRegisterReq) {
         // check if duplicate email/id
-        if (memberRepository.existsByEmail(memberRegisterReq.getEmail()) || memberProfileRepository.existsById(memberRegisterReq.getId())) {
+        if (memberRepository.existsByEmail(memberRegisterReq.getEmail()) || memberProfileRepository.findByMemberId(memberRegisterReq.getId()).isPresent()) {
             throw new MemberAlreadyExistsException();
         }
 
@@ -104,7 +104,8 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         redisUtil.deleteValue(memberLoginReq.getEmail());
         redisUtil.setValueWithExpiration(memberLoginReq.getEmail(), refreshToken, jwtTokenProvider.refreshTokenExpiration);
 
-        return Map.of("accessToken", "Bearer " + accessToken,
+        return Map.of("id", member.getMemberProfile().getId(),
+                "accessToken", "Bearer " + accessToken,
                 "refreshToken", "Bearer " + refreshToken);
     }
 
@@ -169,6 +170,16 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         }
 
         throw new TokenInvalidException();
+    }
+
+    @Override
+    public boolean checkExistingEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean checkExistingId(String id) {
+        return memberProfileRepository.findByMemberId(id).isPresent();
     }
 
     Member fromMemberRegisterReqtoMember(MemberRegisterReq memberRegisterReq) {

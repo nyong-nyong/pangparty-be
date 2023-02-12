@@ -3,26 +3,25 @@ package nyongnyong.pangparty.dto.feed;
 import lombok.*;
 
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class PostCommentDto {
+public class PostCommentRes {
     @Id
     private Long uid;
-    @NonNull
-    private Long postUid;
-    @NonNull
-    private Long memberUid;
+    @NotBlank
+    private String memberId;
+    @NotBlank
     private String content;
     private LocalDateTime createTime;
 
     @Builder
-    public PostCommentDto(Long uid, Long postUid, Long memberUid, String content, LocalDateTime createTime) {
+    public PostCommentRes(Long uid, String memberId, String content, LocalDateTime createTime) {
         this.uid = uid;
-        this.postUid = postUid;
-        this.memberUid = memberUid;
+        this.memberId = memberId;
         this.content = content;
         this.createTime = createTime;
     }
