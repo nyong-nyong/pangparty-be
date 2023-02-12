@@ -9,6 +9,8 @@ import nyongnyong.pangparty.exception.CommentNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
+import nyongnyong.pangparty.service.feed.PostCommentService;
+import nyongnyong.pangparty.service.feed.PostLikeService;
 import nyongnyong.pangparty.service.feed.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,8 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+    private final PostCommentService postCommentService;
+    private final PostLikeService postLikeService;
     private final MemberAuthService memberAuthService;
 
     @PostMapping
@@ -97,13 +101,58 @@ public class PostController {
         }
     }
 
+    @PostMapping("/{postUid}/likes")
+    public ResponseEntity<?> addLike(@RequestHeader("Authorization") String token,
+                                     @PathVariable Long postUid) {
+        System.out.println("AddLike");
+        System.out.println(token);
+        if (token == null || token.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            System.out.println("memberUid: " + memberUid);
+            postLikeService.addPostLike(memberUid, postUid);
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (PostNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (MemberNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{postUid}/likes")
+    public ResponseEntity<?> deleteLike(@RequestHeader("Authorization") String token,
+                                        @PathVariable Long postUid) {
+        if (token == null || token.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            postLikeService.deletePostLike(memberUid, postUid);
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (PostNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (MemberNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/{postUid}/comments")
     public ResponseEntity<?> getComments(@PathVariable Long postUid,
                                          @RequestParam(required = false, defaultValue = "recent") String type,
                                          Pageable pageable) {
         try {
             if (type.equals("recent")) {
-                Page<PostCommentRes> postCommentResPage = postService.getRecentCommentList(postUid, 5);
+                Page<PostCommentRes> postCommentResPage = postCommentService.getRecentCommentList(postUid, 5);
 
                 Map<String, Object> response = Map.of("size", 5,
                         "itemCnt", postCommentResPage.getTotalElements(),
@@ -111,7 +160,7 @@ public class PostController {
 
                 return ResponseEntity.ok(response);
             } else {
-                Page<PostCommentRes> postCommentResPage = postService.getPostCommentList(postUid, pageable);
+                Page<PostCommentRes> postCommentResPage = postCommentService.getPostCommentList(postUid, pageable);
 
                 Map<String, Object> response = Map.of("size", pageable.getPageSize(),
                         "page", pageable.getPageNumber(),
@@ -137,7 +186,7 @@ public class PostController {
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
 
-            Long commentUid = postService.createPostComment(postUid, memberUid, postCommentReq.getContent());
+            Long commentUid = postCommentService.createPostComment(postUid, memberUid, postCommentReq.getContent());
 
             return ResponseEntity.created(URI.create("/posts/" + postUid + "/comments/" + commentUid)).build();
         } catch (PostNotFoundException e) {
@@ -158,7 +207,7 @@ public class PostController {
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
 
-            postService.deletePostComment(postUid, commentUid, memberUid);
+            postCommentService.deletePostComment(postUid, commentUid, memberUid);
 
             return ResponseEntity.noContent().build();
         } catch (PostNotFoundException | CommentNotFoundException e) {
