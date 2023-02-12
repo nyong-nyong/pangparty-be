@@ -7,4 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RollingPaperPieceRepository extends JpaRepository<RollingPaperPiece, Long> {
     Page<RollingPaperPiece> findAllByRollingPaperUid(Long rollingPaperUid, Pageable pageable);
+
+
+    int countByMemberUidAndRollingPaperUid(Long memberUid, Long rollingPaperUid);
 }

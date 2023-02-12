@@ -1,43 +1,64 @@
 package nyongnyong.pangparty.service.album;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.entity.album.AlbumMedia;
+import nyongnyong.pangparty.entity.event.EventParticipant;
 import nyongnyong.pangparty.repository.album.AlbumMediaRepository;
-import nyongnyong.pangparty.util.AwsS3;
+import nyongnyong.pangparty.repository.album.AlbumRepository;
+import nyongnyong.pangparty.repository.event.EventParticipantRepository;
+import nyongnyong.pangparty.repository.event.EventRepository;
+import nyongnyong.pangparty.repository.member.MemberRepository;
+import nyongnyong.pangparty.repository.rollingpaper.RollingPaperPieceRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AlbumMediaServiceImpl implements AlbumMediaService {
+    private final RollingPaperPieceRepository rollingPaperPieceRepository;
+    private final EventRepository eventRepository;
 
     private final AlbumMediaRepository albumMediaRepository;
-    private final AwsS3 awsS3 = AwsS3.getInstance();
-
-    public AlbumMediaServiceImpl(AlbumMediaRepository albumMediaRepository) {
-        this.albumMediaRepository = albumMediaRepository;
-    }
+    private final AlbumRepository albumRepository;
+    private final MemberRepository memberRepository;
+    private final EventParticipantRepository eventParticipantRepository;
 
     @Override
-    public AlbumMediaSimpleRes createAlbumMedia(AlbumMedia albumMedia) {
-        //TODO: create albumMedia
-        return null;
+    public AlbumMediaSimpleRes createAlbumMedia(Long eventUid, Long memberUid, String thumbnailUrl, String mediaUrl) throws NoSuchElementException {
+        AlbumMedia albumMedia = AlbumMedia.builder()
+                .album(albumRepository.findByEventUid(eventUid))
+                .member(memberRepository.findMemberByUid(memberUid))
+                .thumbnailUrl(thumbnailUrl)
+                .mediaUrl(mediaUrl)
+                .extension(mediaUrl.substring(mediaUrl.lastIndexOf(".")+1))
+                .uploadTime(LocalDateTime.now())
+                .build();
+        // check if the member is already participating in the event
+        if (eventParticipantRepository.findByMemberUidAndEventUid(memberUid, eventUid) == null) {
+            EventParticipant eventParticipant = EventParticipant.builder().event(eventRepository.findById(eventUid).get()).member(memberRepository.findById(memberUid).get()).build();
+            eventParticipantRepository.save(eventParticipant);
+        }
+        return new AlbumMediaSimpleRes(albumMediaRepository.save(albumMedia));
     }
 
     @Override
     public AlbumMediaDetailRes getAlbumMedia(Long mediaUid) {
         try {
-            Long[] prevAndNext = albumMediaRepository.findPrevAndNextByUid(mediaUid);
+            List<List<Long>> prevAndNext = albumMediaRepository.findPrevAndNextByUid(mediaUid);
+            log.debug("get prevAndNext = " + prevAndNext.get(0));
             Optional<AlbumMedia> medium = albumMediaRepository.findById(mediaUid);
             if(medium.isPresent()){
-                AlbumMediaDetailRes albumMediaDetailRes = new AlbumMediaDetailRes(medium.get(), prevAndNext[0], prevAndNext[1]);
+                AlbumMediaDetailRes albumMediaDetailRes = new AlbumMediaDetailRes(medium.get(), prevAndNext.get(0).get(0), prevAndNext.get(0).get(1));
                 log.debug("get albumMediaDetailRes = " + albumMediaDetailRes);
                 return albumMediaDetailRes;
             } else{
@@ -58,23 +79,9 @@ public class AlbumMediaServiceImpl implements AlbumMediaService {
     }
 
     @Override
-    public void deleteAlbumMedia(Long albumMediaUid) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            albumMediaRepository.findById(albumMediaUid).ifPresent(albumMedia -> {
-                sb.append(albumMedia.getAlbum().getUid())
-                        .append("/").append(albumMediaUid).append(".webp");
-                String key = sb.toString();
-                awsS3.delete("thumbnail/" + key);
-                log.debug("deleted albumMediaKey = " + key);
-                awsS3.delete("albumMedia/" + key + " at /thumbnail/");
-                log.debug("deleted albumMediaKey = " + key + " at /albumMedia/");
-                albumMediaRepository.deleteById(albumMediaUid);
-                log.debug("deleted albumMediaUid = " + albumMediaUid);
-            });
-        } catch (NoSuchElementException e) {
-            log.debug("albumMediaUid = " + albumMediaUid + " is not exist");
-        }
+    public void deleteAlbumMedia(Long memberUid, Long albumMediaUid) throws NoSuchElementException {
+        albumMediaRepository.deleteById(albumMediaUid);
+        log.debug("deleted albumMediaUid = " + albumMediaUid);
     }
 
     @Override

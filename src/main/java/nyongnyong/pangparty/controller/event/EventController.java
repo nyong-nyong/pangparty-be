@@ -1,25 +1,23 @@
 package nyongnyong.pangparty.controller.event;
 
-import com.amazonaws.util.json.Jackson;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.*;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.hashtag.Hashtag;
+import nyongnyong.pangparty.exception.MemberNotFoundException;
+import nyongnyong.pangparty.exception.TokenInvalidException;
+import nyongnyong.pangparty.service.album.AlbumService;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.event.EventHashtagService;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.hashtag.HashtagService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/events")
@@ -30,12 +28,27 @@ public class EventController {
     private final MemberAuthService memberAuthService;
     private final HashtagService hashtagService;
     private final EventHashtagService eventHashtagService;
+    private final AlbumService albumService;
 
     @GetMapping("/{eventUid}")
     public ResponseEntity<?> findEventIntroduceByEventUid(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid){
-        Long memberUid = memberAuthService.getMemberUid(token);   // Test: 31L -> isLiked가 true, 그 외 -> isLiked가 false
+        try{
+            Long memberUid = memberAuthService.getMemberUid(token);   // Test: 31L -> isLiked가 true, 그 외 -> isLiked가 false
 //        Long rollingPaperUid = eventService.getEventByEventUid(eventUid).getRollingPaper().getUid();
-        return ResponseEntity.ok(eventService.findEventIntroduceByEventUid(memberUid, eventUid));
+            return ResponseEntity.ok(eventService.findEventIntroduceByEventUid(memberUid, eventUid));
+        } catch (MemberNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (TokenInvalidException e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping
@@ -43,6 +56,11 @@ public class EventController {
 
         try{
             Long hostUid = memberAuthService.getMemberUid(token);
+            if (hostUid == null){
+                log.debug("hostUid is null");
+                return ResponseEntity.badRequest().build();
+            }
+
             Event event = eventService.addEventAndEventTarget(hostUid, eventCreateReq);
             Long eventUid = event.getUid();
 
@@ -56,11 +74,21 @@ public class EventController {
             // rollingPaperRepository에서 save
             eventService.addRollingPaper(eventUid);
 
-            // TODO: albumRepository에서 save
+            // albumRepository에서 save
+            albumService.createAlbum(eventUid);
 
             eventCreateReq.setEventUid(eventUid);
             EventCreateRes eventCreateRes = new EventCreateRes(eventUid);
             return ResponseEntity.created(URI.create("/events/"+eventUid)).body(eventCreateRes);
+        } catch (MemberNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (TokenInvalidException e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         } catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -77,6 +105,15 @@ public class EventController {
             Long memberUid = memberAuthService.getMemberUid(token);
             eventService.likeEvent(memberUid, eventUid);
             return ResponseEntity.created(URI.create("/events/"+eventUid+"/like")).build();
+        }  catch (MemberNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (TokenInvalidException e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         } catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -97,8 +134,16 @@ public class EventController {
                 log.debug("memberUid: " + memberUid);
                 eventService.dislikeEvent(memberUid, eventUid);
                 return ResponseEntity.noContent().build();
+            } catch (MemberNotFoundException e){
+                e.printStackTrace();
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            } catch (TokenInvalidException e){
+                e.printStackTrace();
+                return ResponseEntity.badRequest().build();
+            } catch (NoSuchElementException e) {
+                e.printStackTrace();
+                return ResponseEntity.badRequest().build();
             } catch (Exception e){
-                log.debug("dislikeEvent error");
                 e.printStackTrace();
                 return ResponseEntity.badRequest().build();
             }
@@ -122,9 +167,41 @@ public class EventController {
             } else if(type.equals("end")){
                 List<EventCard> todayEndEvents = eventService.findTodayEndEvents();
                 response.put("endEvents", todayEndEvents);
+            } else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-
             return ResponseEntity.ok(response);
+        } catch (MemberNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (TokenInvalidException e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/{eventUid}/export")
+    public ResponseEntity<?> findExportStatistics(@PathVariable Long eventUid){
+        try{
+            Map<String, Object> response = new HashMap<>();
+            List<EventExportRes> eventExportRes = eventService.findExportStatistics(eventUid);
+            response.put("eventExports", eventExportRes);
+            return ResponseEntity.ok(response);
+        } catch (MemberNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (TokenInvalidException e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         } catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().build();

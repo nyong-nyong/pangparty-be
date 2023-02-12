@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.service.event;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
+import nyongnyong.pangparty.dto.event.EventExportRes;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.entity.event.Event;
 
@@ -31,4 +32,6 @@ public interface EventService {
     List<EventCard> findTodayStartEvents();
 
     List<EventCard> findTodayEndEvents();
+
+    List<EventExportRes> findExportStatistics(Long eventUid);
 }
