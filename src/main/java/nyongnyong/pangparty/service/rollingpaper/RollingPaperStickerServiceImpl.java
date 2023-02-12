@@ -50,7 +50,7 @@ public class RollingPaperStickerServiceImpl implements RollingPaperStickerServic
         }
 
         // check if rollingpaper exists
-        if (event.get().getRollingPaper().getUid().equals(rollingPaperUid) || !rollingPaperRepository.existsById(rollingPaperUid)) {
+        if (!event.get().getRollingPaper().getUid().equals(rollingPaperUid) || !rollingPaperRepository.existsById(rollingPaperUid)) {
             throw new RollingPaperNotFoundException();
         }
 
