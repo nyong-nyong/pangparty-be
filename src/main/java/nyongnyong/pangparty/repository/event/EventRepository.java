@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.repository.event;
 
 import nyongnyong.pangparty.dto.event.EventCard;
+import nyongnyong.pangparty.dto.event.EventExportRes;
 import nyongnyong.pangparty.entity.event.Event;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -57,6 +58,15 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
             " left join e.eventTarget.targetMember.memberProfile mp" +
             " where date(e.createTime) = CURRENT_DATE")
     List<EventCard> findTodayStartEvents(Pageable pageable);
+
+    @Query("select new nyongnyong.pangparty.dto.event.EventExportRes(count(distinct el.uid), count(distinct ep.uid), count(distinct rpp.uid), count(distinct am.uid)) from Event e" +
+            " left join EventLike el on e.uid = el.event.uid" +
+            " left join EventParticipant ep on e.uid = ep.event.uid" +
+            " left join RollingPaper rp on e.uid = rp.event.uid" +
+            " left join RollingPaperPiece rpp on rp.uid = rpp.rollingPaper.uid" +
+            " left join Album a on e.uid = a.event.uid" +
+            " left join AlbumMedia am on a.uid = am.album.uid where e.uid = ?1")
+    List<EventExportRes> findExportStatistics(Long eventUid);
 
     @Query("select count(e) from Event e" +
             " left join e.eventTarget.targetMember.memberProfile mp" +

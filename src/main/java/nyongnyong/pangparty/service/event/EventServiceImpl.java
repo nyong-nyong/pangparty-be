@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
+import nyongnyong.pangparty.dto.event.EventExportRes;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.EventLike;
@@ -94,6 +95,11 @@ public class EventServiceImpl implements EventService {
     public List<EventCard> findTodayEndEvents() {
         Pageable top3 = PageRequest.of(0, 3);
         return eventRepository.findTodayEndEvents(top3);
+    }
+
+    @Override
+    public List<EventExportRes> findExportStatistics(Long eventUid) {
+        return eventRepository.findExportStatistics(eventUid);
     }
 
     private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){
