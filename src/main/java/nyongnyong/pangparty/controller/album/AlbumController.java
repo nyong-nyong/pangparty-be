@@ -1,10 +1,10 @@
 package nyongnyong.pangparty.controller.album;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
-import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.service.album.*;
@@ -25,6 +25,7 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/events/{eventUid}/album")
 public class AlbumController {
 
@@ -34,15 +35,6 @@ public class AlbumController {
     private final AlbumMediaLikeService albumMediaLikeService;
     private final MediaService mediaService;
     private final MemberAuthService memberAuthService;
-
-    public AlbumController(AlbumService albumService, AlbumMediaService albumMediaService, AlbumMediaCommentService albumMediaCommentService, AlbumMediaLikeService albumMediaLikeService, MediaService mediaService, MemberAuthService memberAuthService) {
-        this.albumService = albumService;
-        this.albumMediaService = albumMediaService;
-        this.albumMediaCommentService = albumMediaCommentService;
-        this.albumMediaLikeService = albumMediaLikeService;
-        this.mediaService = mediaService;
-        this.memberAuthService = memberAuthService;
-    }
 
     /**
      * 앨범 미디어 전체 조회

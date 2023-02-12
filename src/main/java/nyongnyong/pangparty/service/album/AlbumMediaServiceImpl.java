@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.service.album;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
@@ -18,17 +19,12 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AlbumMediaServiceImpl implements AlbumMediaService {
 
     private final AlbumMediaRepository albumMediaRepository;
     private final AlbumRepository albumRepository;
     private final MemberRepository memberRepository;
-
-    public AlbumMediaServiceImpl(AlbumMediaRepository albumMediaRepository, AlbumRepository albumRepository, MemberRepository memberRepository) {
-        this.albumMediaRepository = albumMediaRepository;
-        this.albumRepository = albumRepository;
-        this.memberRepository = memberRepository;
-    }
 
     @Override
     public AlbumMediaSimpleRes createAlbumMedia(Long eventUid, Long memberUid, String thumbnailUrl, String mediaUrl) {

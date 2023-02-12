@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.service.album;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
 import nyongnyong.pangparty.entity.album.AlbumMediaComment;
@@ -16,17 +17,12 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AlbumMediaCommentServiceImpl implements AlbumMediaCommentService {
 
     private final MemberRepository memberRepository;
     private final AlbumMediaRepository albumMediaRepository;
     private final AlbumMediaCommentRepository albumMediaCommentRepository;
-
-    public AlbumMediaCommentServiceImpl(MemberRepository memberRepository, AlbumMediaRepository albumMediaRepository, AlbumMediaCommentRepository albumMediaCommentRepository) {
-        this.memberRepository = memberRepository;
-        this.albumMediaRepository = albumMediaRepository;
-        this.albumMediaCommentRepository = albumMediaCommentRepository;
-    }
 
     @Override
     public AlbumMediaCommentSimpleRes createAlbumMediaComment(Long memberUid, Long albumMediaUid, String comment) {
