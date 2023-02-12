@@ -9,6 +9,7 @@ import nyongnyong.pangparty.exception.CommentNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
+import nyongnyong.pangparty.service.feed.PostLikeService;
 import nyongnyong.pangparty.service.feed.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+    private final PostLikeService postLikeService;
     private final MemberAuthService memberAuthService;
 
     @PostMapping
@@ -94,6 +96,51 @@ public class PostController {
             return ResponseEntity.notFound().build();
         } catch (MemberNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/{postUid}/likes")
+    public ResponseEntity<?> addLike(@RequestHeader("Authorization") String token,
+                                     @PathVariable Long postUid) {
+        System.out.println("AddLike");
+        System.out.println(token);
+        if (token == null || token.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            System.out.println("memberUid: " + memberUid);
+            postLikeService.addPostLike(memberUid, postUid);
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (PostNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (MemberNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }  catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{postUid}/likes")
+    public ResponseEntity<?> deleteLike(@RequestHeader("Authorization") String token,
+                                        @PathVariable Long postUid) {
+        if (token == null || token.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            postLikeService.deletePostLike(memberUid, postUid);
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (PostNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (MemberNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -46,8 +46,8 @@ public class PostServiceImpl implements PostService {
             postRes.setLikeCount(postLikeRepository.countByPostUid(postUid));
 
             if (memberUid != null) {
-                PostLike postLike = postLikeRepository.findByPostUidAndMemberUid(postUid, memberUid);
-                if (postLike != null) {
+                Optional<PostLike> postLike = postLikeRepository.findByPostUidAndMemberUid(postUid, memberUid);
+                if (postLike.isPresent()) {
                     postRes.setLiked(true);
                 }
             }
@@ -205,9 +205,5 @@ public class PostServiceImpl implements PostService {
                 .member(memberRepository.findMemberByUid(memberUid))
                 .content(content)
                 .build();
-    }
-
-    PostRes toPostRes(Post post) {
-        return PostRes.builder().build();
     }
 }
