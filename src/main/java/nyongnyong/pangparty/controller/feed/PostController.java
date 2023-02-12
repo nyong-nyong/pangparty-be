@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.feed.PostCommentReq;
 import nyongnyong.pangparty.dto.feed.PostCommentRes;
+import nyongnyong.pangparty.dto.feed.PostReq;
 import nyongnyong.pangparty.exception.CommentNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
-import nyongnyong.pangparty.service.feed.FeedService;
+import nyongnyong.pangparty.service.feed.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,25 @@ import java.util.Map;
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 @Slf4j
-public class FeedController {
+public class PostController {
 
-    private final FeedService feedService;
+    private final PostService postService;
     private final MemberAuthService memberAuthService;
+
+    @PostMapping
+    public ResponseEntity<?> addPost(@RequestHeader("Authorization") String token,
+                                     @RequestBody PostReq postReq) {
+        if (token == null || token.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            Long postUid = postService.addPost(postReq, memberAuthService.getMemberUid(token));
+            return ResponseEntity.created(URI.create("/posts/" + postUid)).build();
+        } catch (MemberNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @GetMapping("/{postUid}/comments")
     public ResponseEntity<?> getComments(@PathVariable Long postUid,
@@ -34,7 +50,7 @@ public class FeedController {
         try {
             System.out.println("type: " + type);
             if (type.equals("recent")) {
-                Page<PostCommentRes> postCommentResPage = feedService.getRecentCommentList(postUid, 5);
+                Page<PostCommentRes> postCommentResPage = postService.getRecentCommentList(postUid, 5);
 
                 Map<String, Object> response = Map.of("size", 5,
                         "itemCnt", postCommentResPage.getTotalElements(),
@@ -42,7 +58,7 @@ public class FeedController {
 
                 return ResponseEntity.ok(response);
             } else {
-                Page<PostCommentRes> postCommentResPage = feedService.getPostCommentList(postUid, pageable);
+                Page<PostCommentRes> postCommentResPage = postService.getPostCommentList(postUid, pageable);
 
                 Map<String, Object> response = Map.of("size", pageable.getPageSize(),
                         "page", pageable.getPageNumber(),
@@ -68,7 +84,7 @@ public class FeedController {
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
 
-            Long commentUid = feedService.createPostComment(postUid, memberUid, postCommentReq.getContent());
+            Long commentUid = postService.createPostComment(postUid, memberUid, postCommentReq.getContent());
 
             return ResponseEntity.created(URI.create("/posts/" + postUid + "/comments/" + commentUid)).build();
         } catch (PostNotFoundException e) {
@@ -89,7 +105,7 @@ public class FeedController {
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
 
-            feedService.deletePostComment(postUid, commentUid, memberUid);
+            postService.deletePostComment(postUid, commentUid, memberUid);
 
             return ResponseEntity.noContent().build();
         } catch (PostNotFoundException | CommentNotFoundException e) {

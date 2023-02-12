@@ -2,9 +2,15 @@ package nyongnyong.pangparty.service.feed;
 
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.feed.PostCommentRes;
+import nyongnyong.pangparty.dto.feed.PostReq;
+import nyongnyong.pangparty.entity.event.Event;
+import nyongnyong.pangparty.entity.feed.Post;
 import nyongnyong.pangparty.entity.feed.PostComment;
+import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.exception.CommentNotFoundException;
+import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
+import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.feed.PostCommentRepository;
 import nyongnyong.pangparty.repository.feed.PostRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
@@ -18,11 +24,31 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class FeedServiceImpl implements FeedService {
+public class PostServiceImpl implements PostService {
 
+    private final EventRepository eventRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final PostCommentRepository postCommentRepository;
+
+    @Override
+    @Transactional
+    public Long addPost(PostReq postReq, Long memberUid) {
+        // check if member exists
+        Member member = memberRepository.findMemberByUid(memberUid);
+        if (member == null) {
+            throw new MemberNotFoundException();
+        }
+
+        if (postReq.getEventUid() != null) {
+            Event event = eventRepository.findEventByUid(postReq.getEventUid());
+            Post post = toPostEntity(postReq, member, event);
+            return postRepository.save(post).getUid();
+        } else {
+            Post post = toPostEntity(postReq, member);
+            return postRepository.save(post).getUid();
+        }
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -80,6 +106,23 @@ public class FeedServiceImpl implements FeedService {
         }
 
         postCommentRepository.delete(postComment.get());
+    }
+
+    Post toPostEntity(PostReq postReq, Member member) {
+        return Post.builder()
+                .member(member)
+                .imgUrl(postReq.getImgUrl())
+                .content(postReq.getContent())
+                .build();
+    }
+
+    Post toPostEntity(PostReq postReq, Member member, Event event) {
+        return Post.builder()
+                .member(member)
+                .event(event)
+                .imgUrl(postReq.getImgUrl())
+                .content(postReq.getContent())
+                .build();
     }
 
     PostComment toPostCommentEntity(Long postUid, Long memberUid, String content) {
