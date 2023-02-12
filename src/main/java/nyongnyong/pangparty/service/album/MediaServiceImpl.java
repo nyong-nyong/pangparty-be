@@ -35,7 +35,8 @@ public class MediaServiceImpl implements MediaService{
     @Override
     public String uploadMedia(MultipartFile file, String key, String contentType, long contentLength) {
         upload(file, key, contentType, contentLength);
-        return "https://" + bucket + ".s3." + clientRegion.name() + ".amazonaws.com/" + key;
+        log.debug(clientRegion.getName());
+        return "https://" + bucket + ".s3." + clientRegion.getName() + ".amazonaws.com/" + key;
     }
 
     @Override
