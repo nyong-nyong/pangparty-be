@@ -5,13 +5,13 @@ import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.repository.album.AlbumMediaRepository;
-import nyongnyong.pangparty.util.AwsS3;
+import nyongnyong.pangparty.repository.album.AlbumRepository;
+import nyongnyong.pangparty.repository.member.MemberRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -21,16 +21,26 @@ import java.util.Optional;
 public class AlbumMediaServiceImpl implements AlbumMediaService {
 
     private final AlbumMediaRepository albumMediaRepository;
-    private final AwsS3 awsS3 = AwsS3.getInstance();
+    private final AlbumRepository albumRepository;
+    private final MemberRepository memberRepository;
 
-    public AlbumMediaServiceImpl(AlbumMediaRepository albumMediaRepository) {
+    public AlbumMediaServiceImpl(AlbumMediaRepository albumMediaRepository, AlbumRepository albumRepository, MemberRepository memberRepository) {
         this.albumMediaRepository = albumMediaRepository;
+        this.albumRepository = albumRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
-    public AlbumMediaSimpleRes createAlbumMedia(AlbumMedia albumMedia) {
-        //TODO: create albumMedia
-        return null;
+    public AlbumMediaSimpleRes createAlbumMedia(Long eventUid, Long memberUid, String thumbnailUrl, String mediaUrl) {
+        AlbumMedia albumMedia = AlbumMedia.builder()
+                .album(albumRepository.findByEventUid(eventUid))
+                .member(memberRepository.findMemberByUid(memberUid))
+                .thumbnailUrl(thumbnailUrl)
+                .mediaUrl(mediaUrl)
+                .extension(mediaUrl.substring(mediaUrl.lastIndexOf(".")+1))
+                .uploadTime(LocalDateTime.now())
+                .build();
+        return new AlbumMediaSimpleRes(albumMediaRepository.save(albumMedia));
     }
 
     @Override
@@ -68,10 +78,6 @@ public class AlbumMediaServiceImpl implements AlbumMediaService {
                 sb.append(albumMedia.getAlbum().getUid())
                         .append("/").append(albumMediaUid).append(".webp");
                 String key = sb.toString();
-                awsS3.delete("thumbnail/" + key);
-                log.debug("deleted albumMediaKey = " + key);
-                awsS3.delete("albumMedia/" + key + " at /thumbnail/");
-                log.debug("deleted albumMediaKey = " + key + " at /albumMedia/");
                 albumMediaRepository.deleteById(albumMediaUid);
                 log.debug("deleted albumMediaUid = " + albumMediaUid);
             });

@@ -8,19 +8,18 @@ import org.hibernate.validator.constraints.URL;
 @NoArgsConstructor
 public class AlbumMediaSimpleRes {
 
-
     private Long uid;
     private Long eventUid;
     private Long memberUid;
     @URL(message = "URL 형식이 아닙니다.")
-    private String mediaUrl;
+    private String thumbnailUrl;
     private String extension;
 
     // Entity -> Dto
     public AlbumMediaSimpleRes(AlbumMedia albumMedia) {
         this.uid = albumMedia.getUid();
         this.memberUid = albumMedia.getMember().getUid();
-        this.mediaUrl = albumMedia.getMediaUrl();
+        this.thumbnailUrl = albumMedia.getThumbnailUrl();
         this.extension = albumMedia.getExtension();
     }
 

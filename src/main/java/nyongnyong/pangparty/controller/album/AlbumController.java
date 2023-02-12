@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.album.AlbumMediaCommentSimpleRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
-import nyongnyong.pangparty.entity.album.AlbumMediaComment;
+import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.service.album.*;
@@ -76,39 +76,50 @@ public class AlbumController {
      * @param file
      * @return
      */
-//    @PostMapping("/")
-//    public ResponseEntity<AlbumMediaSimpleRes> createAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @RequestPart MultipartFile file) {
-//        // InputStream으로 file을 전달
-////        final String uri = "http://localhost:8080/media/"+eventUid+"/upload";
-////        HttpHeaders headers = new HttpHeaders();
-////        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-////        RestTemplate restTemplate = new RestTemplate();
-////        AlbumMediaDetailRes result = restTemplate.exchange(uri, AlbumMediaDetailRes.class);
-//        //TODO: memberUid
-//        try {
+    @PostMapping
+    public ResponseEntity<AlbumMediaSimpleRes> createAlbumMedia(@RequestHeader(required = false, value = "Authorization") String token, @PathVariable Long eventUid, @RequestPart(value = "file", required = false) MultipartFile file) {
+        // InputStream으로 file을 전달
+//        final String uri = "http://localhost:8080/media/"+eventUid+"/upload";
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+//        RestTemplate restTemplate = new RestTemplate();
+//        AlbumMediaDetailRes result = restTemplate.exchange(uri, AlbumMediaDetailRes.class);
+        //TODO: memberUid
+        try {
 //            Long memberUid = memberAuthService.getMemberUid(token);
-//            Path imgPath = Path.of(file.getOriginalFilename());
-//            String contentType = Files.probeContentType(imgPath);
-//            if (contentType.startsWith("video")) {  // video
-//            } else if (contentType.startsWith("image")) {   // image
-//                //TODO: 이미지
-//            } else {
-//                return ResponseEntity.badRequest().build();
-//            }
-//            Long albumUid = albumService.getAlbum(eventUid).getUid();
-//            mediaService.saveMedia(albumUid, memberUid, file);
-//            AlbumMediaSimpleRes albumMedia = albumMediaService.createAlbumMedia(result);
-//
-//            return new ResponseEntity<>(albumMedia, HttpStatus.CREATED);
-//        }catch (MemberNotFoundException e){
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }catch (TokenInvalidException e){
-//            return ResponseEntity.badRequest().build();
-//        }catch (IOException e) {
-//            log.debug(e.getMessage());
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
+            Long memberUid = 3L;
+            String fileName = file.getOriginalFilename();
+            if (fileName == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            fileName = String.valueOf(System.currentTimeMillis()).concat(fileName);
+            String contentType = Files.probeContentType(Path.of(fileName));
+            if (contentType.startsWith("video")) {  // video
+                mediaService.uploadMedia(file, "media/"+fileName, contentType, file.getSize());
+            } else if (contentType.startsWith("image")) {   // image
+                //TODO: 이미지 s3에 저장
+//                MultipartFile webpMedia = mediaService.reformatMedia(file);
+//                MultipartFile thumbnail = mediaService.resizeMediaToThumbnail(webpMedia);
+//                MultipartFile media = mediaService.resizeMediaToAlbumSize(webpMedia);
+//                String originalUrl = mediaService.uploadMedia(webpMedia, "webp/"+fileName, contentType, webpMedia.getSize());
+//                String thumbnailUrl = mediaService.uploadMedia(thumbnail, "thumbnail/"+fileName, contentType, thumbnail.getSize());
+//                String mediaUrl = mediaService.uploadMedia(media, "album/"+fileName, contentType, media.getSize());
+                String originalUrl = mediaService.uploadMedia(file, "original/"+fileName, contentType, file.getSize());
+                String thumbnailUrl = originalUrl;
+                String mediaUrl = originalUrl;
+                AlbumMediaSimpleRes albumMediaSimpleRes = albumMediaService.createAlbumMedia(eventUid, memberUid, thumbnailUrl, mediaUrl);
+                return new ResponseEntity<>(albumMediaSimpleRes, HttpStatus.CREATED);
+            }
+        }catch (MemberNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }catch (TokenInvalidException e){
+            return ResponseEntity.badRequest().build();
+        }catch (IOException e) {
+            log.debug(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
 
     /**
      * 앨범 미디어 상세 조회
@@ -142,7 +153,8 @@ public class AlbumController {
         }
         // TODO: memberUid
         try {
-            Long memberUid = memberAuthService.getMemberUid(token);
+//            Long memberUid = memberAuthService.getMemberUid(token);
+            Long memberUid = 3L;
             if (!albumMediaService.isAlbumMediaOwner(memberUid, mediaUid)) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
@@ -150,12 +162,11 @@ public class AlbumController {
             return ResponseEntity.noContent().build();
         }catch (MemberNotFoundException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (TokenInvalidException e){
-            return ResponseEntity.badRequest().build();
-        }catch (NoSuchElementException e) {
+        }catch (TokenInvalidException | NoSuchElementException e){
             return ResponseEntity.badRequest().build();
         }
     }
+
 
     /**
      * 앨범 미디어 댓글 전체 조회

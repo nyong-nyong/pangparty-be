@@ -11,10 +11,13 @@ public interface AlbumMediaService {
 
     /**
      * 앨범 미디어 생성
-     * @param albumMedia
+     * @param eventUid
+     * @param memberUid
+     * @param thumbnailUrl
+     * @param mediaUrl
      * @return AlbumMediaSimpleRes
      */
-    public AlbumMediaSimpleRes createAlbumMedia(AlbumMedia albumMedia);
+    public AlbumMediaSimpleRes createAlbumMedia(Long eventUid, Long memberUid, String thumbnailUrl, String mediaUrl);
 
     /**
      * 앨범 미디어 상세 조회
