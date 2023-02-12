@@ -14,7 +14,6 @@ public class AlbumMediaDetailRes {
 
 
     private Long uid;
-    private Long eventUid;
     private Long memberUid;
     @URL(message = "URL 형식이 아닙니다.")
     private String mediaUrl;
@@ -30,9 +29,8 @@ public class AlbumMediaDetailRes {
     private LocalDateTime likeTime;
 
     @Builder
-    public AlbumMediaDetailRes(Long uid, Long eventUid, Long memberUid, String mediaUrl, String extension, LocalDateTime uploadTime, LocalDateTime takenTime, String takenLat, String takenLng, Long prevAlbumMediaUid, Long nextAlbumMediaUid, int likeCount, boolean isLiked, LocalDateTime likeTime) {
+    public AlbumMediaDetailRes(Long uid,Long memberUid, String mediaUrl, String extension, LocalDateTime uploadTime, LocalDateTime takenTime, String takenLat, String takenLng, Long prevAlbumMediaUid, Long nextAlbumMediaUid, int likeCount, boolean isLiked, LocalDateTime likeTime) {
         this.uid = uid;
-        this.eventUid = eventUid;
         this.memberUid = memberUid;
         this.mediaUrl = mediaUrl;
         this.extension = extension;
@@ -50,7 +48,6 @@ public class AlbumMediaDetailRes {
     @Builder
     public AlbumMediaDetailRes(AlbumMedia albumMedia, Long prevAlbumMediaUid, Long nextAlbumMediaUid) {
         this.uid = albumMedia.getUid();
-        this.eventUid = albumMedia.getAlbum().getEvent().getUid();
         this.memberUid = albumMedia.getMember().getUid();
         this.mediaUrl = albumMedia.getMediaUrl();
         this.extension = albumMedia.getExtension();

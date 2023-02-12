@@ -9,7 +9,6 @@ import org.hibernate.validator.constraints.URL;
 public class AlbumMediaSimpleRes {
 
     private Long uid;
-    private Long eventUid;
     private Long memberUid;
     @URL(message = "URL 형식이 아닙니다.")
     private String thumbnailUrl;
