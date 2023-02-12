@@ -1,8 +1,12 @@
 package nyongnyong.pangparty.service.hashtag;
 
 import lombok.RequiredArgsConstructor;
+import nyongnyong.pangparty.dto.event.SimpleHashtagName;
+import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.entity.hashtag.Hashtag;
 import nyongnyong.pangparty.repository.hashtag.HashtagRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,5 +28,10 @@ public class HashtagServiceImpl implements HashtagService {
         } else {
             return hashtagRepository.findHashtagByHashtagName(hashtagName);
         }
+    }
+
+    @Override
+    public Page<SimpleHashtagName> searchHashtag(SearchReq conditions, Pageable pageable) {
+        return hashtagRepository.searchHashtag(conditions, pageable);
     }
 }
