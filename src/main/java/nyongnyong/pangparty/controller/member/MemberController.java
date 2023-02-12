@@ -2,7 +2,6 @@ package nyongnyong.pangparty.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.event.EventCard;
-<<<<<<< backend/pangparty/src/main/java/nyongnyong/pangparty/controller/member/MemberController.java
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.dto.member.MemberProfileReq;
