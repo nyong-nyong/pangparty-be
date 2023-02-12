@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class AlbumMediaCommentSimpleRes {
 
     private Long uid;
-    private Long memberUid;
+    private String memberId;
     private Long albumMediaUid;
     @NotEmpty(message = "내용은 필수입니다.")
     private String content;
@@ -20,9 +20,9 @@ public class AlbumMediaCommentSimpleRes {
     private LocalDateTime modifyTime;
 
     @Builder
-    public AlbumMediaCommentSimpleRes(Long uid, Long memberUid, Long albumMediaUid, String content, LocalDateTime createTime, LocalDateTime modifyTime) {
+    public AlbumMediaCommentSimpleRes(Long uid, String memberId, Long albumMediaUid, String content, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.uid = uid;
-        this.memberUid = memberUid;
+        this.memberId = memberId;
         this.albumMediaUid = albumMediaUid;
         this.content = content;
         this.createTime = createTime;
@@ -31,7 +31,7 @@ public class AlbumMediaCommentSimpleRes {
 
     public AlbumMediaCommentSimpleRes(AlbumMediaComment albumMediaComment) {
         this.uid = albumMediaComment.getUid();
-        this.memberUid = albumMediaComment.getMember().getUid();
+        this.memberId = albumMediaComment.getMember().getMemberProfile().getId();
         this.albumMediaUid = albumMediaComment.getAlbumMedia().getUid();
         this.content = albumMediaComment.getContent();
         this.createTime = albumMediaComment.getCreateTime();
