@@ -5,9 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.album.AlbumMediaDetailRes;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.entity.album.AlbumMedia;
+import nyongnyong.pangparty.entity.event.EventParticipant;
 import nyongnyong.pangparty.repository.album.AlbumMediaRepository;
 import nyongnyong.pangparty.repository.album.AlbumRepository;
+import nyongnyong.pangparty.repository.event.EventParticipantRepository;
+import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
+import nyongnyong.pangparty.repository.rollingpaper.RollingPaperPieceRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,13 +25,16 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AlbumMediaServiceImpl implements AlbumMediaService {
+    private final RollingPaperPieceRepository rollingPaperPieceRepository;
+    private final EventRepository eventRepository;
 
     private final AlbumMediaRepository albumMediaRepository;
     private final AlbumRepository albumRepository;
     private final MemberRepository memberRepository;
+    private final EventParticipantRepository eventParticipantRepository;
 
     @Override
-    public AlbumMediaSimpleRes createAlbumMedia(Long eventUid, Long memberUid, String thumbnailUrl, String mediaUrl) {
+    public AlbumMediaSimpleRes createAlbumMedia(Long eventUid, Long memberUid, String thumbnailUrl, String mediaUrl) throws NoSuchElementException {
         AlbumMedia albumMedia = AlbumMedia.builder()
                 .album(albumRepository.findByEventUid(eventUid))
                 .member(memberRepository.findMemberByUid(memberUid))
@@ -36,6 +43,11 @@ public class AlbumMediaServiceImpl implements AlbumMediaService {
                 .extension(mediaUrl.substring(mediaUrl.lastIndexOf(".")+1))
                 .uploadTime(LocalDateTime.now())
                 .build();
+        // check if the member is already participating in the event
+        if (eventParticipantRepository.findByMemberUidAndEventUid(memberUid, eventUid) == null) {
+            EventParticipant eventParticipant = EventParticipant.builder().event(eventRepository.findById(eventUid).get()).member(memberRepository.findById(memberUid).get()).build();
+            eventParticipantRepository.save(eventParticipant);
+        }
         return new AlbumMediaSimpleRes(albumMediaRepository.save(albumMedia));
     }
 
@@ -67,19 +79,9 @@ public class AlbumMediaServiceImpl implements AlbumMediaService {
     }
 
     @Override
-    public void deleteAlbumMedia(Long albumMediaUid) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            albumMediaRepository.findById(albumMediaUid).ifPresent(albumMedia -> {
-                sb.append(albumMedia.getAlbum().getUid())
-                        .append("/").append(albumMediaUid).append(".webp");
-                String key = sb.toString();
-                albumMediaRepository.deleteById(albumMediaUid);
-                log.debug("deleted albumMediaUid = " + albumMediaUid);
-            });
-        } catch (NoSuchElementException e) {
-            log.debug("albumMediaUid = " + albumMediaUid + " is not exist");
-        }
+    public void deleteAlbumMedia(Long memberUid, Long albumMediaUid) throws NoSuchElementException {
+        albumMediaRepository.deleteById(albumMediaUid);
+        log.debug("deleted albumMediaUid = " + albumMediaUid);
     }
 
     @Override

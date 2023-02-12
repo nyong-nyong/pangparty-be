@@ -8,4 +8,7 @@ public interface EventParticipantRepository extends JpaRepository<EventParticipa
 
     @Query("SELECT ep FROM EventParticipant ep WHERE ep.event.uid = :eventUid AND ep.member.uid = :memberUid")
     EventParticipant findByMemberUidAndEventUid(Long memberUid, Long eventUid);
+
+    void deleteByMemberUidAndEventUid(Long memberUid, Long eventUid);
+
 }
