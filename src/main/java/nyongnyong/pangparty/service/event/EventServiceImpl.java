@@ -2,14 +2,12 @@ package nyongnyong.pangparty.service.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nyongnyong.pangparty.dto.event.EventCard;
-import nyongnyong.pangparty.dto.event.EventCreateReq;
-import nyongnyong.pangparty.dto.event.EventExportRes;
-import nyongnyong.pangparty.dto.event.EventIntroduceRes;
+import nyongnyong.pangparty.dto.event.*;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.EventLike;
 import nyongnyong.pangparty.entity.event.EventTarget;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
+import nyongnyong.pangparty.repository.event.BannerRepository;
 import nyongnyong.pangparty.repository.event.EventLikeRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.event.EventTargetRepository;
@@ -34,6 +32,7 @@ public class EventServiceImpl implements EventService {
     private final EventLikeRepository eventLikeRepository;
     private final MemberRepository memberRepository;
     private final RollingPaperRepository rollingPaperRepository;
+    private final BannerRepository bannerRepository;
 
     @Override
     public boolean isExistEventByEventUid(Long eventUid) {
@@ -100,6 +99,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventExportRes> findExportStatistics(Long eventUid) {
         return eventRepository.findExportStatistics(eventUid);
+    }
+
+    @Override
+    public List<BannerRes> findBanners() {
+        return bannerRepository.findBanners();
     }
 
     private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){
