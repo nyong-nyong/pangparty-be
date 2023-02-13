@@ -6,6 +6,7 @@ import nyongnyong.pangparty.dto.auth.MemberLoginReq;
 import nyongnyong.pangparty.dto.auth.MemberRegisterReq;
 import nyongnyong.pangparty.entity.auth.MemberAuthInfo;
 import nyongnyong.pangparty.entity.auth.Role;
+import nyongnyong.pangparty.entity.badge.MemberBadgeInfo;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.member.MemberPersonal;
 import nyongnyong.pangparty.entity.member.MemberProfile;
@@ -13,6 +14,7 @@ import nyongnyong.pangparty.entity.member.MemberSetting;
 import nyongnyong.pangparty.exception.*;
 import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.repository.auth.MemberAuthInfoRepository;
+import nyongnyong.pangparty.repository.badge.MemberBadgeInfoRepository;
 import nyongnyong.pangparty.repository.member.MemberPersonalRepository;
 import nyongnyong.pangparty.repository.member.MemberProfileRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
@@ -42,6 +44,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
     private final MemberProfileRepository memberProfileRepository;
     private final MemberPersonalRepository memberPersonalRepository;
     private final MemberSettingRepository memberSettingRepository;
+    private final MemberBadgeInfoRepository memberBadgeInfoRepository;
 
     @Override
     @Transactional
@@ -74,6 +77,10 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         MemberSetting memberSetting = fromMemberRegisterReqtoMemberSetting(member);
         memberSettingRepository.save(memberSetting);
 
+        // 사용자 뱃지 관리 정보에 추가
+        MemberBadgeInfo memberBadgeInfo = fromMemberRegisterReqtoMemberBadgeInfo(member);
+        memberBadgeInfoRepository.save(memberBadgeInfo);
+
         return member.getUid();
     }
 
@@ -91,8 +98,6 @@ public class MemberAuthServiceImpl implements MemberAuthService {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
 
-        // TODO 유저 로그인 로그 남겨야지...
-        // TODO 이걸 이렇게 두번에 나눠서 넣는 게 맞는 걸까?
         Member member = memberRepository.findByEmail(memberLoginReq.getEmail());
         if (member == null) {
             throw new MemberNotFoundException();
@@ -201,5 +206,9 @@ public class MemberAuthServiceImpl implements MemberAuthService {
 
     MemberSetting fromMemberRegisterReqtoMemberSetting(Member member) {
         return MemberSetting.builder().member(member).alarmOnAll(true).build();
+    }
+
+    MemberBadgeInfo fromMemberRegisterReqtoMemberBadgeInfo(Member member) {
+        return MemberBadgeInfo.builder().member(member).build();
     }
 }

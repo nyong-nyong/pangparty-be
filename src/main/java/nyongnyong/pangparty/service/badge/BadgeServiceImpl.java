@@ -1,15 +1,14 @@
 package nyongnyong.pangparty.service.badge;
 
 import lombok.RequiredArgsConstructor;
-import nyongnyong.pangparty.dto.badge.BadgeRes;
 import nyongnyong.pangparty.dto.badge.MemberBadgeRes;
-import nyongnyong.pangparty.entity.badge.MemberBadge;
+import nyongnyong.pangparty.entity.member.Member;
+import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.repository.badge.BadgeRepository;
-import nyongnyong.pangparty.repository.badge.MemberBadgeRepository;
+import nyongnyong.pangparty.repository.member.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,23 +16,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BadgeServiceImpl implements BadgeService {
 
+    private final MemberRepository memberRepository;
     private final BadgeRepository badgeRepository;
-    private final MemberBadgeRepository memberBadgeRepository;
-
-    @Override
-    @Transactional
-    public List<BadgeRes> getBadgeList() {
-        return badgeRepository.getBadgeList();
-    }
 
     @Override
     @Transactional
     public List<MemberBadgeRes> getMemberBadgeList(String memberId) {
+        Member member = memberRepository.findMemberById(memberId);
+        if (member == null) {
+            throw new MemberNotFoundException();
+        }
 
-        List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberUid(Long.parseLong(memberId));
+        List<MemberBadgeRes> memberBadgeResList = badgeRepository.getBadgeListAsMemberBadgeRes(member.getUid());
+        for (MemberBadgeRes memberBadgeRes : memberBadgeResList) {
+            if (memberBadgeRes.getAcquireTime() != null) {
+                memberBadgeRes.setHasBadge(true);
+            }
+        }
 
-        List<MemberBadgeRes> memberBadgeResList = new ArrayList<>();
-        
-
+        return memberBadgeResList;
     }
 }

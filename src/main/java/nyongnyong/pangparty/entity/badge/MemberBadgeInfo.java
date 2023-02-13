@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.badge;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 
 import javax.persistence.*;
@@ -27,5 +24,13 @@ public class MemberBadgeInfo implements Serializable {
     private Long loginCount;
     private Long participateCount;
     private Long receiveCount;
+
+    @Builder
+    public MemberBadgeInfo(Member member, Long loginCount, Long participateCount, Long receiveCount) {
+        this.member = member;
+        this.loginCount = loginCount;
+        this.participateCount = participateCount;
+        this.receiveCount = receiveCount;
+    }
 
 }

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "acquireTime"})
+@ToString
 public class MemberBadge implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
