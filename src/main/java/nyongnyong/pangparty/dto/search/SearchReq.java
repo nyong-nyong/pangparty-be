@@ -18,6 +18,6 @@ public class SearchReq {
     private SortType sort = SortType.POPULAR;
     @NotNull
     private Pageable pageable;
-    private Long hashtagUid;
+    private String hashtagName;
 
 }

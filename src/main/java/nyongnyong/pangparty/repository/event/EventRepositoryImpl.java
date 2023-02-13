@@ -104,7 +104,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
                 = queryFactory
                 .selectFrom(event)
                 .where(event.eventName.contains(conditions.getKeyword())
-                    , eqHashtagUid(conditions.getHashtagUid()))
+                    , eqHashtagName(conditions.getHashtagName()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -112,8 +112,8 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
         return new PageImpl<>(events, pageable, events.size());
     }
 
-    private BooleanExpression eqHashtagUid(Long hashtagUid){
-        return hashtagUid != null ? QEvent.event.eventHashtags.any().hashtag.uid.eq(hashtagUid) : null;
+    private BooleanExpression eqHashtagName(String hashtagName){
+        return hashtagName != null ? QEvent.event.eventHashtags.any().hashtag.name.eq(hashtagName) : null;
     }
 
 }
