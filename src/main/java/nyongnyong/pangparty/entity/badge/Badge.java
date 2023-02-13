@@ -8,20 +8,30 @@ import java.io.Serializable;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"uid", "badgeName", "imgUrl", "badgeCondition"})
+@ToString
 public class Badge implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
     private String badgeName;
-    private String imgUrl;
+    private String trueImgUrl;
+    private String falseImgUrl;
     private String badgeCondition;
 
     @Builder
+    public Badge(Long uid, String badgeName, String trueImgUrl, String falseImgUrl, String badgeCondition) {
+        this.uid = uid;
+        this.badgeName = badgeName;
+        this.trueImgUrl = trueImgUrl;
+        this.falseImgUrl = falseImgUrl;
+        this.badgeCondition = badgeCondition;
+    }
+
+    //    @Builder
     public Badge(String badgeName, String imgUrl, String badgeCondition) {
         this.badgeName = badgeName;
-        this.imgUrl = imgUrl;
+        this.trueImgUrl = imgUrl;
         this.badgeCondition = badgeCondition;
     }
 

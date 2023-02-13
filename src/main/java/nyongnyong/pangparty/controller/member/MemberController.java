@@ -3,13 +3,13 @@ package nyongnyong.pangparty.controller.member;
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.feed.FeedRes;
+import nyongnyong.pangparty.dto.member.MemberProfileReq;
 import nyongnyong.pangparty.exception.FeedNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
-import nyongnyong.pangparty.exception.PostNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
-import nyongnyong.pangparty.dto.member.MemberProfileReq;
 import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
+import nyongnyong.pangparty.service.badge.BadgeService;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.feed.PostService;
 import nyongnyong.pangparty.service.member.MemberService;
@@ -29,6 +29,8 @@ import java.util.NoSuchElementException;
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
+
+    private final BadgeService badgeService;
     private final EventService eventService;
     private final PostService postService;
     private final MemberService memberService;
@@ -36,7 +38,7 @@ public class MemberController {
     private final JwtTokenProvider jwtTokenProvider;
 
 
-    @GetMapping("/profile/{targetId}")
+    @GetMapping(value = {"/profile/{targetId}", "/{targetId}/profile"})
     public ResponseEntity<?> findMemberProfile(@RequestHeader(required = false, value = "Authorization") String token,
                                                @PathVariable("targetId") String targetId) {
         // 로그인 안 한 상태
@@ -60,8 +62,7 @@ public class MemberController {
 
     @PutMapping("/profile")
     public ResponseEntity<?> updateMemberProfile(@RequestHeader("Authorization") String token,
-                                                 @RequestBody @Valid MemberProfileReq memberProfileReq)
-    {
+                                                 @RequestBody @Valid MemberProfileReq memberProfileReq) {
         // Validate Token
         if (token == null || token.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -84,9 +85,9 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}/received-events")
-    public ResponseEntity<?> findReceivedEvent(@PathVariable("memberId") String memberId){
+    public ResponseEntity<?> findReceivedEvent(@PathVariable("memberId") String memberId) {
 
-        try{
+        try {
             // Validate Path Variable
             if (memberId == null || memberId.isEmpty()) {   // DB에 있는 id인지 레포지토리에서 검사도 해야할듯.. 근데 못하겠어
                 return ResponseEntity.badRequest().build();
@@ -98,25 +99,25 @@ public class MemberController {
             response.put("receivedEvents", receivedEvents);
 
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e){
+        } catch (MemberNotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e){
+        } catch (TokenInvalidException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/{memberId}/host-events")
-    public ResponseEntity<?> findHostEvent(@PathVariable("memberId") String memberId){
+    public ResponseEntity<?> findHostEvent(@PathVariable("memberId") String memberId) {
 
-        try{
+        try {
             // Validate Path Variable
             if (memberId == null || memberId.isEmpty()) {   // DB에 있는 id인지 레포지토리에서 검사도 해야할듯.. 근데 못하겠어
                 return ResponseEntity.badRequest().build();
@@ -128,24 +129,24 @@ public class MemberController {
             response.put("hostEvents", hostEvents);
 
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e){
+        } catch (MemberNotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e){
+        } catch (TokenInvalidException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/{memberId}/involving-events")
-    public ResponseEntity<?> findInvolvingEvent(@PathVariable("memberId") String memberId){
-        try{
+    public ResponseEntity<?> findInvolvingEvent(@PathVariable("memberId") String memberId) {
+        try {
             // Validate Path Variable
             if (memberId == null || memberId.isEmpty()) {   // DB에 있는 id인지 레포지토리에서 검사도 해야할듯.. 근데 못하겠어
                 return ResponseEntity.badRequest().build();
@@ -157,16 +158,16 @@ public class MemberController {
             response.put("involvingEvents", involvingEvents);
 
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e){
+        } catch (MemberNotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e){
+        } catch (TokenInvalidException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
@@ -174,9 +175,9 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}/involved-events")
-    public ResponseEntity<?> findInvolvedEvent(@PathVariable("memberId") String memberId){
+    public ResponseEntity<?> findInvolvedEvent(@PathVariable("memberId") String memberId) {
 
-        try{
+        try {
             // Validate Path Variable
             if (memberId == null || memberId.isEmpty()) {   // DB에 있는 id인지 레포지토리에서 검사도 해야할듯.. 근데 못하겠어
                 return ResponseEntity.badRequest().build();
@@ -188,16 +189,16 @@ public class MemberController {
             response.put("involvedEvents", involvedEvents);
 
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e){
+        } catch (MemberNotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e){
+        } catch (TokenInvalidException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
@@ -205,7 +206,7 @@ public class MemberController {
 
     @GetMapping("/{memberId}/feed")
     public ResponseEntity<?> findProfileFeed(@RequestHeader(value = "Authorization") String token, @PathVariable("memberId") String memberId, Pageable pageable) {
-        if (pageable.getPageNumber() < 0 || pageable.getPageSize() < 0){
+        if (pageable.getPageNumber() < 0 || pageable.getPageSize() < 0) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -220,7 +221,7 @@ public class MemberController {
                 response.put("totalPageCnt", feed.getTotalPages());
                 response.put("feed", feed.getContent());
                 return ResponseEntity.ok(response);
-            }else{
+            } else {
                 System.out.println("token is null");
                 return ResponseEntity.badRequest().build();
             }
@@ -230,18 +231,30 @@ public class MemberController {
             response.put("feed", e.getMessage());
             e.printStackTrace();
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e){
+        } catch (MemberNotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e){
+        } catch (TokenInvalidException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping(value = {"/{memberId}/badges", "/badges/{memberId}"})
+    public ResponseEntity<?> findProfileBadges(@PathVariable("memberId") String memberId) {
+        // Validate Path Variable
+        if (memberId == null || memberId.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Map<String, Object> response = Map.of("memberBadges", badgeService.getMemberBadgeList(memberId));
+
+        return ResponseEntity.ok(response);
     }
 }

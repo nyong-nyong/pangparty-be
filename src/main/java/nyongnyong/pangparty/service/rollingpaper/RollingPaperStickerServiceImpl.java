@@ -13,6 +13,7 @@ import nyongnyong.pangparty.exception.EventNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.RollingPaperNotFoundException;
 import nyongnyong.pangparty.exception.StickerNotFoundException;
+import nyongnyong.pangparty.repository.badge.MemberBadgeInfoRepository;
 import nyongnyong.pangparty.repository.event.EventParticipantRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
@@ -34,6 +35,7 @@ public class RollingPaperStickerServiceImpl implements RollingPaperStickerServic
 
     private final EventRepository eventRepository;
     private final MemberRepository memberRepository;
+    private final MemberBadgeInfoRepository memberBadgeInfoRepository;
     private final EventParticipantRepository eventParticipantRepository;
 
     private final StickerRepository stickerRepository;
@@ -107,6 +109,7 @@ public class RollingPaperStickerServiceImpl implements RollingPaperStickerServic
         if (eventParticipantRepository.findByMemberUidAndEventUid(memberUid, eventUid) == null) {
             EventParticipant eventParticipant = toEventParticipantEntity(event.get(), member.get());
             eventParticipantRepository.save(eventParticipant);
+            memberBadgeInfoRepository.updateParticipateCount(memberUid);
         }
 
         RollingPaperSticker rollingPaperSticker = toEntity(member.get(), rollingPaper.get(), sticker.get(), rollingPaperStickerReq);
