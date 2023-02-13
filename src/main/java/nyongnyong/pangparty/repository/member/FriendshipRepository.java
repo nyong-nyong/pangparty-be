@@ -21,6 +21,9 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
     @Query(value = "select f from Friendship f where f.follower.uid = :follower and f.followee.uid = :followee")
     Optional<Friendship> findByFollowerAndFollowee(Long follower, Long followee);
 
+    @Query(value = "select f from Friendship f where f.followee.uid = :followee")
+    List<Friendship> findAllByFollowee(Long followee);
+
     @Query(value = "select new nyongnyong.pangparty.dto.member.FriendshipRes(mp.id, mp.name, mp.imgUrl) " +
             "from Friendship f inner join MemberProfile mp on f.followee.uid = mp.memberUid where f.follower.uid = :follower")
     List<FriendshipRes> findAllByFollower(Long follower);
