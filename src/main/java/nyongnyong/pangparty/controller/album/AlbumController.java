@@ -107,9 +107,7 @@ public class AlbumController {
             }
         }catch (FileSizeLimitExceededException e){
             return new ResponseEntity<>(HttpStatus.PAYLOAD_TOO_LARGE);
-        }catch (MemberNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (TokenInvalidException | NoSuchElementException | IOException e){
+        }catch (NoSuchElementException | IOException e){
             log.debug(e.getMessage());
             return ResponseEntity.badRequest().build();
         }

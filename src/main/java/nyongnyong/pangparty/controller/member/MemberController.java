@@ -3,23 +3,30 @@ package nyongnyong.pangparty.controller.member;
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.feed.FeedRes;
+import nyongnyong.pangparty.dto.member.MemberProfilePictureSimpleRes;
 import nyongnyong.pangparty.dto.member.MemberProfileReq;
 import nyongnyong.pangparty.exception.FeedNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.jwt.JwtTokenProvider;
+import nyongnyong.pangparty.service.album.MediaService;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.badge.BadgeService;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.feed.PostService;
 import nyongnyong.pangparty.service.member.MemberService;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +43,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberAuthService memberAuthService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final MediaService mediaService;
 
 
     @GetMapping(value = {"/profile/{targetId}", "/{targetId}/profile"})
@@ -80,6 +88,43 @@ public class MemberController {
 
             return ResponseEntity.ok().build();
         } catch (MemberNotFoundException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/profile/picture")
+    public ResponseEntity<?> createMemberProfilePicture(@RequestHeader("Authorization") String token,
+                                                        @RequestPart(value = "file", required = false) MultipartFile file) {
+        // Validate Token
+        if (token == null || token.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        // Validate Request Part
+        if (file == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            String fileName = memberUid.toString().concat(file.getOriginalFilename());
+            String contentType = Files.probeContentType(Path.of(fileName));
+            if (contentType.startsWith("image")) {  // image
+//                MultipartFile webpMedia = mediaService.reformatMedia(file);
+//                MultipartFile thumbnail = mediaService.resizeMediaToThumbnail(webpMedia);
+//                MultipartFile media = mediaService.resizeMediaToAlbumSize(webpMedia);
+//                String originalUrl = mediaService.uploadMedia(webpMedia, "webp/"+fileName, contentType, webpMedia.getSize());
+//                String thumbnailUrl = mediaService.uploadMedia(thumbnail, "thumbnail/"+fileName, contentType, thumbnail.getSize());
+//                String mediaUrl = mediaService.uploadMedia(media, "album/"+fileName, contentType, media.getSize());
+                String profileUrl = mediaService.uploadMedia(file, "profile/"+fileName, contentType, file.getSize());
+                MemberProfilePictureSimpleRes memberProfilePictureSimpleRes = memberService.createMemberProfilePicture(memberUid, profileUrl);
+                return new ResponseEntity<>(memberProfilePictureSimpleRes, HttpStatus.CREATED);
+            } else{
+                throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
+            }
+        } catch (FileSizeLimitExceededException e){
+            return new ResponseEntity<>(HttpStatus.PAYLOAD_TOO_LARGE);
+        } catch (IllegalArgumentException | IOException e) {
             return ResponseEntity.badRequest().build();
         }
     }

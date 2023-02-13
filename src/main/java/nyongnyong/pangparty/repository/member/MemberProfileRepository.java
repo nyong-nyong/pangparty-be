@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.repository.member;
 
+import nyongnyong.pangparty.dto.member.MemberProfilePictureSimpleRes;
 import nyongnyong.pangparty.entity.member.MemberProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,4 +19,9 @@ public interface MemberProfileRepository extends JpaRepository<MemberProfile, Lo
             "where m.memberUid = :memberUid")
     int updateMemberProfile(Long memberUid, String memberId, String name, String imgUrl, String introduction);
 
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("update MemberProfile m " +
+            "set m.imgUrl = :profileUrl " +
+            "where m.memberUid = :memberUid")
+    void updateImgUrl(Long memberUid, String profileUrl);
 }
