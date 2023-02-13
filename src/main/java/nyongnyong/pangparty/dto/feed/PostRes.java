@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.dto.feed;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.validator.constraints.UniqueElements;
 
@@ -22,6 +23,7 @@ public class PostRes {
     private List<PostCommentRes> postComments;
 
     private Long likeCount;
+    @JsonProperty("isLiked")
     private boolean isLiked;
     private String title;
     private String content;
