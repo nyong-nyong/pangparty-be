@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.member.FriendshipRes;
 import nyongnyong.pangparty.dto.member.MemberProfileReq;
 import nyongnyong.pangparty.dto.member.MemberProfileRes;
+import nyongnyong.pangparty.dto.member.MemberProfileSimpleRes;
 import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.entity.member.Friendship;
 import nyongnyong.pangparty.entity.member.Member;
+import nyongnyong.pangparty.entity.member.MemberProfile;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.member.FriendshipRepository;
@@ -89,8 +91,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Page<FriendshipRes> searchMember(SearchReq conditions, Pageable pageable) {
-        return memberRepository.searchMember(conditions, pageable);
+    public Page<MemberProfileSimpleRes> searchMember(SearchReq conditions, Pageable pageable) {
+        return memberProfileRepository.searchMember(conditions, pageable).map(MemberProfileSimpleRes::new);
     }
 
 

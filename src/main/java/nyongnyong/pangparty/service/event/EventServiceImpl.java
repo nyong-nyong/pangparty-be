@@ -6,6 +6,7 @@ import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.event.EventCreateReq;
 import nyongnyong.pangparty.dto.event.EventExportRes;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
+import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.EventLike;
 import nyongnyong.pangparty.entity.event.EventTarget;
@@ -15,6 +16,7 @@ import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.event.EventTargetRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import nyongnyong.pangparty.repository.rollingpaper.RollingPaperRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -100,6 +102,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventExportRes> findExportStatistics(Long eventUid) {
         return eventRepository.findExportStatistics(eventUid);
+    }
+
+    @Override
+    public Page<EventCard> searchEvent(SearchReq conditions, Pageable pageable) {
+        return null;
     }
 
     private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){

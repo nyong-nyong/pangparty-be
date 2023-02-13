@@ -12,8 +12,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class SearchReq {
 
-    @Builder.Default
-    private CategoryType category = CategoryType.EVENT;
+    private CategoryType category;
     private String keyword;
     @Builder.Default
     private SortType sort = SortType.POPULAR;

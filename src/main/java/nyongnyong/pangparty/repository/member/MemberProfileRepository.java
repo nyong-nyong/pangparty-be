@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface MemberProfileRepository extends JpaRepository<MemberProfile, Long> {
+public interface MemberProfileRepository extends JpaRepository<MemberProfile, Long>, MemberProfileRepositoryCustom {
     @Query("select m from MemberProfile m where m.id = :memberId")
     Optional<MemberProfile> findByMemberId(String memberId);
 
