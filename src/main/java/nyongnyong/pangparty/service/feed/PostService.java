@@ -20,4 +20,5 @@ public interface PostService {
     void updatePost(Long postUid, Long memberUid, PostReq postReq);
 
     Page<FeedRes> getFeed(Long memberUid, Pageable pageable);
+    Page<FeedRes> findProfileFeed(Long memberUid, String memberId, Pageable pageable);
 }

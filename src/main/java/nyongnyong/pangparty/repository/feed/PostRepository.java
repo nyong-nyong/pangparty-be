@@ -40,4 +40,31 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " where f.follower.uid = :memberUid" +
             " order by p.createTime desc")
     List<FeedDto> findPostsByMemberUid(@Param("memberUid") Long memberUid);
+
+//    @Query("select new nyongnyong.pangparty.dto.feed.FeedDto(p.uid, p.event.uid, p.member.memberProfile.id," +
+//            " case pl.member.uid when :memberUid then true else false end, p.title, p.content," +
+//            " p.imgUrl, p.createTime, p.modifyTime) from Post p" +
+//            " left join Event e on e.uid = p.event.uid" +
+//            " left join Member m on p.member.uid = m.uid" +
+//            " left join MemberProfile mp on m.uid = mp.member.uid" +
+//            " left join PostLike pl on pl.post.uid = p.uid" +
+//            " where p.member.memberProfile.id = :memberId" +
+//            " order by p.createTime desc")
+//    List<FeedDto> findMyPostsByMemberId(@Param("memberId") String memberId);
+//    @Query("select new nyongnyong.pangparty.dto.feed.FeedDto(p.uid, p.event.uid, p.member.memberProfile.id," +
+//            " case pl.member.uid when :memberUid then true else false end, p.title, p.content," +
+//            " p.imgUrl, p.createTime, p.modifyTime) from Post p" +
+//            " left join PostLike pl on pl.post.uid = p.uid" +
+//            " where p.member.memberProfile.id = :memberId" +
+//            " order by p.createTime desc")
+//    List<FeedDto> findMyPostsByMemberId(@Param("memberUid") Long memberUid, @Param("memberId") String memberId);
+
+    @Query("select distinct new nyongnyong.pangparty.dto.feed.FeedDto(p.uid, p.event.uid, p.member.memberProfile.id," +
+            " case pl.member.uid when :memberUid then true else false end, p.title, p.content," +
+            " p.imgUrl, p.createTime, p.modifyTime) from Post p" +
+            " join PostLike pl on pl.post.uid = p.uid" +
+            " where p.member.memberProfile.id = :memberId" +
+            " group by p.uid" +
+            " order by p.createTime desc")
+    List<FeedDto> findMyPostsByMemberId(@Param("memberUid") Long memberUid, @Param("memberId") String memberId);
 }

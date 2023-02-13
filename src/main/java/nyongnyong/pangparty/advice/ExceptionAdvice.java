@@ -47,6 +47,12 @@ public class ExceptionAdvice {
         return new ErrorRes("존재하지 않는 게시물입니다.", HttpStatus.NOT_FOUND.value(), "POST_NOT_FOUND");
     }
 
+    @ExceptionHandler(FeedNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorRes handleFeedNotFoundException(FeedNotFoundException e) {
+        return new ErrorRes("존재하지 않는 게시물입니다.", HttpStatus.NOT_FOUND.value(), "FEED_NOT_FOUND");
+    }
+
     @ExceptionHandler(RollingPaperNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorRes handleRollingPaperNotFoundException(RollingPaperNotFoundException e) {

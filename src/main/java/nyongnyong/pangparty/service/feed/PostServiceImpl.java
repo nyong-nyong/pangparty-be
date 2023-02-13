@@ -9,6 +9,7 @@ import nyongnyong.pangparty.entity.feed.PostComment;
 import nyongnyong.pangparty.entity.feed.PostLike;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.exception.CommentNotFoundException;
+import nyongnyong.pangparty.exception.FeedNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
 import nyongnyong.pangparty.repository.event.EventRepository;
@@ -138,15 +139,31 @@ public class PostServiceImpl implements PostService {
             final int end = Math.min((start + pageable.getPageSize()), feedResList.size());
             final Page<FeedRes> feed = new PageImpl<>(feedResList.subList(start, end), pageable, feedResList.size());
 
-            if(feed.getTotalPages() > 0){
-                return feed;
-            } else{
-                System.out.println("feed is empty1");
-                throw new PostNotFoundException();
-            }
+            return feed;
         } catch(Exception e){
             System.out.println("feed is empty2");
             throw new PostNotFoundException();
+        }
+    }
+
+    @Override
+    public Page<FeedRes> findProfileFeed(Long memberUid, String memberId, Pageable pageable) {
+        try{
+            List<FeedDto> feedDtoPages = postRepository.findMyPostsByMemberId(memberUid, memberId);
+            ArrayList<FeedRes> feedResList = new ArrayList<>();
+            for (int i = 0; i < feedDtoPages.size(); i++) {
+                FeedDto feedDto = feedDtoPages.get(i);
+                EventCard eventCard = eventRepository.findEventCardByEventUid(feedDto.getEventUid());
+                FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
+                feedResList.add(feedRes);
+            }
+            final int start = (int)pageable.getOffset();
+            final int end = Math.min((start + pageable.getPageSize()), feedResList.size());
+            final Page<FeedRes> feed = new PageImpl<>(feedResList.subList(start, end), pageable, feedResList.size());
+
+            return feed;
+        } catch(Exception e){
+            throw new FeedNotFoundException();
         }
     }
 
