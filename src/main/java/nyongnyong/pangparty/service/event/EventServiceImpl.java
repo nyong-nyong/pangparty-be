@@ -106,7 +106,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Page<EventCard> searchEvent(SearchReq conditions, Pageable pageable) {
-        return null;
+        return eventRepository.searchEvent(conditions, pageable).map(EventCard::new);
     }
 
     private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){

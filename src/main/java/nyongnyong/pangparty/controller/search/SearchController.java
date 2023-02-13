@@ -39,7 +39,14 @@ public class SearchController {
         if (events.isEmpty())
             return ResponseEntity.noContent().build();
 
-        return ResponseEntity.ok().build();
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("size", pageable.getPageSize());
+        response.put("page", pageable.getPageNumber());
+        response.put("itemCnt", events.getTotalElements());
+        response.put("totalPageCnt", events.getTotalPages());
+        response.put("events", events.getContent());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/hashtag")
@@ -49,7 +56,14 @@ public class SearchController {
         if (hashtags.isEmpty())
             return ResponseEntity.noContent().build();
 
-        return ResponseEntity.ok().build();
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("size", pageable.getPageSize());
+        response.put("page", pageable.getPageNumber());
+        response.put("itemCnt", hashtags.getTotalElements());
+        response.put("totalPageCnt", hashtags.getTotalPages());
+        response.put("hashtags", hashtags.getContent());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/member")

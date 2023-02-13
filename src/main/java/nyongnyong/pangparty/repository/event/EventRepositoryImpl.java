@@ -1,17 +1,21 @@
 package nyongnyong.pangparty.repository.event;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nyongnyong.pangparty.dto.event.SimpleHashtagName;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
+import nyongnyong.pangparty.dto.event.SimpleHashtagName;
+import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.QEvent;
-import nyongnyong.pangparty.entity.event.QEventHashtag;
 import nyongnyong.pangparty.entity.event.QEventLike;
 import nyongnyong.pangparty.entity.rollingpaper.QRollingPaper;
 import nyongnyong.pangparty.entity.rollingpaper.QRollingPaperPiece;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -78,7 +82,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
             SimpleHashtagName simpleHashtagName = new SimpleHashtagName(hashtagName);
             hashtags.add(simpleHashtagName);
         }
-        log.debug("hashtags: ", hashtags);
+        log.debug("hashtags: {}", hashtags);
 //        List<String> albumMediaUrls = event.getAlbum().getAlbumMedia().stream().map(AlbumMedia::getMediaUrl).collect(Collectors.toList());
 
         boolean isLiked = true;
@@ -86,12 +90,30 @@ public class EventRepositoryImpl implements EventRepositoryCustom{
             isLiked = false;
         }
 
-        EventIntroduceRes eventIntroduceRes = new EventIntroduceRes(event.getEventTarget().getTargetMember().getMemberProfile().getId()
+        return new EventIntroduceRes(event.getEventTarget().getTargetMember().getMemberProfile().getId()
                 , event.getDDay(), event.getEventName(), isLiked, event.getIntroduction(), event.getImgUrl(),
                 hashtags, likeCnt, rollingPaperCnt, rollingPaper.getUid());
-
-        return eventIntroduceRes;
     }
 
+    @Override
+    public Page<Event> searchEvent(SearchReq conditions, Pageable pageable) {
+
+        QEvent event = QEvent.event;
+
+        List<Event> events
+                = queryFactory
+                .selectFrom(event)
+                .where(event.eventName.contains(conditions.getKeyword())
+                    , eqHashtagUid(conditions.getHashtagUid()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(events, pageable, events.size());
+    }
+
+    private BooleanExpression eqHashtagUid(Long hashtagUid){
+        return hashtagUid != null ? QEvent.event.eventHashtags.any().hashtag.uid.eq(hashtagUid) : null;
+    }
 
 }
