@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.advice;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import nyongnyong.pangparty.dto.ErrorRes;
 import nyongnyong.pangparty.exception.*;
 import org.springframework.http.HttpStatus;
@@ -70,4 +71,9 @@ public class ExceptionAdvice {
         return new ErrorRes("토큰 갱신에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR.value(), "TOKEN_REFRESH_FAIL");
     }
 
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorRes handleExpiredJwtException(ExpiredJwtException e) {
+        return new ErrorRes("토큰이 만료되었습니다", HttpStatus.BAD_REQUEST.value(), "TOKEN_EXPIRED");
+    }
 }
