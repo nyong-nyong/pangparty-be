@@ -7,14 +7,14 @@ import java.time.LocalDateTime;
 
 @Data
 public class HashtagSearchRes {
-    private Long uid;
+    private Long hashtagUid;
     private String name;
     private LocalDateTime createTime;
     private int likes;
     private boolean isLiked;
 
     public HashtagSearchRes(Hashtag hashtag) {
-        this.uid = hashtag.getUid();
+        this.hashtagUid = hashtag.getUid();
         this.name = hashtag.getName();
         this.createTime = hashtag.getCreateTime();
     }
