@@ -7,6 +7,7 @@ import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.repository.member.FriendshipRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
+import nyongnyong.pangparty.service.auth.NotificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class FollowServiceImpl implements FollowService {
 
     private final MemberRepository memberRepository;
     private final FriendshipRepository friendshipRepository;
+    private final NotificationService notificationService;
 
 
     @Override
@@ -48,6 +50,7 @@ public class FollowServiceImpl implements FollowService {
                 .build();
 
         friendshipRepository.save(createFriendship);
+        notificationService.alertFollow(memberId, followeeId);
     }
 
     @Override
