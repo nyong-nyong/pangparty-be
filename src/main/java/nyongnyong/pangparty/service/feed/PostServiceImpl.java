@@ -8,7 +8,6 @@ import nyongnyong.pangparty.entity.feed.Post;
 import nyongnyong.pangparty.entity.feed.PostComment;
 import nyongnyong.pangparty.entity.feed.PostLike;
 import nyongnyong.pangparty.entity.member.Member;
-import nyongnyong.pangparty.exception.CommentNotFoundException;
 import nyongnyong.pangparty.exception.FeedNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;

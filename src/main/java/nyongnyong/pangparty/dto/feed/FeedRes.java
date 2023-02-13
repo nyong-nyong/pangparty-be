@@ -3,12 +3,10 @@ package nyongnyong.pangparty.dto.feed;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import nyongnyong.pangparty.dto.event.EventCard;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
