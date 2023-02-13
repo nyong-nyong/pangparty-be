@@ -47,9 +47,12 @@ dependencies {
 	implementation 'com.querydsl:querydsl-apt:5.0.0'
 	// aws
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.232'
-	// lombok
+	// jwt & redis
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'redis.clients:jedis'
+	// firebase
+	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
+	// lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'

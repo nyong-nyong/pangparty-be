@@ -2,7 +2,6 @@ package nyongnyong.pangparty.dto.feed;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import nyongnyong.pangparty.dto.event.EventCard;
 import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.validation.constraints.NotBlank;
@@ -13,12 +12,17 @@ import java.util.List;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class FeedDto {
+public class PostRes {
     @NotNull
     private Long uid;
     private Long eventUid;
     @NotBlank
     private String memberId;
+
+    @UniqueElements
+    private List<PostCommentRes> postComments;
+
+    private Long likeCount;
     @JsonProperty("isLiked")
     private boolean isLiked;
     private String title;
@@ -29,11 +33,24 @@ public class FeedDto {
 //    private int hit;
 
     @Builder
-    public FeedDto(Long uid, Long eventUid, String memberId, boolean isLiked, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
+    public PostRes(Long uid, Long eventUid, String memberId, List<PostCommentRes> postComments, Long likeCount, boolean isLiked, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.uid = uid;
         this.eventUid = eventUid;
         this.memberId = memberId;
+        this.postComments = postComments;
+        this.likeCount = likeCount;
         this.isLiked = isLiked;
+        this.content = content;
+        this.imgUrl = imgUrl;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+//        this.hit = hit;
+    }
+
+    public PostRes(Long uid, Long eventUid, String memberId, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
+        this.uid = uid;
+        this.eventUid = eventUid;
+        this.memberId = memberId;
         this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;

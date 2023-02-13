@@ -32,6 +32,7 @@ public class MemberAuthController {
             Map<String, String> response = memberAuthService.login(memberLoginReq);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }

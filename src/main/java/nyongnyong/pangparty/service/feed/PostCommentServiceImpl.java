@@ -18,7 +18,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class FeedServiceImpl implements FeedService {
+public class PostCommentServiceImpl implements PostCommentService {
 
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
@@ -84,9 +84,10 @@ public class FeedServiceImpl implements FeedService {
 
     PostComment toPostCommentEntity(Long postUid, Long memberUid, String content) {
         return PostComment.builder()
-                .post(postRepository.findByUid(postUid))
+                .post(postRepository.findByUid(postUid).get())
                 .member(memberRepository.findMemberByUid(memberUid))
                 .content(content)
                 .build();
     }
+
 }

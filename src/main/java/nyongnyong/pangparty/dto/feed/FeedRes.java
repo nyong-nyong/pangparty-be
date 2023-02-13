@@ -13,10 +13,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class FeedDto {
+public class FeedRes {
     @NotNull
     private Long uid;
-    private Long eventUid;
+    @JsonProperty("event")
+    private EventCard eventCard;
     @NotBlank
     private String memberId;
     @JsonProperty("isLiked")
@@ -29,12 +30,12 @@ public class FeedDto {
 //    private int hit;
 
     @Builder
-    public FeedDto(Long uid, Long eventUid, String memberId, boolean isLiked, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
+    public FeedRes(Long uid, EventCard eventCard, String memberId, boolean isLiked, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.uid = uid;
-        this.eventUid = eventUid;
+        this.eventCard = eventCard;
+        this.title = title;
         this.memberId = memberId;
         this.isLiked = isLiked;
-        this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;
         this.createTime = createTime;

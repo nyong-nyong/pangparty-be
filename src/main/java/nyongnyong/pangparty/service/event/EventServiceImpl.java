@@ -7,16 +7,21 @@ import nyongnyong.pangparty.dto.event.EventCreateReq;
 import nyongnyong.pangparty.dto.event.EventExportRes;
 import nyongnyong.pangparty.dto.event.EventIntroduceRes;
 import nyongnyong.pangparty.dto.search.SearchReq;
+import nyongnyong.pangparty.dto.event.*;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.EventLike;
 import nyongnyong.pangparty.entity.event.EventTarget;
+import nyongnyong.pangparty.entity.member.Friendship;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
+import nyongnyong.pangparty.repository.event.BannerRepository;
 import nyongnyong.pangparty.repository.event.EventLikeRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.event.EventTargetRepository;
+import nyongnyong.pangparty.repository.member.FriendshipRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import nyongnyong.pangparty.repository.rollingpaper.RollingPaperRepository;
 import org.springframework.data.domain.Page;
+import nyongnyong.pangparty.service.auth.NotificationService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,6 +41,9 @@ public class EventServiceImpl implements EventService {
     private final EventLikeRepository eventLikeRepository;
     private final MemberRepository memberRepository;
     private final RollingPaperRepository rollingPaperRepository;
+    private final BannerRepository bannerRepository;
+    private final FriendshipRepository friendshipRepository;
+    private final NotificationService notificationService;
 
     @Override
     public boolean isExistEventByEventUid(Long eventUid) {
@@ -43,10 +51,20 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public Event addEventAndEventTarget(Long hostUid, EventCreateReq eventCreateReq) {
         Event event = toEventEntity(hostUid, eventCreateReq);
         eventRepository.save(event);
         eventTargetRepository.save(toEventTargetEntity(eventCreateReq, event));
+
+        // 주인공에게 알림 전송
+        notificationService.alertTargetEvent(event.getUid(), hostUid, eventCreateReq.getTargetId());
+
+        // 호스트의 팔로워들에게 알림 전송
+        List<Friendship> friendships = friendshipRepository.findAllByFollowee(hostUid);
+        for (Friendship friendship : friendships) {
+            notificationService.alertFollowerEvent(event.getUid(), hostUid, friendship.getFollower().getUid());
+        }
         return event;
     }
 
@@ -102,6 +120,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventExportRes> findExportStatistics(Long eventUid) {
         return eventRepository.findExportStatistics(eventUid);
+    }
+
+    @Override
+    public List<BannerRes> findBanners() {
+        return bannerRepository.findBanners();
     }
 
     @Override

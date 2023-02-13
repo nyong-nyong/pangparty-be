@@ -121,7 +121,9 @@ public class RollingPaperStickerServiceImpl implements RollingPaperStickerServic
                 .topLoc(rollingPaperStickerReq.getTopLoc())
                 .leftLoc(rollingPaperStickerReq.getLeftLoc())
                 .zIndex(rollingPaperStickerReq.getZIndex())
-                .scale(rollingPaperStickerReq.getScale()).build();
+                .scale(rollingPaperStickerReq.getScale())
+                .angle(rollingPaperStickerReq.getAngle())
+                .build();
     }
 
     private RollingPaperSticker toEntity(Member member, RollingPaper rollingPaper, Sticker sticker, RollingPaperStickerReq rollingPaperStickerReq) {
@@ -132,7 +134,9 @@ public class RollingPaperStickerServiceImpl implements RollingPaperStickerServic
                 .topLoc(rollingPaperStickerReq.getTopLoc())
                 .leftLoc(rollingPaperStickerReq.getLeftLoc())
                 .zIndex(rollingPaperStickerReq.getZIndex())
-                .scale(rollingPaperStickerReq.getScale()).build();
+                .scale(rollingPaperStickerReq.getScale())
+                .angle(rollingPaperStickerReq.getAngle())
+                .build();
     }
 
     EventParticipant toEventParticipantEntity(Event event, Member member) {

@@ -2,6 +2,7 @@ package nyongnyong.pangparty.entity.event;
 
 import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class Banner implements Serializable {
     @Lob
     private String content;
 
+    @CreatedDate
     private LocalDateTime createTime;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
