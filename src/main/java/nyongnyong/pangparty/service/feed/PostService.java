@@ -1,7 +1,12 @@
 package nyongnyong.pangparty.service.feed;
 
+import nyongnyong.pangparty.dto.feed.PostCommentRes;
 import nyongnyong.pangparty.dto.feed.PostReq;
 import nyongnyong.pangparty.dto.feed.PostRes;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface PostService {
 
@@ -13,4 +18,5 @@ public interface PostService {
 
     void updatePost(Long postUid, Long memberUid, PostReq postReq);
 
+    Page<PostRes> getFeed(Long memberUid, Pageable pageable);
 }

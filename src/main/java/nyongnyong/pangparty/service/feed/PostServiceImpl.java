@@ -6,8 +6,10 @@ import nyongnyong.pangparty.dto.feed.PostReq;
 import nyongnyong.pangparty.dto.feed.PostRes;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.feed.Post;
+import nyongnyong.pangparty.entity.feed.PostComment;
 import nyongnyong.pangparty.entity.feed.PostLike;
 import nyongnyong.pangparty.entity.member.Member;
+import nyongnyong.pangparty.exception.CommentNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
 import nyongnyong.pangparty.repository.event.EventRepository;
@@ -15,6 +17,7 @@ import nyongnyong.pangparty.repository.feed.PostCommentRepository;
 import nyongnyong.pangparty.repository.feed.PostLikeRepository;
 import nyongnyong.pangparty.repository.feed.PostRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +47,7 @@ public class PostServiceImpl implements PostService {
 
             if (memberUid != null) {
                 Optional<PostLike> postLike = postLikeRepository.findByPostUidAndMemberUid(postUid, memberUid);
-                if (postLike.isPresent()) {
+                if (postLike != null) {
                     postRes.setLiked(true);
                 }
             }
@@ -119,6 +122,22 @@ public class PostServiceImpl implements PostService {
         postRepository.updatePost(postUid, event, postReq.getTitle(), postReq.getContent(), postReq.getImgUrl());
     }
 
+    @Override
+    public Page<PostRes> getFeed(Long memberUid, Pageable pageable) {
+        try{
+            Page<PostRes> feed = postRepository.findPostsByMemberUid(memberUid, pageable);
+            if(feed.getTotalPages() > 0){
+                return feed;
+            } else{
+                System.out.println("feed is empty1");
+                throw new PostNotFoundException();
+            }
+        } catch(Exception e){
+            System.out.println("feed is empty2");
+            throw new PostNotFoundException();
+        }
+    }
+
     Post toPostEntity(PostReq postReq, Member member) {
         return Post.builder()
                 .member(member)
@@ -136,5 +155,17 @@ public class PostServiceImpl implements PostService {
                 .imgUrl(postReq.getImgUrl())
                 .content(postReq.getContent())
                 .build();
+    }
+
+    PostComment toPostCommentEntity(Long postUid, Long memberUid, String content) {
+        return PostComment.builder()
+                .post(postRepository.findByUid(postUid).get())
+                .member(memberRepository.findMemberByUid(memberUid))
+                .content(content)
+                .build();
+    }
+
+    PostRes toPostRes(Post post) {
+        return PostRes.builder().build();
     }
 }
