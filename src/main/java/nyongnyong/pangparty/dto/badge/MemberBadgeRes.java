@@ -1,18 +1,19 @@
 package nyongnyong.pangparty.dto.badge;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Data
+
+@Getter
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class MemberBadgeRes {
     @NotNull
-    private Long badgeUid;
+    private Long uid;
 
     @NotBlank
     private String badgeName;
@@ -31,7 +32,7 @@ public class MemberBadgeRes {
 
     @Builder
     public MemberBadgeRes(Long badgeUid, String badgeName, String trueImgUrl, String falseImgUrl, String badgeCondition, LocalDateTime acquireTime) {
-        this.badgeUid = badgeUid;
+        this.uid = badgeUid;
         this.badgeName = badgeName;
         this.trueImgUrl = trueImgUrl;
         this.falseImgUrl = falseImgUrl;

@@ -33,9 +33,9 @@ public class BadgeServiceImpl implements BadgeService {
             throw new MemberNotFoundException();
         }
 
-        updateMemberBadge(member.getUid());
+        updateMemberBadge(member);
 
-        List<MemberBadgeRes> memberBadgeResList = badgeRepository.getBadgeListAsMemberBadgeRes(member.getUid());
+        List<MemberBadgeRes> memberBadgeResList = memberBadgeInfoRepository.getBadgeListAsMemberBadgeRes(member.getUid());
         for (MemberBadgeRes memberBadgeRes : memberBadgeResList) {
             if (memberBadgeRes.getAcquireTime() != null) {
                 memberBadgeRes.setHasBadge(true);
@@ -47,13 +47,10 @@ public class BadgeServiceImpl implements BadgeService {
 
     @Override
     @Transactional
-    public void updateMemberBadge(Long memberUid) {
-        Member member = memberRepository.findMemberByUid(memberUid);
-        if (member == null) {
-            throw new MemberNotFoundException();
-        }
-
-        MemberBadgeInfo memberBadgeInfo = memberBadgeInfoRepository.findByMemberUid(memberUid);
+    public void updateMemberBadge(Member member) {
+        System.out.println("UPDATE MEMBER BADGE");
+        MemberBadgeInfo memberBadgeInfo = memberBadgeInfoRepository.findByMemberUid(member.getUid());
+        System.out.println(memberBadgeInfo);
 
         if (memberBadgeInfo == null) {
             memberBadgeInfo = MemberBadgeInfo.builder().member(member).build();
@@ -61,10 +58,10 @@ public class BadgeServiceImpl implements BadgeService {
             return;
         }
 
-        List<MemberBadgeRes> memberBadgeResList = badgeRepository.getBadgeListAsMemberBadgeRes(member.getUid());
+        List<MemberBadgeRes> memberBadgeResList = memberBadgeInfoRepository.getBadgeListAsMemberBadgeRes(member.getUid());
         for (MemberBadgeRes memberBadgeRes : memberBadgeResList) {
             if (memberBadgeRes.getAcquireTime() == null) {
-                switch (memberBadgeRes.getBadgeUid().toString()) {
+                switch (memberBadgeRes.getUid().toString()) {
                     case "1":
                         if (memberBadgeInfo.getLoginCount() == 1) {
                             MemberBadge memberBadge = MemberBadge.builder().member(member).badge(badgeRepository.findBadgeByUid(1L)).build();
