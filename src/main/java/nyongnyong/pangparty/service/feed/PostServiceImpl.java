@@ -126,10 +126,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<FeedRes> getFeed(Long memberUid, Pageable pageable) {
         try{
-            Page<FeedDto> feedDtoPages = postRepository.findPostsByMemberUid(memberUid, pageable);
+            List<FeedDto> feedDtoPages = postRepository.findPostsByMemberUid(memberUid);
             ArrayList<FeedRes> feedResList = new ArrayList<>();
-            for (int i = 0; i < feedDtoPages.getContent().size(); i++) {
-                FeedDto feedDto = feedDtoPages.getContent().get(i);
+            for (int i = 0; i < feedDtoPages.size(); i++) {
+                FeedDto feedDto = feedDtoPages.get(i);
                 EventCard eventCard = eventRepository.findEventCardByEventUid(feedDto.getEventUid());
                 FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
                 feedResList.add(feedRes);

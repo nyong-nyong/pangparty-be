@@ -42,7 +42,7 @@ public class FeedController {
                 Page<FeedRes> feed = postService.getFeed(memberUid, pageable);
                 response.put("size", pageable.getPageSize());
                 response.put("page", pageable.getPageNumber());
-                response.put("itemCnt", feed.getTotalElements());
+                response.put("itemCnt", feed.getNumberOfElements());
                 response.put("totalPageCnt", feed.getTotalPages());
                 response.put("feed", feed.getContent());
                 return ResponseEntity.ok(response);

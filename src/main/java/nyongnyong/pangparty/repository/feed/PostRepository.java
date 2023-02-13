@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -38,5 +39,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " left join PostLike pl on pl.post.uid = p.uid" +
             " where f.follower.uid = :memberUid" +
             " order by p.createTime desc")
-    Page<FeedDto> findPostsByMemberUid(@Param("memberUid") Long memberUid, Pageable pageable);
+    List<FeedDto> findPostsByMemberUid(@Param("memberUid") Long memberUid);
 }
