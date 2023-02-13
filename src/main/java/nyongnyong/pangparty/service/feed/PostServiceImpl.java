@@ -138,22 +138,6 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    @Override
-    public Page<PostRes> getFeed(Long memberUid, Pageable pageable) {
-        try{
-            Page<PostRes> feed = postRepository.findPostsByMemberUid(memberUid, pageable);
-            if(feed.getTotalPages() > 0){
-                return feed;
-            } else{
-                System.out.println("feed is empty1");
-                throw new PostNotFoundException();
-            }
-        } catch(Exception e){
-            System.out.println("feed is empty2");
-            throw new PostNotFoundException();
-        }
-    }
-
     Post toPostEntity(PostReq postReq, Member member) {
         return Post.builder()
                 .member(member)
