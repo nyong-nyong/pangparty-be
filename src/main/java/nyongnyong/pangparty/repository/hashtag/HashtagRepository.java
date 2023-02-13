@@ -11,11 +11,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
+public interface HashtagRepository extends JpaRepository<Hashtag, Long>, HashtagRepositoryCustom {
     @Query("select h from Hashtag h where h.name = ?1")
     Hashtag findHashtagByHashtagName(@Param(value = "name") String hashtagName);
 
-    Page<SimpleHashtagName> searchHashtag(SearchReq conditions, Pageable pageable);
 //    Hashtag findHashtagByHashtagName(String hashtagName);
 
 //    boolean isExistHashtagByHashtagName(String hashtagName);

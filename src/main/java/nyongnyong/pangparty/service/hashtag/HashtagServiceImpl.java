@@ -32,6 +32,6 @@ public class HashtagServiceImpl implements HashtagService {
 
     @Override
     public Page<SimpleHashtagName> searchHashtag(SearchReq conditions, Pageable pageable) {
-        return hashtagRepository.searchHashtag(conditions, pageable);
+        return hashtagRepository.searchHashtag(conditions, pageable).map(SimpleHashtagName::new);
     }
 }
