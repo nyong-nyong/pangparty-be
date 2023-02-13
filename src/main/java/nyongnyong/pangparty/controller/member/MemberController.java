@@ -3,6 +3,7 @@ package nyongnyong.pangparty.controller.member;
 import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.feed.FeedRes;
+import nyongnyong.pangparty.entity.badge.Badge;
 import nyongnyong.pangparty.exception.FeedNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
@@ -10,6 +11,7 @@ import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.dto.member.MemberProfileReq;
 import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
+import nyongnyong.pangparty.service.badge.BadgeService;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.feed.PostService;
 import nyongnyong.pangparty.service.member.MemberService;
@@ -29,6 +31,8 @@ import java.util.NoSuchElementException;
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
+
+    private final BadgeService badgeService;
     private final EventService eventService;
     private final PostService postService;
     private final MemberService memberService;
@@ -36,7 +40,7 @@ public class MemberController {
     private final JwtTokenProvider jwtTokenProvider;
 
 
-    @GetMapping("/profile/{targetId}")
+    @GetMapping(value= {"/profile/{targetId}", "/{targetId}/profile"})
     public ResponseEntity<?> findMemberProfile(@RequestHeader(required = false, value = "Authorization") String token,
                                                @PathVariable("targetId") String targetId) {
         // 로그인 안 한 상태
@@ -239,6 +243,26 @@ public class MemberController {
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/{memberId}/badges")
+    public ResponseEntity<?> findProfileBadges(@PathVariable("memberId") String memberId){
+        try{
+            // Validate Path Variable
+            if (memberId == null || memberId.isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            List<Badge> badges = badgeService.findBadgesByMemberId(memberId);
+            response.put("totalCnt", badges.size());
+            response.put("badges", badges);
+
+            return ResponseEntity.ok(response);
         } catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
