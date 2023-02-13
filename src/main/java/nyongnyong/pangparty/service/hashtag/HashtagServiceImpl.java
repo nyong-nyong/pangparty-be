@@ -1,7 +1,7 @@
 package nyongnyong.pangparty.service.hashtag;
 
 import lombok.RequiredArgsConstructor;
-import nyongnyong.pangparty.dto.event.SimpleHashtagName;
+import nyongnyong.pangparty.dto.hashtag.HashtagSearchRes;
 import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.entity.hashtag.Hashtag;
 import nyongnyong.pangparty.repository.hashtag.HashtagRepository;
@@ -31,7 +31,7 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     @Override
-    public Page<SimpleHashtagName> searchHashtag(SearchReq conditions, Pageable pageable) {
-        return hashtagRepository.searchHashtag(conditions, pageable).map(SimpleHashtagName::new);
+    public Page<HashtagSearchRes> searchHashtag(SearchReq conditions, Pageable pageable) {
+        return hashtagRepository.searchHashtag(conditions, pageable).map(HashtagSearchRes::new);
     }
 }

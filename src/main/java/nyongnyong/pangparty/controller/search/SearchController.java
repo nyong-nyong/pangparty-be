@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.common.CategoryType;
 import nyongnyong.pangparty.dto.event.EventCard;
-import nyongnyong.pangparty.dto.event.SimpleHashtagName;
-import nyongnyong.pangparty.dto.member.FriendshipRes;
+import nyongnyong.pangparty.dto.hashtag.HashtagSearchRes;
 import nyongnyong.pangparty.dto.member.MemberProfileSimpleRes;
 import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.service.event.EventService;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -52,7 +50,7 @@ public class SearchController {
     @GetMapping("/hashtag")
     public ResponseEntity<?> searchHashtag(SearchReq conditions, Pageable pageable) {
         conditions.setCategory(CategoryType.HASHTAG);
-        Page<SimpleHashtagName> hashtags = hashtagService.searchHashtag(conditions, pageable);
+        Page<HashtagSearchRes> hashtags = hashtagService.searchHashtag(conditions, pageable);
         if (hashtags.isEmpty())
             return ResponseEntity.noContent().build();
 
