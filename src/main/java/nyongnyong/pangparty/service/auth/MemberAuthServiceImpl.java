@@ -109,6 +109,8 @@ public class MemberAuthServiceImpl implements MemberAuthService {
         redisUtil.deleteValue(memberLoginReq.getEmail());
         redisUtil.setValueWithExpiration(memberLoginReq.getEmail(), refreshToken, jwtTokenProvider.refreshTokenExpiration);
 
+        memberBadgeInfoRepository.updateLoginCount(member.getUid());
+
         return Map.of("id", member.getMemberProfile().getId(),
                 "accessToken", "Bearer " + accessToken,
                 "refreshToken", "Bearer " + refreshToken);

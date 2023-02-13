@@ -1,9 +1,6 @@
 package nyongnyong.pangparty.entity.badge;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -36,6 +33,7 @@ public class MemberBadge implements Serializable {
     @Column(updatable = false)
     private LocalDateTime acquireTime;
 
+    @Builder
     public MemberBadge(Badge badge, Member member) {
         this.badge = badge;
         this.member = member;

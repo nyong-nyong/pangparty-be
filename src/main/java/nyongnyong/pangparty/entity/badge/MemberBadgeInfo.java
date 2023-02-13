@@ -21,8 +21,11 @@ public class MemberBadgeInfo implements Serializable {
     @ToString.Exclude
     private Member member;
 
+    @Column(columnDefinition = "bigint default 0")
     private Long loginCount;
+    @Column(columnDefinition = "bigint default 0")
     private Long participateCount;
+    @Column(columnDefinition = "bigint default 0")
     private Long receiveCount;
 
     @Builder

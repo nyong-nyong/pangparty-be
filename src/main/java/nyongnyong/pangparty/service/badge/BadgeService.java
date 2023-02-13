@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface BadgeService {
     List<MemberBadgeRes> getMemberBadgeList(String memberId);
+
+    void updateMemberBadge(Long memberUid);
 }

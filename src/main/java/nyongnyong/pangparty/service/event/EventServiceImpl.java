@@ -8,6 +8,7 @@ import nyongnyong.pangparty.entity.event.EventLike;
 import nyongnyong.pangparty.entity.event.EventTarget;
 import nyongnyong.pangparty.entity.member.Friendship;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
+import nyongnyong.pangparty.repository.badge.MemberBadgeInfoRepository;
 import nyongnyong.pangparty.repository.event.BannerRepository;
 import nyongnyong.pangparty.repository.event.EventLikeRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
@@ -37,6 +38,7 @@ public class EventServiceImpl implements EventService {
     private final RollingPaperRepository rollingPaperRepository;
     private final BannerRepository bannerRepository;
     private final FriendshipRepository friendshipRepository;
+    private final MemberBadgeInfoRepository memberBadgeInfoRepository;
     private final NotificationService notificationService;
 
     @Override
@@ -53,6 +55,7 @@ public class EventServiceImpl implements EventService {
 
         // 주인공에게 알림 전송
         notificationService.alertTargetEvent(event.getUid(), hostUid, eventCreateReq.getTargetId());
+        memberBadgeInfoRepository.updateReceiveCountById(eventCreateReq.getTargetId());
 
         // 호스트의 팔로워들에게 알림 전송
         List<Friendship> friendships = friendshipRepository.findAllByFollowee(hostUid);

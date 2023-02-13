@@ -14,4 +14,7 @@ public interface BadgeRepository extends JpaRepository<Badge, Long> {
             "from Badge b left join MemberBadge mb on b.uid = mb.badge.uid " +
             "where mb.member.uid = :memberUid")
     List<MemberBadgeRes> getBadgeListAsMemberBadgeRes(Long memberUid);
+
+    @Query("select b from Badge b where b.uid = :badgeUid")
+    Badge findBadgeByUid(Long badgeUid);
 }
