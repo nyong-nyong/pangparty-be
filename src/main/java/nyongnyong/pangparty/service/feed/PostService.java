@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.service.feed;
 
+import nyongnyong.pangparty.dto.feed.FeedRes;
 import nyongnyong.pangparty.dto.feed.PostCommentRes;
 import nyongnyong.pangparty.dto.feed.PostReq;
 import nyongnyong.pangparty.dto.feed.PostRes;
@@ -16,5 +17,5 @@ public interface PostService {
 
     void updatePost(Long postUid, Long memberUid, PostReq postReq);
 
-    Page<PostRes> getFeed(Long memberUid, Pageable pageable);
+    Page<FeedRes> getFeed(Long memberUid, Pageable pageable);
 }

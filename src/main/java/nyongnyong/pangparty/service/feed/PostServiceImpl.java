@@ -1,9 +1,8 @@
 package nyongnyong.pangparty.service.feed;
 
 import lombok.RequiredArgsConstructor;
-import nyongnyong.pangparty.dto.feed.PostCommentRes;
-import nyongnyong.pangparty.dto.feed.PostReq;
-import nyongnyong.pangparty.dto.feed.PostRes;
+import nyongnyong.pangparty.dto.event.EventCard;
+import nyongnyong.pangparty.dto.feed.*;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.feed.Post;
 import nyongnyong.pangparty.entity.feed.PostComment;
@@ -18,10 +17,12 @@ import nyongnyong.pangparty.repository.feed.PostLikeRepository;
 import nyongnyong.pangparty.repository.feed.PostRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -123,9 +124,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostRes> getFeed(Long memberUid, Pageable pageable) {
+    public Page<FeedRes> getFeed(Long memberUid, Pageable pageable) {
         try{
-            Page<PostRes> feed = postRepository.findPostsByMemberUid(memberUid, pageable);
+            Page<FeedDto> feedDtoPages = postRepository.findPostsByMemberUid(memberUid, pageable);
+            ArrayList<FeedRes> feedResList = new ArrayList<>();
+            for (int i = 0; i < feedDtoPages.getContent().size(); i++) {
+                FeedDto feedDto = feedDtoPages.getContent().get(i);
+                EventCard eventCard = eventRepository.findEventCardByEventUid(feedDto.getEventUid());
+                FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
+                feedResList.add(feedRes);
+            }
+            final int start = (int)pageable.getOffset();
+            final int end = Math.min((start + pageable.getPageSize()), feedResList.size());
+            final Page<FeedRes> feed = new PageImpl<>(feedResList.subList(start, end), pageable, feedResList.size());
+
             if(feed.getTotalPages() > 0){
                 return feed;
             } else{

@@ -1,5 +1,7 @@
 package nyongnyong.pangparty.repository.feed;
 
+import nyongnyong.pangparty.dto.feed.FeedDto;
+import nyongnyong.pangparty.dto.feed.FeedRes;
 import nyongnyong.pangparty.dto.feed.PostRes;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.feed.Post;
@@ -26,12 +28,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("update Post p set p.event = :event, p.title = :title, p.content = :content, p.imgUrl = :imgUrl where p.uid = :postUid")
     int updatePost(Long postUid, Event event, String title, String content, String imgUrl);
 
-    @Query("select new nyongnyong.pangparty.dto.feed.PostRes(p.uid, p.event.uid, p.member.memberProfile.id, p.title, p.content," +
+    @Query("select new nyongnyong.pangparty.dto.feed.FeedDto(p.uid, p.event.uid, p.member.memberProfile.id," +
+            " case pl.member.uid when :memberUid then true else false end, p.title, p.content," +
             " p.imgUrl, p.createTime, p.modifyTime) from Post p" +
             " left join Event e on e.uid = p.event.uid" +
             " left join Member m on p.member.uid = m.uid" +
             " left join MemberProfile mp on m.uid = mp.member.uid" +
             " left join Friendship f on m.uid = f.followee.uid" +
-            " where f.follower.uid = :memberUid order by p.createTime desc")
-    Page<PostRes> findPostsByMemberUid(@Param("memberUid") Long memberUid, Pageable pageable);
+            " left join PostLike pl on pl.post.uid = p.uid" +
+            " where f.follower.uid = :memberUid" +
+            " order by p.createTime desc")
+    Page<FeedDto> findPostsByMemberUid(@Param("memberUid") Long memberUid, Pageable pageable);
 }

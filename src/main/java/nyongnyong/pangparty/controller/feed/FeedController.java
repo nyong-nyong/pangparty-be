@@ -3,6 +3,7 @@ package nyongnyong.pangparty.controller.feed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.EventExportRes;
+import nyongnyong.pangparty.dto.feed.FeedRes;
 import nyongnyong.pangparty.dto.feed.PostRes;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
@@ -38,7 +39,7 @@ public class FeedController {
             if (token != null && !token.isEmpty()) {
                 Long memberUid = memberAuthService.getMemberUid(token);
                 Map<String, Object> response = new HashMap<>();
-                Page<PostRes> feed = postService.getFeed(memberUid, pageable);
+                Page<FeedRes> feed = postService.getFeed(memberUid, pageable);
                 response.put("size", pageable.getPageSize());
                 response.put("page", pageable.getPageNumber());
                 response.put("itemCnt", feed.getTotalElements());
