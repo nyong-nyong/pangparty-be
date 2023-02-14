@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.controller.member;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.feed.FeedRes;
 import nyongnyong.pangparty.dto.member.MemberProfilePictureSimpleRes;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
@@ -92,6 +94,12 @@ public class MemberController {
         }
     }
 
+    /**
+     * 프로필 사진 업로드
+     * @param token
+     * @param file
+     * @return
+     */
     @PostMapping("/profile/picture")
     public ResponseEntity<?> createMemberProfilePicture(@RequestHeader("Authorization") String token,
                                                         @RequestPart(value = "file", required = false) MultipartFile file) {
@@ -102,12 +110,15 @@ public class MemberController {
 
         // Validate Request Part
         if (file == null) {
+            log.debug("file is null");
             return ResponseEntity.badRequest().build();
         }
 
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
+            log.debug("memberUid : {}", memberUid);
             String fileName = memberUid.toString().concat(file.getOriginalFilename());
+            log.debug("fileName : {}", fileName);
             String contentType = Files.probeContentType(Path.of(fileName));
             if (contentType.startsWith("image")) {  // image
 //                MultipartFile webpMedia = mediaService.reformatMedia(file);
@@ -118,6 +129,7 @@ public class MemberController {
 //                String mediaUrl = mediaService.uploadMedia(media, "album/"+fileName, contentType, media.getSize());
                 String profileUrl = mediaService.uploadMedia(file, "profile/"+fileName, contentType, file.getSize());
                 MemberProfilePictureSimpleRes memberProfilePictureSimpleRes = memberService.createMemberProfilePicture(memberUid, profileUrl);
+                log.debug("memberProfilePictureSimpleRes : {}", memberProfilePictureSimpleRes);
                 return new ResponseEntity<>(memberProfilePictureSimpleRes, HttpStatus.CREATED);
             } else{
                 throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
