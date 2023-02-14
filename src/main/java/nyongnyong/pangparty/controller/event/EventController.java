@@ -13,6 +13,7 @@ import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.event.EventHashtagService;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.hashtag.HashtagService;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -154,21 +155,33 @@ public class EventController {
             }
     }
 
+    /**
+     * 이벤트 헤더 이미지 업로드
+     * @param token
+     * @param eventUid
+     * @param file
+     * @return
+     */
     @PostMapping("/{eventUid}/header")
     public ResponseEntity<?> createEventHeader(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid, @RequestPart(value = "file", required = false) MultipartFile file){
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
             String fileName = file.getOriginalFilename();
             if (fileName == null) {
+                log.debug("fileName is null");
                 return ResponseEntity.badRequest().build();
             }
-            fileName = String.valueOf(System.currentTimeMillis()).concat(fileName);
+            log.debug("fileName: " + fileName);
+            fileName = String.valueOf(System.currentTimeMillis()).concat(eventUid.toString());
             String contentType = Files.probeContentType(Path.of(fileName));
+            log.debug("contentType: " + contentType);
             if (contentType.startsWith("image")) {   // image
                 String headerUrl = mediaService.uploadMedia(file, "eventHeader/" + fileName, contentType, file.getSize());
                 EventHeaderRes eventHeaderRes = eventService.updateThumbnail(eventUid, headerUrl);
                 return new ResponseEntity<>(eventHeaderRes, HttpStatus.CREATED);
             }
+        }catch (FileSizeLimitExceededException e){
+            return new ResponseEntity<>(HttpStatus.PAYLOAD_TOO_LARGE);
         }catch (NoSuchElementException e){
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
