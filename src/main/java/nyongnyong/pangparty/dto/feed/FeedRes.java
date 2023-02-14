@@ -23,12 +23,13 @@ public class FeedRes {
     private String title;
     private String content;
     private String imgUrl;
+    private String profileImgUrl;
     private LocalDateTime createTime;
     private LocalDateTime modifyTime;
 //    private int hit;
 
     @Builder
-    public FeedRes(Long uid, EventCard eventCard, String memberId, boolean isLiked, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
+    public FeedRes(Long uid, EventCard eventCard, String memberId, boolean isLiked, String title, String content, String imgUrl, String profileImgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.uid = uid;
         this.eventCard = eventCard;
         this.title = title;
@@ -36,6 +37,7 @@ public class FeedRes {
         this.isLiked = isLiked;
         this.content = content;
         this.imgUrl = imgUrl;
+        this.profileImgUrl = profileImgUrl;
         this.createTime = createTime;
         this.modifyTime = modifyTime;
 //        this.hit = hit;

@@ -23,6 +23,7 @@ public class FeedDto {
     private String imgUrl;
     private LocalDateTime createTime;
     private LocalDateTime modifyTime;
+    private String profileImgUrl;
 //    private int hit;
 
     @Builder
@@ -39,13 +40,14 @@ public class FeedDto {
 //        this.hit = hit;
     }
 
-    public FeedDto(Long uid, Long eventUid, String memberId, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
+    public FeedDto(Long uid, Long eventUid, String memberId, String title, String content, String imgUrl, String profileImgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.uid = uid;
         this.eventUid = eventUid;
         this.memberId = memberId;
         this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;
+        this.profileImgUrl = profileImgUrl;
         this.createTime = createTime;
         this.modifyTime = modifyTime;
 //        this.hit = hit;

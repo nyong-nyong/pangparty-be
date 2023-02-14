@@ -28,18 +28,20 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // TODO: profileImgUrl FeedDto에 추가, 쿼리에도 추가하기
     @Query("select distinct new nyongnyong.pangparty.dto.feed.FeedDto(p.uid, p.event.uid, p.member.memberProfile.id," +
-            " p.title, p.content, p.imgUrl, p.createTime, p.modifyTime) from Post p" +
-            " left join Event e on e.uid = p.event.uid" +
+            " p.title, p.content, p.imgUrl, mp.member.memberProfile.imgUrl, p.createTime, p.modifyTime) from Post p" +
+//            " left join Event e on e.uid = p.event.uid" +
             " left join Member m on p.member.uid = m.uid" +
             " left join MemberProfile mp on m.uid = mp.member.uid" +
             " left join Friendship f on m.uid = f.followee.uid" +
-            " where f.follower.uid = :memberUid" +
+            " where f.follower.uid = :memberUid or p.member.uid = :memberUid" +
             " order by p.createTime desc")
     List<FeedDto> findPostsByMemberUid(@Param("memberUid") Long memberUid);
 
     // TODO: profileImgUrl FeedDto에 추가, 쿼리에도 추가하기
     @Query("select distinct new nyongnyong.pangparty.dto.feed.FeedDto(p.uid, p.event.uid, p.member.memberProfile.id," +
-            " p.title, p.content, p.imgUrl, p.createTime, p.modifyTime) from Post p" +
+            " p.title, p.content, p.imgUrl, mp.member.memberProfile.imgUrl,  p.createTime, p.modifyTime) from Post p" +
+            " left join Member m on p.member.uid = m.uid" +
+            " left join MemberProfile mp on m.uid = mp.member.uid" +
             " where p.member.memberProfile.id = :memberId" +
             " order by p.createTime desc")
     List<FeedDto> findMyPostsByMemberId(@Param("memberId") String memberId);

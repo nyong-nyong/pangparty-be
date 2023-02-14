@@ -134,7 +134,7 @@ public class PostServiceImpl implements PostService {
                 FeedDto feedDto = feedDtoPages.get(i);
                 feedDto.setLiked(postLikeRepository.existsByPostUidAndMemberUid(feedDto.getUid(), memberUid));
                 EventCard eventCard = eventRepository.findEventCardByEventUid(feedDto.getEventUid());
-                FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
+                FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getProfileImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
                 feedResList.add(feedRes);
             }
             final int start = (int)pageable.getOffset();
@@ -157,7 +157,7 @@ public class PostServiceImpl implements PostService {
                 FeedDto feedDto = feedDtoPages.get(i);
                 feedDto.setLiked(postLikeRepository.existsByPostUidAndMemberUid(feedDto.getUid(), memberUid));
                 EventCard eventCard = eventRepository.findEventCardByEventUid(feedDto.getEventUid());
-                FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
+                FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getProfileImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
                 feedResList.add(feedRes);
             }
             final int start = (int)pageable.getOffset();
