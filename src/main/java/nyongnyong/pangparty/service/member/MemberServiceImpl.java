@@ -1,10 +1,7 @@
 package nyongnyong.pangparty.service.member;
 
 import lombok.RequiredArgsConstructor;
-import nyongnyong.pangparty.dto.member.FriendshipRes;
-import nyongnyong.pangparty.dto.member.MemberProfileReq;
-import nyongnyong.pangparty.dto.member.MemberProfileRes;
-import nyongnyong.pangparty.dto.member.MemberProfileSimpleRes;
+import nyongnyong.pangparty.dto.member.*;
 import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.entity.member.Friendship;
 import nyongnyong.pangparty.entity.member.Member;
@@ -93,6 +90,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Page<MemberProfileSimpleRes> searchMember(SearchReq conditions, Pageable pageable) {
         return memberProfileRepository.searchMember(conditions, pageable).map(MemberProfileSimpleRes::new);
+    }
+
+    @Override
+    public MemberProfilePictureSimpleRes createMemberProfilePicture(Long memberUid, String profileUrl) {
+        memberProfileRepository.updateImgUrl(memberUid, profileUrl);
+        return new MemberProfilePictureSimpleRes(memberRepository.findIdByUid(memberUid), profileUrl);
     }
 
 
