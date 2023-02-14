@@ -18,7 +18,7 @@ public class PostRes {
     private Long eventUid;
     @NotBlank
     private String memberId;
-
+    private String profileImgUrl;
     @UniqueElements
     private List<PostCommentRes> postComments;
 
@@ -33,10 +33,11 @@ public class PostRes {
 //    private int hit;
 
     @Builder
-    public PostRes(Long uid, Long eventUid, String memberId, List<PostCommentRes> postComments, Long likeCount, boolean isLiked, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
+    public PostRes(Long uid, Long eventUid, String memberId, String profileImgUrl, List<PostCommentRes> postComments, Long likeCount, boolean isLiked, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.uid = uid;
         this.eventUid = eventUid;
         this.memberId = memberId;
+        this.profileImgUrl = profileImgUrl;
         this.postComments = postComments;
         this.likeCount = likeCount;
         this.isLiked = isLiked;
@@ -47,10 +48,11 @@ public class PostRes {
 //        this.hit = hit;
     }
 
-    public PostRes(Long uid, Long eventUid, String memberId, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
+    public PostRes(Long uid, Long eventUid, String memberId, String profileImgUrl, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.uid = uid;
         this.eventUid = eventUid;
         this.memberId = memberId;
+        this.profileImgUrl = profileImgUrl;
         this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;

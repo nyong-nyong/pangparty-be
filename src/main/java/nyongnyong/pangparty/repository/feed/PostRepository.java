@@ -1,12 +1,9 @@
 package nyongnyong.pangparty.repository.feed;
 
 import nyongnyong.pangparty.dto.feed.FeedDto;
-import nyongnyong.pangparty.dto.feed.FeedRes;
 import nyongnyong.pangparty.dto.feed.PostRes;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.feed.Post;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<Post> findByUid(Long uid);
 
-    @Query("select new nyongnyong.pangparty.dto.feed.PostRes(p.uid, p.event.uid, p.member.memberProfile.id, p.title, p.content, " +
+    @Query("select new nyongnyong.pangparty.dto.feed.PostRes(p.uid, p.event.uid, p.member.memberProfile.id, p.member.memberProfile.imgUrl, p.title, p.content, " +
             "p.imgUrl, p.createTime, p.modifyTime) from Post p where p.uid = :postUid")
     PostRes findPostResByUid(Long postUid);
 
