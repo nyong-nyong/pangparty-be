@@ -72,9 +72,9 @@ public class AlbumMediaServiceImpl implements AlbumMediaService {
 
     @Override
     public Page<AlbumMediaSimpleRes> getAlbumMediaList(Long albumUid, Pageable pageable) {
-        Page<AlbumMedia> albumMediaPage = albumMediaRepository.findByUidGreaterThanOrderByUidAsc(albumUid, pageable);
-        Page<AlbumMediaSimpleRes> dtoPage = albumMediaPage.map(m -> new AlbumMediaSimpleRes(m));
-        log.debug("get albumMediaDtoPage = " + dtoPage);
+        Page<AlbumMedia> albumMediaPage = albumMediaRepository.findByAlbumUidOrderByUidAsc(albumUid, pageable);
+        Page<AlbumMediaSimpleRes> dtoPage = albumMediaPage.map(AlbumMediaSimpleRes::new);
+        log.debug("get albumMediaDtoPage = " + dtoPage.getContent());
         return dtoPage;
     }
 
