@@ -22,14 +22,14 @@ public class MemberBadgeInfo implements Serializable {
     private Member member;
 
     @Column(columnDefinition = "bigint default 0")
-    private Long loginCount;
+    private long loginCount;
     @Column(columnDefinition = "bigint default 0")
-    private Long participateCount;
+    private long participateCount;
     @Column(columnDefinition = "bigint default 0")
-    private Long receiveCount;
+    private long receiveCount;
 
     @Builder
-    public MemberBadgeInfo(Member member, Long loginCount, Long participateCount, Long receiveCount) {
+    public MemberBadgeInfo(Member member, long loginCount, long participateCount, long receiveCount) {
         this.member = member;
         this.loginCount = loginCount;
         this.participateCount = participateCount;
