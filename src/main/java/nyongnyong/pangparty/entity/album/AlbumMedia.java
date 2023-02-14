@@ -31,7 +31,7 @@ public class AlbumMedia implements Serializable {
 
     @OneToMany(mappedBy = "albumMedia")
     @ToString.Exclude
-    private List<AlbumMediaComment> albumMediaComments = new ArrayList<>();
+    private List<AlbumMediaComment> albumMediaComments;
 
     @OneToMany(mappedBy = "albumMedia")
     @ToString.Exclude

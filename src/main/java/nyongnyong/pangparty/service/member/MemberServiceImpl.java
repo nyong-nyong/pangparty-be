@@ -1,15 +1,18 @@
 package nyongnyong.pangparty.service.member;
 
 import lombok.RequiredArgsConstructor;
-import nyongnyong.pangparty.dto.member.MemberProfileReq;
-import nyongnyong.pangparty.dto.member.MemberProfileRes;
+import nyongnyong.pangparty.dto.member.*;
+import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.entity.member.Friendship;
 import nyongnyong.pangparty.entity.member.Member;
+import nyongnyong.pangparty.entity.member.MemberProfile;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.member.FriendshipRepository;
 import nyongnyong.pangparty.repository.member.MemberProfileRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,6 +85,17 @@ public class MemberServiceImpl implements MemberService {
 
         memberProfileRepository.updateMemberProfile(member.getUid(), memberProfileReq.getId(),
                 memberProfileReq.getName(), memberProfileReq.getImgUrl(), memberProfileReq.getIntroduction());
+    }
+
+    @Override
+    public Page<MemberProfileSimpleRes> searchMember(SearchReq conditions, Pageable pageable) {
+        return memberProfileRepository.searchMember(conditions, pageable).map(MemberProfileSimpleRes::new);
+    }
+
+    @Override
+    public MemberProfilePictureSimpleRes createMemberProfilePicture(Long memberUid, String profileUrl) {
+        memberProfileRepository.updateImgUrl(memberUid, profileUrl);
+        return new MemberProfilePictureSimpleRes(memberRepository.findIdByUid(memberUid), profileUrl);
     }
 
 

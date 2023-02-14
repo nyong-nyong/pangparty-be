@@ -11,6 +11,7 @@ import nyongnyong.pangparty.entity.rollingpaper.RollingPaperPiece;
 import nyongnyong.pangparty.exception.EventNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.RollingPaperNotFoundException;
+import nyongnyong.pangparty.repository.badge.MemberBadgeInfoRepository;
 import nyongnyong.pangparty.repository.event.EventParticipantRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
@@ -31,6 +32,7 @@ public class RollingPaperPieceServiceImpl implements RollingPaperPieceService {
 
     private final EventRepository eventRepository;
     private final MemberRepository memberRepository;
+    private final MemberBadgeInfoRepository memberBadgeInfoRepository;
     private final EventParticipantRepository eventParticipantRepository;
     private final RollingPaperRepository rollingPaperRepository;
     private final RollingPaperPieceRepository rollingPaperPieceRepository;
@@ -74,6 +76,7 @@ public class RollingPaperPieceServiceImpl implements RollingPaperPieceService {
         if (eventParticipantRepository.findByMemberUidAndEventUid(memberUid, eventUid) == null) {
                 EventParticipant eventParticipant = toEventParticipantEntity(event.get(), member.get());
                 eventParticipantRepository.save(eventParticipant);
+                memberBadgeInfoRepository.updateParticipateCount(memberUid);
         }
 
         RollingPaperPiece rollingPaperPiece = toRollingPaperPieceEntity(member.get(), rollingPaper.get(), rollingPaperPieceReq);

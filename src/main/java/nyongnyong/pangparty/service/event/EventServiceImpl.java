@@ -2,12 +2,19 @@ package nyongnyong.pangparty.service.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nyongnyong.pangparty.dto.event.EventCard;
+import nyongnyong.pangparty.dto.event.EventCreateReq;
+import nyongnyong.pangparty.dto.event.EventExportRes;
+import nyongnyong.pangparty.dto.event.EventIntroduceRes;
+import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.dto.event.*;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.EventLike;
 import nyongnyong.pangparty.entity.event.EventTarget;
 import nyongnyong.pangparty.entity.member.Friendship;
+import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
+import nyongnyong.pangparty.repository.badge.MemberBadgeInfoRepository;
 import nyongnyong.pangparty.repository.event.BannerRepository;
 import nyongnyong.pangparty.repository.event.EventLikeRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
@@ -15,6 +22,7 @@ import nyongnyong.pangparty.repository.event.EventTargetRepository;
 import nyongnyong.pangparty.repository.member.FriendshipRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
 import nyongnyong.pangparty.repository.rollingpaper.RollingPaperRepository;
+import org.springframework.data.domain.Page;
 import nyongnyong.pangparty.service.auth.NotificationService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +45,7 @@ public class EventServiceImpl implements EventService {
     private final RollingPaperRepository rollingPaperRepository;
     private final BannerRepository bannerRepository;
     private final FriendshipRepository friendshipRepository;
+    private final MemberBadgeInfoRepository memberBadgeInfoRepository;
     private final NotificationService notificationService;
 
     @Override
@@ -53,6 +62,8 @@ public class EventServiceImpl implements EventService {
 
         // 주인공에게 알림 전송
         notificationService.alertTargetEvent(event.getUid(), hostUid, eventCreateReq.getTargetId());
+        Member target = memberRepository.findMemberById(eventCreateReq.getTargetId());
+        memberBadgeInfoRepository.updateReceiveCount(target.getUid());
 
         // 호스트의 팔로워들에게 알림 전송
         List<Friendship> friendships = friendshipRepository.findAllByFollowee(hostUid);
@@ -119,6 +130,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<BannerRes> findBanners() {
         return bannerRepository.findBanners();
+    }
+
+    @Override
+    public Page<EventCard> searchEvent(SearchReq conditions, Pageable pageable) {
+        return eventRepository.searchEvent(conditions, pageable).map(EventCard::new);
     }
 
     private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){

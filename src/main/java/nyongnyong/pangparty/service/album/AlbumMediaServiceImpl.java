@@ -8,6 +8,7 @@ import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.entity.event.EventParticipant;
 import nyongnyong.pangparty.repository.album.AlbumMediaRepository;
 import nyongnyong.pangparty.repository.album.AlbumRepository;
+import nyongnyong.pangparty.repository.badge.MemberBadgeInfoRepository;
 import nyongnyong.pangparty.repository.event.EventParticipantRepository;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
@@ -25,13 +26,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AlbumMediaServiceImpl implements AlbumMediaService {
-    private final RollingPaperPieceRepository rollingPaperPieceRepository;
     private final EventRepository eventRepository;
 
     private final AlbumMediaRepository albumMediaRepository;
     private final AlbumRepository albumRepository;
     private final MemberRepository memberRepository;
     private final EventParticipantRepository eventParticipantRepository;
+    private final MemberBadgeInfoRepository memberBadgeInfoRepository;
 
     @Override
     public AlbumMediaSimpleRes createAlbumMedia(Long eventUid, Long memberUid, String thumbnailUrl, String mediaUrl) throws NoSuchElementException {
@@ -47,6 +48,7 @@ public class AlbumMediaServiceImpl implements AlbumMediaService {
         if (eventParticipantRepository.findByMemberUidAndEventUid(memberUid, eventUid) == null) {
             EventParticipant eventParticipant = EventParticipant.builder().event(eventRepository.findById(eventUid).get()).member(memberRepository.findById(memberUid).get()).build();
             eventParticipantRepository.save(eventParticipant);
+            memberBadgeInfoRepository.updateParticipateCount(memberUid);
         }
         return new AlbumMediaSimpleRes(albumMediaRepository.save(albumMedia));
     }
@@ -72,9 +74,9 @@ public class AlbumMediaServiceImpl implements AlbumMediaService {
 
     @Override
     public Page<AlbumMediaSimpleRes> getAlbumMediaList(Long albumUid, Pageable pageable) {
-        Page<AlbumMedia> albumMediaPage = albumMediaRepository.findByUidGreaterThanOrderByUidAsc(albumUid, pageable);
-        Page<AlbumMediaSimpleRes> dtoPage = albumMediaPage.map(m -> new AlbumMediaSimpleRes(m));
-        log.debug("get albumMediaDtoPage = " + dtoPage);
+        Page<AlbumMedia> albumMediaPage = albumMediaRepository.findByAlbumUidOrderByUidAsc(albumUid, pageable);
+        Page<AlbumMediaSimpleRes> dtoPage = albumMediaPage.map(AlbumMediaSimpleRes::new);
+        log.debug("get albumMediaDtoPage = " + dtoPage.getContent());
         return dtoPage;
     }
 

@@ -12,4 +12,5 @@ public interface AlbumMediaLikeRepository extends JpaRepository<AlbumMediaLike, 
      */
     public void deleteByAlbumMediaUidAndMemberUid(Long albumMediaUid, Long memberUid);
 
+    AlbumMediaLike findByAlbumMediaUidAndMemberUid(Long mediaUid, Long memberUid);
 }

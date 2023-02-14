@@ -1,6 +1,10 @@
 package nyongnyong.pangparty.repository.member;
 
+import nyongnyong.pangparty.dto.member.FriendshipRes;
+import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.entity.member.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +21,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Member findByEmail(String email);
     boolean existsByEmail(String email);
+
+    String findIdByUid(Long memberUid);
 }

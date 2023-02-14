@@ -1,6 +1,13 @@
 package nyongnyong.pangparty.service.event;
+import nyongnyong.pangparty.dto.event.EventCard;
+import nyongnyong.pangparty.dto.event.EventCreateReq;
+import nyongnyong.pangparty.dto.event.EventExportRes;
+import nyongnyong.pangparty.dto.event.EventIntroduceRes;
+import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.dto.event.*;
 import nyongnyong.pangparty.entity.event.Event;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -31,6 +38,8 @@ public interface EventService {
     List<EventCard> findTodayEndEvents();
 
     List<EventExportRes> findExportStatistics(Long eventUid);
+
+    Page<EventCard> searchEvent(SearchReq conditions, Pageable pageable);
 
     List<BannerRes> findBanners();
 }

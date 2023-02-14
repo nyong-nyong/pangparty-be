@@ -18,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<Post> findByUid(Long uid);
 
-    @Query("select new nyongnyong.pangparty.dto.feed.PostRes(p.uid, p.event.uid, p.member.memberProfile.id, p.title, p.content, " +
+    @Query("select new nyongnyong.pangparty.dto.feed.PostRes(p.uid, p.event.uid, p.member.memberProfile.id, p.member.memberProfile.imgUrl, p.title, p.content, " +
             "p.imgUrl, p.createTime, p.modifyTime) from Post p where p.uid = :postUid")
     PostRes findPostResByUid(Long postUid);
 
