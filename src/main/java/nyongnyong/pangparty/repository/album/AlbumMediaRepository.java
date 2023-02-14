@@ -12,7 +12,7 @@ public interface AlbumMediaRepository extends JpaRepository<AlbumMedia, Long> {
     Page<AlbumMedia> findByAlbumUid(Long albumUid, Pageable pageable);
 
     int countByMemberUidAndAlbumUid(Long memberUid, Long albumUid);
-    Page<AlbumMedia> findByUidGreaterThanOrderByUidAsc(Long uid, Pageable pageable);
+    Page<AlbumMedia> findByAlbumUidOrderByUidAsc(Long albumUid, Pageable pageable);
 
     @Query(value = "SELECT prevUid, nextUid from (SELECT LAG(uid, 1) OVER(ORDER BY uid) as prevUid, uid, LEAD(uid, 1) OVER(ORDER BY uid) as nextUid FROM album_media) as sub WHERE sub.uid = :uid",
             nativeQuery = true)
