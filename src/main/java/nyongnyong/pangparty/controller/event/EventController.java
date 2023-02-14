@@ -8,6 +8,7 @@ import nyongnyong.pangparty.entity.hashtag.Hashtag;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.service.album.AlbumService;
+import nyongnyong.pangparty.service.album.MediaService;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.event.EventHashtagService;
 import nyongnyong.pangparty.service.event.EventService;
@@ -15,8 +16,11 @@ import nyongnyong.pangparty.service.hashtag.HashtagService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 @RestController
@@ -29,6 +33,7 @@ public class EventController {
     private final HashtagService hashtagService;
     private final EventHashtagService eventHashtagService;
     private final AlbumService albumService;
+    private final MediaService mediaService;
 
     @GetMapping("/{eventUid}")
     public ResponseEntity<?> findEventIntroduceByEventUid(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid){
@@ -120,7 +125,7 @@ public class EventController {
         }
     }
 
-    @DeleteMapping("/{eventUid}/dislike")
+    @DeleteMapping("/{eventUid}/like")
     public ResponseEntity<?> dislikeEvent(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid){
             // Validate Path Variable and Request Body
             log.debug("dislikeEvent");
@@ -147,6 +152,31 @@ public class EventController {
                 e.printStackTrace();
                 return ResponseEntity.badRequest().build();
             }
+    }
+
+    @PostMapping("/{eventUid}/header")
+    public ResponseEntity<?> createEventHeader(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid, @RequestPart(value = "file", required = false) MultipartFile file){
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            String fileName = file.getOriginalFilename();
+            if (fileName == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            fileName = String.valueOf(System.currentTimeMillis()).concat(fileName);
+            String contentType = Files.probeContentType(Path.of(fileName));
+            if (contentType.startsWith("image")) {   // image
+                String headerUrl = mediaService.uploadMedia(file, "eventHeader/" + fileName, contentType, file.getSize());
+                EventHeaderRes eventHeaderRes = eventService.updateThumbnail(eventUid, headerUrl);
+                return new ResponseEntity<>(eventHeaderRes, HttpStatus.CREATED);
+            }
+        }catch (NoSuchElementException e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping

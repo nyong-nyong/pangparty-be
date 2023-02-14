@@ -133,6 +133,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public EventHeaderRes updateThumbnail(Long eventUid, String headerUrl) {
+        eventRepository.updateThumbnail(eventUid, headerUrl);
+        return new EventHeaderRes(eventUid, headerUrl);
+    }
+
+    @Override
     public Page<EventCard> searchEvent(SearchReq conditions, Pageable pageable) {
         return eventRepository.searchEvent(conditions, pageable).map(EventCard::new);
     }
