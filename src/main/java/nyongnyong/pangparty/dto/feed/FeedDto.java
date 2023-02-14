@@ -38,4 +38,16 @@ public class FeedDto {
         this.modifyTime = modifyTime;
 //        this.hit = hit;
     }
+
+    public FeedDto(Long uid, Long eventUid, String memberId, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
+        this.uid = uid;
+        this.eventUid = eventUid;
+        this.memberId = memberId;
+        this.title = title;
+        this.content = content;
+        this.imgUrl = imgUrl;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+//        this.hit = hit;
+    }
 }

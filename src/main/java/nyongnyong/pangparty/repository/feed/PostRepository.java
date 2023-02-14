@@ -26,24 +26,21 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("update Post p set p.event = :event, p.title = :title, p.content = :content, p.imgUrl = :imgUrl where p.uid = :postUid")
     int updatePost(Long postUid, Event event, String title, String content, String imgUrl);
 
-    @Query("select new nyongnyong.pangparty.dto.feed.FeedDto(p.uid, p.event.uid, p.member.memberProfile.id," +
-            " case pl.member.uid when :memberUid then true else false end, p.title, p.content," +
-            " p.imgUrl, p.createTime, p.modifyTime) from Post p" +
+    // TODO: profileImgUrl FeedDto에 추가, 쿼리에도 추가하기
+    @Query("select distinct new nyongnyong.pangparty.dto.feed.FeedDto(p.uid, p.event.uid, p.member.memberProfile.id," +
+            " p.title, p.content, p.imgUrl, p.createTime, p.modifyTime) from Post p" +
             " left join Event e on e.uid = p.event.uid" +
             " left join Member m on p.member.uid = m.uid" +
             " left join MemberProfile mp on m.uid = mp.member.uid" +
             " left join Friendship f on m.uid = f.followee.uid" +
-            " left join PostLike pl on pl.post.uid = p.uid" +
             " where f.follower.uid = :memberUid" +
             " order by p.createTime desc")
     List<FeedDto> findPostsByMemberUid(@Param("memberUid") Long memberUid);
 
+    // TODO: profileImgUrl FeedDto에 추가, 쿼리에도 추가하기
     @Query("select distinct new nyongnyong.pangparty.dto.feed.FeedDto(p.uid, p.event.uid, p.member.memberProfile.id," +
-            " case pl.member.uid when :memberUid then true else false end, p.title, p.content," +
-            " p.imgUrl, p.createTime, p.modifyTime) from Post p" +
-            " join PostLike pl on pl.post.uid = p.uid" +
+            " p.title, p.content, p.imgUrl, p.createTime, p.modifyTime) from Post p" +
             " where p.member.memberProfile.id = :memberId" +
-            " group by p.uid" +
             " order by p.createTime desc")
-    List<FeedDto> findMyPostsByMemberId(@Param("memberUid") Long memberUid, @Param("memberId") String memberId);
+    List<FeedDto> findMyPostsByMemberId(@Param("memberId") String memberId);
 }

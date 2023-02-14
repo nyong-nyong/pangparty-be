@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.service.feed;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.feed.*;
 import nyongnyong.pangparty.entity.event.Event;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -130,6 +132,7 @@ public class PostServiceImpl implements PostService {
             ArrayList<FeedRes> feedResList = new ArrayList<>();
             for (int i = 0; i < feedDtoPages.size(); i++) {
                 FeedDto feedDto = feedDtoPages.get(i);
+                feedDto.setLiked(postLikeRepository.existsByPostUidAndMemberUid(feedDto.getUid(), memberUid));
                 EventCard eventCard = eventRepository.findEventCardByEventUid(feedDto.getEventUid());
                 FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
                 feedResList.add(feedRes);
@@ -148,10 +151,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<FeedRes> findProfileFeed(Long memberUid, String memberId, Pageable pageable) {
         try{
-            List<FeedDto> feedDtoPages = postRepository.findMyPostsByMemberId(memberUid, memberId);
+            List<FeedDto> feedDtoPages = postRepository.findMyPostsByMemberId(memberId);
             ArrayList<FeedRes> feedResList = new ArrayList<>();
             for (int i = 0; i < feedDtoPages.size(); i++) {
                 FeedDto feedDto = feedDtoPages.get(i);
+                feedDto.setLiked(postLikeRepository.existsByPostUidAndMemberUid(feedDto.getUid(), memberUid));
                 EventCard eventCard = eventRepository.findEventCardByEventUid(feedDto.getEventUid());
                 FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
                 feedResList.add(feedRes);
