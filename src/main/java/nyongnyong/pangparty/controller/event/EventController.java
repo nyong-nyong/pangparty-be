@@ -172,7 +172,7 @@ public class EventController {
                 return ResponseEntity.badRequest().build();
             }
             log.debug("fileName: " + fileName);
-            fileName = String.valueOf(System.currentTimeMillis()).concat(eventUid.toString());
+            fileName = String.valueOf(System.currentTimeMillis()).concat(fileName);
             String contentType = Files.probeContentType(Path.of(fileName));
             log.debug("contentType: " + contentType);
             if (contentType.startsWith("image")) {   // image
