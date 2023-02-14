@@ -133,8 +133,11 @@ public class PostServiceImpl implements PostService {
             for (int i = 0; i < feedDtoPages.size(); i++) {
                 FeedDto feedDto = feedDtoPages.get(i);
                 feedDto.setLiked(postLikeRepository.existsByPostUidAndMemberUid(feedDto.getUid(), memberUid));
+                feedDto.setLikeCnt(postLikeRepository.countByPostUid(feedDto.getUid()));
+                feedDto.setHasCommented(postCommentRepository.existsByPostUidAndMemberUid(feedDto.getUid(), memberUid));
+                feedDto.setCommentCnt(postCommentRepository.countByPostUid(feedDto.getUid()));
                 EventCard eventCard = eventRepository.findEventCardByEventUid(feedDto.getEventUid());
-                FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getProfileImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
+                FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getLikeCnt(), feedDto.isHasCommented(), feedDto.getCommentCnt(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getProfileImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
                 feedResList.add(feedRes);
             }
             final int start = (int)pageable.getOffset();
@@ -156,8 +159,11 @@ public class PostServiceImpl implements PostService {
             for (int i = 0; i < feedDtoPages.size(); i++) {
                 FeedDto feedDto = feedDtoPages.get(i);
                 feedDto.setLiked(postLikeRepository.existsByPostUidAndMemberUid(feedDto.getUid(), memberUid));
+                feedDto.setLikeCnt(postLikeRepository.countByPostUid(feedDto.getUid()));
+                feedDto.setHasCommented(postCommentRepository.existsByPostUidAndMemberUid(feedDto.getUid(), memberUid));
+                feedDto.setCommentCnt(postCommentRepository.countByPostUid(feedDto.getUid()));
                 EventCard eventCard = eventRepository.findEventCardByEventUid(feedDto.getEventUid());
-                FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getProfileImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
+                FeedRes feedRes = new FeedRes(feedDto.getUid(), eventCard, feedDto.getMemberId(), feedDto.isLiked(), feedDto.getLikeCnt(), feedDto.isHasCommented(), feedDto.getCommentCnt(), feedDto.getTitle(), feedDto.getContent(), feedDto.getImgUrl(), feedDto.getProfileImgUrl(), feedDto.getCreateTime(), feedDto.getModifyTime());
                 feedResList.add(feedRes);
             }
             final int start = (int)pageable.getOffset();

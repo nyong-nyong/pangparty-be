@@ -19,4 +19,8 @@ public interface PostCommentRepository extends JpaRepository<PostComment, Long> 
 
     @Query("select pc from PostComment pc where pc.uid = :commentUid")
     Optional<PostComment> findByUid(Long commentUid);
+
+    boolean existsByPostUidAndMemberUid(Long uid, Long memberUid);
+
+    Long countByPostUid(Long uid);
 }

@@ -18,6 +18,10 @@ public class FeedDto {
     private String memberId;
     @JsonProperty("isLiked")
     private boolean isLiked;
+    private Long likeCnt;
+    @JsonProperty("hasCommented")
+    private boolean hasCommented;
+    private Long commentCnt;
     private String title;
     private String content;
     private String imgUrl;
@@ -27,11 +31,14 @@ public class FeedDto {
 //    private int hit;
 
     @Builder
-    public FeedDto(Long uid, Long eventUid, String memberId, boolean isLiked, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
+    public FeedDto(Long uid, Long eventUid, String memberId, boolean isLiked, Long likeCnt, boolean hasCommented, Long commentCnt, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.uid = uid;
         this.eventUid = eventUid;
         this.memberId = memberId;
         this.isLiked = isLiked;
+        this.likeCnt = likeCnt;
+        this.hasCommented = hasCommented;
+        this.commentCnt = commentCnt;
         this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;
