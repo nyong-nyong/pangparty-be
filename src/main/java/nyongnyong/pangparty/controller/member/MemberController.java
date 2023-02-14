@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.EventCard;
 import nyongnyong.pangparty.dto.feed.FeedRes;
+import nyongnyong.pangparty.dto.member.MemberProfilePictureSimpleRes;
 import nyongnyong.pangparty.dto.member.MemberProfileReq;
 import nyongnyong.pangparty.exception.FeedNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
