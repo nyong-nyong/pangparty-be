@@ -42,4 +42,6 @@ public interface EventService {
     Page<EventCard> searchEvent(SearchReq conditions, Pageable pageable);
 
     List<BannerRes> findBanners();
+
+    EventHeaderRes updateThumbnail(Long eventUid, String headerUrl);
 }
