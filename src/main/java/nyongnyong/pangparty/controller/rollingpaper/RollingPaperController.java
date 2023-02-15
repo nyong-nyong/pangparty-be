@@ -87,7 +87,7 @@ public class RollingPaperController {
                                                               @PathVariable("rollingPaperUid") Long rollingPaperUid,
                                                               @RequestParam int topStart, @RequestParam int topEnd) {
         // validate path variable
-        if (eventUid < 0 || rollingPaperUid < 0 || topStart < 0 || topEnd < 0 || topStart > topEnd) {
+        if (eventUid < 0 || rollingPaperUid < 0 || topStart > topEnd) {
             return ResponseEntity.badRequest().build();
         }
 
