@@ -30,9 +30,30 @@ public class PostRes {
     private String imgUrl;
     private LocalDateTime createTime;
     private LocalDateTime modifyTime;
-//    private int hit;
+
+    private Long commentCount;
+    @JsonProperty("hasCommented")
+    private boolean hasCommented;
+    //    private int hit;
 
     @Builder
+    public PostRes(Long uid, Long eventUid, String memberId, String profileImgUrl, List<PostCommentRes> postComments, Long likeCount, boolean isLiked, String title, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime, Long commentCount, boolean hasCommented) {
+        this.uid = uid;
+        this.eventUid = eventUid;
+        this.memberId = memberId;
+        this.profileImgUrl = profileImgUrl;
+        this.postComments = postComments;
+        this.likeCount = likeCount;
+        this.isLiked = isLiked;
+        this.title = title;
+        this.content = content;
+        this.imgUrl = imgUrl;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+        this.commentCount = commentCount;
+        this.hasCommented = hasCommented;
+    }
+
     public PostRes(Long uid, Long eventUid, String memberId, String profileImgUrl, List<PostCommentRes> postComments, Long likeCount, boolean isLiked, String content, String imgUrl, LocalDateTime createTime, LocalDateTime modifyTime) {
         this.uid = uid;
         this.eventUid = eventUid;

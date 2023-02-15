@@ -44,15 +44,18 @@ public class PostServiceImpl implements PostService {
     public PostRes getPost(Long postUid, Long memberUid) {
         PostRes postRes = postRepository.findPostResByUid(postUid);
         if (postRes != null) {
-            List<PostCommentRes> postCommentResList = postCommentRepository.findAllByPostUid(postUid, Pageable.ofSize(5)).getContent();
-            postRes.setPostComments(postCommentResList);
+//            List<PostCommentRes> postCommentResList = postCommentRepository.findAllByPostUid(postUid, Pageable.ofSize(5)).getContent();
+//            postRes.setPostComments(postCommentResList);
             postRes.setLikeCount(postLikeRepository.countByPostUid(postUid));
+            postRes.setCommentCount(postCommentRepository.countByPostUid(postUid));
 
             if (memberUid != null) {
                 Optional<PostLike> postLike = postLikeRepository.findByPostUidAndMemberUid(postUid, memberUid);
                 if (postLike != null) {
                     postRes.setLiked(true);
                 }
+
+                postRes.setHasCommented(postCommentRepository.existsByPostUidAndMemberUid(postUid, memberUid));
             }
 
             return postRes;
