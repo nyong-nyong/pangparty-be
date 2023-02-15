@@ -147,7 +147,7 @@ public class MemberAuthServiceImpl implements MemberAuthService {
     public void sendAuthEmail(String email) {
         String authCode = mailService.getKey(6);
         redisUtil.setValueWithExpiration(email + "AUTH", authCode, 60 * 5);
-        mailService.sendMail(email, "팡파레 이메일 인증번호입니다.", "인증번호 : " + authCode +"./n 5분 이내에 입력해주세요.");
+        mailService.sendMail(email, "팡파레 이메일 인증번호입니다.", "인증번호 : " + authCode +". 5분 이내에 입력해주세요.");
     }
 
     @Override
