@@ -2,18 +2,20 @@ package nyongnyong.pangparty.service.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nyongnyong.pangparty.dto.event.EventCard;
-import nyongnyong.pangparty.dto.event.EventCreateReq;
-import nyongnyong.pangparty.dto.event.EventExportRes;
-import nyongnyong.pangparty.dto.event.EventIntroduceRes;
-import nyongnyong.pangparty.dto.search.SearchReq;
+import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.dto.event.*;
+import nyongnyong.pangparty.dto.search.SearchReq;
+import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.event.EventLike;
 import nyongnyong.pangparty.entity.event.EventTarget;
 import nyongnyong.pangparty.entity.member.Friendship;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
+import nyongnyong.pangparty.entity.rollingpaper.RollingPaperPiece;
+import nyongnyong.pangparty.entity.rollingpaper.RollingPaperSticker;
+import nyongnyong.pangparty.exception.EventNotFoundException;
+import nyongnyong.pangparty.repository.album.AlbumMediaRepository;
 import nyongnyong.pangparty.repository.badge.MemberBadgeInfoRepository;
 import nyongnyong.pangparty.repository.event.BannerRepository;
 import nyongnyong.pangparty.repository.event.EventLikeRepository;
@@ -21,9 +23,11 @@ import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.event.EventTargetRepository;
 import nyongnyong.pangparty.repository.member.FriendshipRepository;
 import nyongnyong.pangparty.repository.member.MemberRepository;
+import nyongnyong.pangparty.repository.rollingpaper.RollingPaperPieceRepository;
 import nyongnyong.pangparty.repository.rollingpaper.RollingPaperRepository;
-import org.springframework.data.domain.Page;
+import nyongnyong.pangparty.repository.rollingpaper.RollingPaperStickerRepository;
 import nyongnyong.pangparty.service.auth.NotificationService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -38,11 +44,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
+    private final AlbumMediaRepository albumMediaRepository;
     private final EventRepository eventRepository;
     private final EventTargetRepository eventTargetRepository;
     private final EventLikeRepository eventLikeRepository;
     private final MemberRepository memberRepository;
     private final RollingPaperRepository rollingPaperRepository;
+    private final RollingPaperPieceRepository  rollingPaperPieceRepository;
+    private final RollingPaperStickerRepository rollingPaperStickerRepository;
     private final BannerRepository bannerRepository;
     private final FriendshipRepository friendshipRepository;
     private final MemberBadgeInfoRepository memberBadgeInfoRepository;
@@ -51,6 +60,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public boolean isExistEventByEventUid(Long eventUid) {
         return eventRepository.existsById(eventUid);
+    }
+
+    @Override
+    public boolean isEventTarget(Long memberUid, Long eventUid) {
+        return eventRepository.findById(eventUid).get().getEventTarget().getUid().equals(memberUid);
     }
 
     @Override
@@ -136,6 +150,36 @@ public class EventServiceImpl implements EventService {
     public EventHeaderRes updateThumbnail(Long eventUid, String headerUrl) {
         eventRepository.updateThumbnail(eventUid, headerUrl);
         return new EventHeaderRes(eventUid, headerUrl);
+    }
+
+    @Override
+    public Map<String, Object> findAllExport(Long eventUid) {
+
+        Event event = eventRepository.findEventByUid(eventUid);
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        List<EventExportRes> eventExportRes = eventRepository.findExportStatistics(eventUid);
+
+        // event detail
+        EventIntroduceRes eventIntroduceRes = eventRepository.findEventIntroduceByEventUid(eventUid);
+
+        // rp list
+        List<RollingPaperPiece> rollingPaperPieceList = rollingPaperPieceRepository.findAllByRollingPaperUid(event.getRollingPaper().getUid());
+
+        // rp sticker list
+        List<RollingPaperSticker> rollingPaperPieceStickerList = rollingPaperStickerRepository.findRollingPaperStickersByRollingPaperUid(event.getRollingPaper().getUid());
+
+        //album 전체 조회
+        List<AlbumMedia> albumMediaList = albumMediaRepository.findByAlbumUidOrderByUidAsc(event.getAlbum().getUid());
+        List<AlbumMediaSimpleRes> albumMediaSimpleResList = albumMediaList.stream().map(AlbumMediaSimpleRes::new).collect(Collectors.toList());
+
+        return Map.of("eventStatistics", eventExportRes,
+                "eventIntroduce", eventIntroduceRes,
+                "rollingPaperPieceList", rollingPaperPieceList,
+                "rollingPaperPieceStickerList", rollingPaperPieceStickerList,
+                "albumMediaList", albumMediaSimpleResList);
     }
 
     @Override

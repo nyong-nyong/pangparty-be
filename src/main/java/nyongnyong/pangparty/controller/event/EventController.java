@@ -11,6 +11,7 @@ import nyongnyong.pangparty.service.album.AlbumService;
 import nyongnyong.pangparty.service.album.MediaService;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.event.EventHashtagService;
+import nyongnyong.pangparty.service.event.EventParticipantService;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.hashtag.HashtagService;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
@@ -30,6 +31,7 @@ import java.util.*;
 @Slf4j
 public class EventController {
     private final EventService eventService;
+    private final EventParticipantService eventParticipantService;
     private final MemberAuthService memberAuthService;
     private final HashtagService hashtagService;
     private final EventHashtagService eventHashtagService;
@@ -236,16 +238,29 @@ public class EventController {
             List<EventExportRes> eventExportRes = eventService.findExportStatistics(eventUid);
             response.put("eventExports", eventExportRes);
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e){
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/{eventUid}/export/all")
+    public ResponseEntity<Map<String, Object>> findAllExport(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid) {
+        try {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            if (eventService.isEventTarget(memberUid, eventUid) || eventParticipantService.isEventParticipant(memberUid, eventUid)) {
+                Map<String, Object> response = eventService.findAllExport(eventUid);
+                return ResponseEntity.ok(response);
+            } else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
