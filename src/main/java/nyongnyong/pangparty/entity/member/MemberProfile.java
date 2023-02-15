@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.entity.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,6 +23,7 @@ public class MemberProfile implements Serializable {
     @MapsId
     @JoinColumn(name = "member_uid")
     @ToString.Exclude
+    @JsonIgnore
     private Member member;
     @Column(unique = true)
     private String id;

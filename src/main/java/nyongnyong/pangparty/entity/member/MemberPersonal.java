@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.entity.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import nyongnyong.pangparty.common.AuthorityType;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,6 +25,7 @@ public class MemberPersonal implements Serializable {
     @MapsId
     @JoinColumn(name = "member_uid")
     @ToString.Exclude
+    @JsonIgnore
     private Member member;
     @Column(unique = true)
     private String phoneNo;

@@ -1,7 +1,7 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 import nyongnyong.pangparty.entity.member.Member;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
