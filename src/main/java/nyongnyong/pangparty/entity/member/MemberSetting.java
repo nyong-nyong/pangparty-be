@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.entity.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ public class MemberSetting implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "member_uid")
+    @JsonIgnore
     private Member member;
     private boolean alarmOnAll;
     private boolean alarmOnFollowing;

@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import nyongnyong.pangparty.entity.member.Member;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,11 +23,13 @@ public class RollingPaperSticker implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rolling_paper_uid")
     @ToString.Exclude
+    @JsonIgnore
     private RollingPaper rollingPaper;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_uid")
     @ToString.Exclude
+    @JsonIgnore
     private Member member;
 
     @OneToOne

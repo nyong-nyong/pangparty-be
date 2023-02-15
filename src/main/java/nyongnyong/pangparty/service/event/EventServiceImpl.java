@@ -64,7 +64,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public boolean isEventTarget(Long memberUid, Long eventUid) {
-        return eventRepository.findById(eventUid).get().getEventTarget().getUid().equals(memberUid);
+        return memberUid.equals(eventRepository.findById(eventUid).get().getEventTarget().getUid());
     }
 
     @Override

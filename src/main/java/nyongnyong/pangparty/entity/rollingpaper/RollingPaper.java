@@ -1,7 +1,7 @@
 package nyongnyong.pangparty.entity.rollingpaper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 import nyongnyong.pangparty.entity.event.Event;
 
 import javax.persistence.*;
@@ -22,6 +22,7 @@ public class RollingPaper implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_uid")
     @ToString.Exclude
+    @JsonIgnore
     private Event event;
 
     @JsonIgnore
