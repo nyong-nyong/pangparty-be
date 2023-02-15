@@ -156,12 +156,6 @@ public class MemberController {
             response.put("receivedEvents", receivedEvents);
 
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -186,12 +180,6 @@ public class MemberController {
             response.put("hostEvents", hostEvents);
 
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -215,12 +203,6 @@ public class MemberController {
             response.put("involvingEvents", involvingEvents);
 
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -246,12 +228,6 @@ public class MemberController {
             response.put("involvedEvents", involvedEvents);
 
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -288,12 +264,6 @@ public class MemberController {
             response.put("feed", e.getMessage());
             e.printStackTrace();
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();

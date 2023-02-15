@@ -1,6 +1,7 @@
 package nyongnyong.pangparty.service.member;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.member.*;
 import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.entity.member.Friendship;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -95,7 +97,9 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberProfilePictureSimpleRes createMemberProfilePicture(Long memberUid, String profileUrl) {
         memberProfileRepository.updateImgUrl(memberUid, profileUrl);
-        return new MemberProfilePictureSimpleRes(memberRepository.findIdByUid(memberUid), profileUrl);
+        String memberId = memberRepository.findById(memberUid).get().getMemberProfile().getId();
+        log.debug("S3에 올리고 그걸로 어케.. 해보기! memberId: {}, profileUrl: {}", memberId, profileUrl);
+        return new MemberProfilePictureSimpleRes(memberId, profileUrl);
     }
 
 
