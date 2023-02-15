@@ -250,4 +250,10 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @GetMapping("/{eventUid}/export/all")
+    public ResponseEntity<?> findAllExport(@PathVariable Long eventUid) {
+        Map<String, Object> response = eventService.findAllExport(eventUid);
+        return ResponseEntity.ok(response);
+    }
 }
