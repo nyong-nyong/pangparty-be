@@ -18,6 +18,8 @@ public interface EventService {
 
     boolean isEventTarget(Long memberUid, Long eventUid);
 
+    boolean isEventHost(Long memberUid, Long eventUid);
+
     Event addEventAndEventTarget(Long hostUid, EventCreateReq eventCreateReq);
     List<EventCard> findReceivedEventsByMemberId(String memberId);
 

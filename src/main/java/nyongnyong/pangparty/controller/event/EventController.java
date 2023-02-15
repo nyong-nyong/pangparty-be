@@ -221,7 +221,7 @@ public class EventController {
     public ResponseEntity<Map<String, Object>> findAllExport(@RequestHeader(value = "Authorization") String token, @PathVariable Long eventUid) {
         try {
             Long memberUid = memberAuthService.getMemberUid(token);
-            if (eventService.isEventTarget(memberUid, eventUid) || eventParticipantService.isEventParticipant(memberUid, eventUid)) {
+            if (eventService.isEventTarget(memberUid, eventUid) || eventService.isEventHost(memberUid, eventUid) || eventParticipantService.isEventParticipant(memberUid, eventUid)) {
                 Map<String, Object> response = eventService.findAllExport(eventUid);
                 return ResponseEntity.ok(response);
             } else {
