@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface PostCommentRepository extends JpaRepository<PostComment, Long> {
 
 
-    @Query("select new nyongnyong.pangparty.dto.feed.PostCommentRes(pc.uid, pc.member.memberProfile.id, pc.content, pc.createTime) " +
+    @Query("select new nyongnyong.pangparty.dto.feed.PostCommentRes(pc.uid, pc.member.memberProfile.id, pc.content, pc.createTime, pc.member.memberProfile.imgUrl) " +
             "from PostComment pc where pc.post.uid = :postUid " +
             "order by pc.createTime desc")
     Page<PostCommentRes> findAllByPostUid(Long postUid, Pageable pageable);

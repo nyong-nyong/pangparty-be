@@ -17,12 +17,14 @@ public class PostCommentRes {
     @NotBlank
     private String content;
     private LocalDateTime createTime;
+    private String profileImgUrl;
 
     @Builder
-    public PostCommentRes(Long uid, String memberId, String content, LocalDateTime createTime) {
+    public PostCommentRes(Long uid, String memberId, String content, LocalDateTime createTime, String profileImgUrl) {
         this.uid = uid;
         this.memberId = memberId;
         this.content = content;
         this.createTime = createTime;
+        this.profileImgUrl = profileImgUrl;
     }
 }
