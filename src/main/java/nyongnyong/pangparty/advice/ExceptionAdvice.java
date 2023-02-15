@@ -17,10 +17,10 @@ public class ExceptionAdvice {
         return new ErrorRes("존재하지 않는 댓글입니다.", HttpStatus.NOT_FOUND.value(), "COMMENT_NOT_FOUND");
     }
 
-    @ExceptionHandler(EmailAuthFailExcpetion.class)
+    @ExceptionHandler(EmailAuthFailException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorRes handleEmailAuthFailExcpetion(EmailAuthFailExcpetion e) {
-        return new ErrorRes("이메일 인증에 실패하였습니다.", HttpStatus.UNAUTHORIZED.value(), "EMAIL_AUTH_FAIL");
+    public ErrorRes handleEmailAuthFailExcpetion(EmailAuthFailException e) {
+        return new ErrorRes(e.getMessage(), HttpStatus.UNAUTHORIZED.value(), "EMAIL_AUTH_FAIL");
     }
 
     @ExceptionHandler(EventNotFoundException.class)

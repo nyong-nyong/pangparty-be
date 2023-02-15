@@ -146,16 +146,20 @@ public class MemberAuthServiceImpl implements MemberAuthService {
     @Override
     public void sendAuthEmail(String email) {
         String authCode = mailService.getKey(6);
-        redisUtil.setValueWithExpiration(email, authCode, 60 * 5);
-        mailService.sendMail(email, "팡파레 이메일 인증번호입니다.", "인증번호 : " + authCode);
+        redisUtil.setValueWithExpiration(email + "AUTH", authCode, 60 * 5);
+        mailService.sendMail(email, "팡파레 이메일 인증번호입니다.", "인증번호 : " + authCode +"./n 5분 이내에 입력해주세요.");
     }
 
     @Override
     public void confirmAuthEmail(String email, String key) {
-        if (redisUtil.getValue(email).equals(key)) {
-            redisUtil.deleteValue(email);
+        if (redisUtil.getValue(email + "AUTH") == null) {
+            throw new EmailAuthFailException("인증번호가 만료되었습니다.");
+        }
+
+        if (redisUtil.getValue(email + "AUTH").equals(key)) {
+            redisUtil.deleteValue(email + "AUTH");
         } else {
-            throw new EmailAuthFailExcpetion("인증번호가 일치하지 않습니다.");
+            throw new EmailAuthFailException("인증번호가 일치하지 않습니다.");
         }
     }
 

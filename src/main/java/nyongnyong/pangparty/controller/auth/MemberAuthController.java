@@ -2,10 +2,7 @@ package nyongnyong.pangparty.controller.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nyongnyong.pangparty.dto.auth.EmailSimple;
-import nyongnyong.pangparty.dto.auth.IdSimple;
-import nyongnyong.pangparty.dto.auth.MemberLoginReq;
-import nyongnyong.pangparty.dto.auth.MemberRegisterReq;
+import nyongnyong.pangparty.dto.auth.*;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -88,15 +85,14 @@ public class MemberAuthController {
     }
 
     @PostMapping("/confirm-auth-email")
-    public ResponseEntity<?> confirmAuthEmail(@RequestBody @Valid EmailSimple email, @RequestBody String
-            authCode, BindingResult bindingResult) {
+    public ResponseEntity<?> confirmAuthEmail(@RequestBody @Valid EmailAuthReq emailAuthReq, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             log.info("bindingResult = {}", bindingResult);
             return ResponseEntity.badRequest().build();
         }
 
-        memberAuthService.confirmAuthEmail(email.getEmail(), authCode);
+        memberAuthService.confirmAuthEmail(emailAuthReq.getEmail(), emailAuthReq.getAuthCode());
         return ResponseEntity.ok().build();
     }
 
