@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -59,6 +60,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public boolean isExistEventByEventUid(Long eventUid) {
         return eventRepository.existsById(eventUid);
+    }
+
+    @Override
+    public boolean isEventTarget(Long memberUid, Long eventUid) {
+        return eventRepository.findById(eventUid).get().getEventTarget().getUid().equals(memberUid);
     }
 
     @Override
@@ -147,7 +153,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional
     public Map<String, Object> findAllExport(Long eventUid) {
 
         Event event = eventRepository.findEventByUid(eventUid);
@@ -167,11 +172,15 @@ public class EventServiceImpl implements EventService {
         List<RollingPaperSticker> rollingPaperPieceStickerList = rollingPaperStickerRepository.findRollingPaperStickersByRollingPaperUid(event.getRollingPaper().getUid());
 
         //album 전체 조회
-        List<AlbumMedia> albumMediaPage = albumMediaRepository.findByAlbumUidOrderByUidAsc(event.getAlbum().getUid());
-        Page<AlbumMediaSimpleRes> dtoPage = albumMediaPage.map(AlbumMediaSimpleRes::new);
-        log.debug("get albumMediaDtoPage = " + dtoPage.getContent());
+        List<AlbumMedia> albumMediaList = albumMediaRepository.findByAlbumUidOrderByUidAsc(event.getAlbum().getUid());
+        List<AlbumMediaSimpleRes> albumMediaSimpleResList = albumMediaList.stream().map(AlbumMediaSimpleRes::new).collect(Collectors.toList());
 
-        }
+        return Map.of("eventStatistics", eventExportRes,
+                "eventIntroduce", eventIntroduceRes,
+                "rollingPaperPieceList", rollingPaperPieceList,
+                "rollingPaperPieceStickerList", rollingPaperPieceStickerList,
+                "albumMediaList", albumMediaSimpleResList);
+    }
 
     @Override
     public Page<EventCard> searchEvent(SearchReq conditions, Pageable pageable) {
