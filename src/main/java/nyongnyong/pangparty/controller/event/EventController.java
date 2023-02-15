@@ -44,12 +44,6 @@ public class EventController {
             Long memberUid = memberAuthService.getMemberUid(token);   // Test: 31L -> isLiked가 true, 그 외 -> isLiked가 false
 //        Long rollingPaperUid = eventService.getEventByEventUid(eventUid).getRollingPaper().getUid();
             return ResponseEntity.ok(eventService.findEventIntroduceByEventUid(memberUid, eventUid));
-        } catch (MemberNotFoundException e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e){
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -88,12 +82,6 @@ public class EventController {
             eventCreateReq.setEventUid(eventUid);
             EventCreateRes eventCreateRes = new EventCreateRes(eventUid);
             return ResponseEntity.created(URI.create("/events/"+eventUid)).body(eventCreateRes);
-        } catch (MemberNotFoundException e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e){
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -113,12 +101,6 @@ public class EventController {
             Long memberUid = memberAuthService.getMemberUid(token);
             eventService.likeEvent(memberUid, eventUid);
             return ResponseEntity.created(URI.create("/events/"+eventUid+"/like")).build();
-        }  catch (MemberNotFoundException e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e){
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -142,12 +124,6 @@ public class EventController {
                 log.debug("memberUid: " + memberUid);
                 eventService.dislikeEvent(memberUid, eventUid);
                 return ResponseEntity.noContent().build();
-            } catch (MemberNotFoundException e){
-                e.printStackTrace();
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            } catch (TokenInvalidException e){
-                e.printStackTrace();
-                return ResponseEntity.badRequest().build();
             } catch (NoSuchElementException e) {
                 e.printStackTrace();
                 return ResponseEntity.badRequest().build();
@@ -216,12 +192,6 @@ public class EventController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             return ResponseEntity.ok(response);
-        } catch (MemberNotFoundException e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (TokenInvalidException e){
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();

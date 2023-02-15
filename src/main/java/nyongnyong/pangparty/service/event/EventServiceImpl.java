@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -175,11 +176,14 @@ public class EventServiceImpl implements EventService {
         List<AlbumMedia> albumMediaList = albumMediaRepository.findByAlbumUidOrderByUidAsc(event.getAlbum().getUid());
         List<AlbumMediaSimpleRes> albumMediaSimpleResList = albumMediaList.stream().map(AlbumMediaSimpleRes::new).collect(Collectors.toList());
 
-        return Map.of("eventStatistics", eventExportRes,
-                "eventIntroduce", eventIntroduceRes,
-                "rollingPaperPieceList", rollingPaperPieceList,
-                "rollingPaperPieceStickerList", rollingPaperPieceStickerList,
-                "albumMediaList", albumMediaSimpleResList);
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("eventStatistics", eventExportRes);
+        response.put("eventIntroduce", eventIntroduceRes);
+        response.put("rollingPaperPieceList", rollingPaperPieceList);
+        response.put("rollingPaperPieceStickerList", rollingPaperPieceStickerList);
+        response.put("albumMediaList", albumMediaSimpleResList);
+
+        return response;
     }
 
     @Override
