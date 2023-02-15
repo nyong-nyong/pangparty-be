@@ -69,6 +69,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public boolean isEventHost(Long memberUid, Long eventUid) {
+        return memberUid.equals(eventRepository.findById(eventUid).get().getHost().getUid());
+    }
+
+    @Override
     @Transactional
     public Event addEventAndEventTarget(Long hostUid, EventCreateReq eventCreateReq) {
         Event event = toEventEntity(hostUid, eventCreateReq);
