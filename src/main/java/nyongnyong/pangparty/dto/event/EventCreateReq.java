@@ -6,11 +6,13 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 
 @Data
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
+@Builder
+@AllArgsConstructor
 public class EventCreateReq {
     @NotBlank
     private Long eventUid;
@@ -25,18 +27,10 @@ public class EventCreateReq {
 
     @JsonProperty("hashtags")
     private List<SimpleHashtagName> hashtags;
-    private String imgUrl;
+    @Builder.Default
+    private String imgUrl = randomImgUrl((int)((Math.random()*2)+1));
 
-    @Builder
-    public EventCreateReq(Long eventUid, Long hostUid, String targetId, String eventName, String introduction, LocalDate dDay, boolean isPrivate, List<SimpleHashtagName> hashtags, String imgUrl) {
-        this.eventUid = eventUid;
-        this.hostUid = hostUid;
-        this.targetId = targetId;
-        this.eventName = eventName;
-        this.introduction = introduction;
-        this.dDay = dDay;
-        this.isPrivate = isPrivate;
-        this.hashtags = hashtags;
-        this.imgUrl = imgUrl;
+    static private String randomImgUrl(int num) {
+        return "/eventDefaults/eventDefaultHeader"+num+".png";
     }
 }

@@ -53,6 +53,13 @@ public class EventController {
         }
     }
 
+    /**
+     * 이벤트 생성
+     *
+     * @param token
+     * @param eventCreateReq
+     * @return
+     */
     @PostMapping
     public ResponseEntity<?> createEvent(@RequestHeader(value = "Authorization") String token, @RequestBody EventCreateReq eventCreateReq){
 
