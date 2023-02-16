@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nyongnyong.pangparty.dto.feed.PostCommentRes;
 import nyongnyong.pangparty.entity.feed.PostComment;
 import nyongnyong.pangparty.exception.CommentNotFoundException;
+import nyongnyong.pangparty.exception.MemberUnAuthorizedException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
 import nyongnyong.pangparty.repository.feed.PostCommentRepository;
 import nyongnyong.pangparty.repository.feed.PostRepository;
@@ -76,7 +77,7 @@ public class PostCommentServiceImpl implements PostCommentService {
 
         // check if comment is written by member
         if (!postComment.get().getMember().getUid().equals(memberUid)) {
-            throw new IllegalArgumentException("사용자가 작성하지 않은 댓글");
+            throw new MemberUnAuthorizedException();
         }
 
         postCommentRepository.delete(postComment.get());
@@ -84,7 +85,7 @@ public class PostCommentServiceImpl implements PostCommentService {
 
     PostComment toPostCommentEntity(Long postUid, Long memberUid, String content) {
         return PostComment.builder()
-                .post(postRepository.findByUid(postUid).get())
+                .post(postRepository.findByUid(postUid).orElseThrow(PostNotFoundException::new))
                 .member(memberRepository.findMemberByUid(memberUid))
                 .content(content)
                 .build();

@@ -5,9 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.feed.PostCommentReq;
 import nyongnyong.pangparty.dto.feed.PostCommentRes;
 import nyongnyong.pangparty.dto.feed.PostReq;
-import nyongnyong.pangparty.exception.CommentNotFoundException;
-import nyongnyong.pangparty.exception.MemberNotFoundException;
-import nyongnyong.pangparty.exception.PostNotFoundException;
+import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
 import nyongnyong.pangparty.service.feed.PostCommentService;
 import nyongnyong.pangparty.service.feed.PostLikeService;
@@ -39,47 +37,32 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        try {
-            Long postUid = postService.addPost(postReq, memberAuthService.getMemberUid(token));
-            return ResponseEntity.created(URI.create("/posts/" + postUid)).build();
-        } catch (MemberNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Long postUid = postService.addPost(postReq, memberAuthService.getMemberUid(token));
+        return ResponseEntity.created(URI.create("/posts/" + postUid)).build();
     }
 
     @GetMapping("/{postUid}")
     public ResponseEntity<?> getPost(@RequestHeader(value = "Authorization", required = false) String token,
                                      @PathVariable Long postUid) {
-        try {
-            if (token != null && !token.isEmpty()) {
-                Long memberUid = memberAuthService.getMemberUid(token);
-                return ResponseEntity.ok(postService.getPost(postUid, memberUid));
-            }
-
-            return ResponseEntity.ok(postService.getPost(postUid, null));
-        } catch (PostNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (MemberNotFoundException e) {
-            return ResponseEntity.badRequest().build();
+        if (token != null && !token.isEmpty()) {
+            Long memberUid = memberAuthService.getMemberUid(token);
+            return ResponseEntity.ok(postService.getPost(postUid, memberUid));
         }
+
+        return ResponseEntity.ok(postService.getPost(postUid, null));
+
     }
 
     @DeleteMapping("/{postUid}")
     public ResponseEntity<?> deletePost(@RequestHeader("Authorization") String token,
                                         @PathVariable Long postUid) {
         if (token == null || token.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new TokenInvalidException();
         }
 
-        try {
-            Long memberUid = memberAuthService.getMemberUid(token);
-            postService.deletePost(postUid, memberUid);
-            return ResponseEntity.noContent().build();
-        } catch (PostNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (MemberNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        Long memberUid = memberAuthService.getMemberUid(token);
+        postService.deletePost(postUid, memberUid);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{postUid}")
@@ -90,15 +73,9 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        try {
-            Long memberUid = memberAuthService.getMemberUid(token);
-            postService.updatePost(postUid, memberUid, postReq);
-            return ResponseEntity.ok().build();
-        } catch (PostNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (MemberNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        Long memberUid = memberAuthService.getMemberUid(token);
+        postService.updatePost(postUid, memberUid, postReq);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{postUid}/likes")
@@ -110,19 +87,11 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        try {
-            Long memberUid = memberAuthService.getMemberUid(token);
-            System.out.println("memberUid: " + memberUid);
-            postLikeService.addPostLike(memberUid, postUid);
+        Long memberUid = memberAuthService.getMemberUid(token);
+        System.out.println("memberUid: " + memberUid);
+        postLikeService.addPostLike(memberUid, postUid);
 
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (PostNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (MemberNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{postUid}/likes")
@@ -132,46 +101,34 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        try {
-            Long memberUid = memberAuthService.getMemberUid(token);
-            postLikeService.deletePostLike(memberUid, postUid);
+        Long memberUid = memberAuthService.getMemberUid(token);
+        postLikeService.deletePostLike(memberUid, postUid);
 
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (PostNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (MemberNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{postUid}/comments")
     public ResponseEntity<?> getComments(@PathVariable Long postUid,
                                          @RequestParam(required = false, defaultValue = "recent") String type,
                                          Pageable pageable) {
-        try {
-            if (type.equals("recent")) {
-                Page<PostCommentRes> postCommentResPage = postCommentService.getRecentCommentList(postUid, 5);
+        if (type.equals("recent")) {
+            Page<PostCommentRes> postCommentResPage = postCommentService.getRecentCommentList(postUid, 5);
 
-                Map<String, Object> response = Map.of("size", 5,
-                        "itemCnt", postCommentResPage.getTotalElements(),
-                        "comments", postCommentResPage.getContent());
+            Map<String, Object> response = Map.of("size", 5,
+                    "itemCnt", postCommentResPage.getTotalElements(),
+                    "comments", postCommentResPage.getContent());
 
-                return ResponseEntity.ok(response);
-            } else {
-                Page<PostCommentRes> postCommentResPage = postCommentService.getPostCommentList(postUid, pageable);
+            return ResponseEntity.ok(response);
+        } else {
+            Page<PostCommentRes> postCommentResPage = postCommentService.getPostCommentList(postUid, pageable);
 
-                Map<String, Object> response = Map.of("size", pageable.getPageSize(),
-                        "page", pageable.getPageNumber(),
-                        "itemCnt", postCommentResPage.getTotalElements(),
-                        "totalPageCnt", postCommentResPage.getTotalPages(),
-                        "comments", postCommentResPage.getContent());
+            Map<String, Object> response = Map.of("size", pageable.getPageSize(),
+                    "page", pageable.getPageNumber(),
+                    "itemCnt", postCommentResPage.getTotalElements(),
+                    "totalPageCnt", postCommentResPage.getTotalPages(),
+                    "comments", postCommentResPage.getContent());
 
-                return ResponseEntity.ok(response);
-            }
-        } catch (PostNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(response);
         }
     }
 
@@ -183,17 +140,10 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        try {
-            Long memberUid = memberAuthService.getMemberUid(token);
+        Long memberUid = memberAuthService.getMemberUid(token);
+        Long commentUid = postCommentService.createPostComment(postUid, memberUid, postCommentReq.getContent());
 
-            Long commentUid = postCommentService.createPostComment(postUid, memberUid, postCommentReq.getContent());
-
-            return ResponseEntity.created(URI.create("/posts/" + postUid + "/comments/" + commentUid)).build();
-        } catch (PostNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (MemberNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        return ResponseEntity.created(URI.create("/posts/" + postUid + "/comments/" + commentUid)).build();
     }
 
     @DeleteMapping("/{postUid}/comments/{commentUid}")
@@ -204,16 +154,9 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        try {
-            Long memberUid = memberAuthService.getMemberUid(token);
+        Long memberUid = memberAuthService.getMemberUid(token);
+        postCommentService.deletePostComment(postUid, commentUid, memberUid);
 
-            postCommentService.deletePostComment(postUid, commentUid, memberUid);
-
-            return ResponseEntity.noContent().build();
-        } catch (PostNotFoundException | CommentNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (MemberNotFoundException | IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        return ResponseEntity.noContent().build();
     }
 }

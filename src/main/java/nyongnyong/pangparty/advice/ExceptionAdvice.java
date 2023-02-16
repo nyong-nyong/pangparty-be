@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.NoSuchElementException;
+
 @RestControllerAdvice
 public class ExceptionAdvice {
 
@@ -88,5 +90,23 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
     public ErrorRes handleFileSizeLimitException(FileSizeLimitExceededException e) {
         return new ErrorRes("5MB가 넘는 파일은 올릴 수 없습니다.", HttpStatus.PAYLOAD_TOO_LARGE.value(), "FILE_SIZE_LIMIT_EXCEEDED");
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorRes handleNoSuchElementException(NoSuchElementException e) {
+        return new ErrorRes("존재하지 않는 요소입니다.", HttpStatus.NOT_FOUND.value(), "NO_SUCH_ELEMENT");
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorRes handleIllegalStateException(IllegalStateException e) {
+        return new ErrorRes(e.getMessage(), HttpStatus.BAD_REQUEST.value(), "ILLEGAL_STATE");
+    }
+
+    @ExceptionHandler(MemberUnAuthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorRes handleMemberUnAuthorizedException(MemberUnAuthorizedException e) {
+        return new ErrorRes("권한이 없습니다.", HttpStatus.UNAUTHORIZED.value(), "MEMBER_UNAUTHORIZED");
     }
 }

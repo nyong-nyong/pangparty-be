@@ -11,6 +11,7 @@ import nyongnyong.pangparty.entity.feed.PostLike;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.exception.FeedNotFoundException;
 import nyongnyong.pangparty.exception.MemberNotFoundException;
+import nyongnyong.pangparty.exception.MemberUnAuthorizedException;
 import nyongnyong.pangparty.exception.PostNotFoundException;
 import nyongnyong.pangparty.repository.event.EventRepository;
 import nyongnyong.pangparty.repository.feed.PostCommentRepository;
@@ -51,7 +52,7 @@ public class PostServiceImpl implements PostService {
 
             if (memberUid != null) {
                 Optional<PostLike> postLike = postLikeRepository.findByPostUidAndMemberUid(postUid, memberUid);
-                if (postLike != null) {
+                if (postLike.isPresent()) {
                     postRes.setLiked(true);
                 }
 
@@ -97,7 +98,7 @@ public class PostServiceImpl implements PostService {
         }
 
         if (!post.get().getMember().getUid().equals(memberUid)) {
-            throw new IllegalArgumentException("사용자가 작성하지 않은 게시물");
+            throw new MemberUnAuthorizedException();
         }
 
         postRepository.delete(post.get());
@@ -117,7 +118,7 @@ public class PostServiceImpl implements PostService {
         }
 
         if (!post.get().getMember().getUid().equals(memberUid)) {
-            throw new IllegalArgumentException("사용자가 작성하지 않은 게시물");
+            throw new MemberUnAuthorizedException();
         }
 
         Event event = null;
@@ -200,7 +201,7 @@ public class PostServiceImpl implements PostService {
 
     PostComment toPostCommentEntity(Long postUid, Long memberUid, String content) {
         return PostComment.builder()
-                .post(postRepository.findByUid(postUid).get())
+                .post(postRepository.findByUid(postUid).orElseThrow(PostNotFoundException::new))
                 .member(memberRepository.findMemberByUid(memberUid))
                 .content(content)
                 .build();
