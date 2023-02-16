@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.event.*;
 import nyongnyong.pangparty.entity.event.Event;
 import nyongnyong.pangparty.entity.hashtag.Hashtag;
-import nyongnyong.pangparty.exception.MemberNotFoundException;
-import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.service.album.AlbumService;
 import nyongnyong.pangparty.service.album.MediaService;
 import nyongnyong.pangparty.service.auth.MemberAuthService;
@@ -235,9 +233,6 @@ public class EventController {
 //                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 //            }
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
