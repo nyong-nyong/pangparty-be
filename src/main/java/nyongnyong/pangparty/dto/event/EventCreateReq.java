@@ -28,21 +28,9 @@ public class EventCreateReq {
     @JsonProperty("hashtags")
     private List<SimpleHashtagName> hashtags;
     @Builder.Default
-    private String imgUrl = ramdomImgUrl((int)((Math.random()*2)+1));
+    private String imgUrl = randomImgUrl((int)((Math.random()*2)+1));
 
-    public EventCreateReq(Long eventUid, Long hostUid, String targetId, String eventName, String introduction, LocalDate dDay, boolean isPrivate, List<SimpleHashtagName> hashtags) {
-        this.eventUid = eventUid;
-        this.hostUid = hostUid;
-        this.targetId = targetId;
-        this.eventName = eventName;
-        this.introduction = introduction;
-        this.dDay = dDay;
-        this.isPrivate = isPrivate;
-        this.hashtags = hashtags;
-        this.imgUrl = ramdomImgUrl((int)((Math.random()*2)+1));
-    }
-
-    private String ramdomImgUrl(int num) {
+    static private String randomImgUrl(int num) {
         return "/eventDefaults/eventDefaultHeader"+num+".png";
     }
 }
