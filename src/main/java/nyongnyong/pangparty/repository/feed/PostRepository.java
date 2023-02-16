@@ -20,11 +20,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select new nyongnyong.pangparty.dto.feed.PostRes(p.uid, p.event.uid, p.member.memberProfile.id, p.member.memberProfile.imgUrl, p.title, p.content, " +
             "p.imgUrl, p.createTime, p.modifyTime) from Post p where p.uid = :postUid")
-    PostRes findPostResByUid(Long postUid);
+    PostRes findPostResByUid(@Param("uid") Long postUid);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Post p set p.event = :event, p.title = :title, p.content = :content, p.imgUrl = :imgUrl where p.uid = :postUid")
-    int updatePost(Long postUid, Event event, String title, String content, String imgUrl);
+    int updatePost(@Param("postUid") Long postUid, @Param("event") Event event, @Param("title") String title, @Param("content") String content, @Param("imgUrl") String imgUrl);
 
     // TODO: profileImgUrl FeedDto에 추가, 쿼리에도 추가하기
     @Query("select distinct new nyongnyong.pangparty.dto.feed.FeedDto(p.uid, p.event.uid, p.member.memberProfile.id," +

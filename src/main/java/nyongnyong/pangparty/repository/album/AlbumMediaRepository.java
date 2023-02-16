@@ -1,5 +1,6 @@
 package nyongnyong.pangparty.repository.album;
 
+import io.lettuce.core.dynamic.annotation.Param;
 import nyongnyong.pangparty.entity.album.AlbumMedia;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,6 @@ public interface AlbumMediaRepository extends JpaRepository<AlbumMedia, Long> {
 
     @Query(value = "SELECT prevUid, nextUid from (SELECT LAG(uid, 1) OVER(ORDER BY uid) as prevUid, uid, LEAD(uid, 1) OVER(ORDER BY uid) as nextUid FROM album_media) as sub WHERE sub.uid = :uid",
             nativeQuery = true)
-    List<List<Long>> findPrevAndNextByUid(Long uid);
+    List<List<Long>> findPrevAndNextByUid(@Param("uid") Long uid);
 
 }
