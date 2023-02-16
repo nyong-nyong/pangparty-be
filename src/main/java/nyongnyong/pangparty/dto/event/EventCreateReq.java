@@ -6,9 +6,9 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 
 @Data
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class EventCreateReq {
@@ -28,7 +28,7 @@ public class EventCreateReq {
     private String imgUrl;
 
     @Builder
-    public EventCreateReq(Long eventUid, Long hostUid, String targetId, String eventName, String introduction, LocalDate dDay, boolean isPrivate, List<SimpleHashtagName> hashtags, String imgUrl) {
+    public EventCreateReq(Long eventUid, Long hostUid, String targetId, String eventName, String introduction, LocalDate dDay, boolean isPrivate, List<SimpleHashtagName> hashtags) {
         this.eventUid = eventUid;
         this.hostUid = hostUid;
         this.targetId = targetId;
@@ -37,6 +37,10 @@ public class EventCreateReq {
         this.dDay = dDay;
         this.isPrivate = isPrivate;
         this.hashtags = hashtags;
-        this.imgUrl = imgUrl;
+        this.imgUrl = ramdomImgUrl((int)((Math.random()*2)+1));
+    }
+
+    private String ramdomImgUrl(int num) {
+        return "/eventDefaults/eventDefaultHeader"+num+".png";
     }
 }
