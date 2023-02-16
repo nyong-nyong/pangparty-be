@@ -11,6 +11,8 @@ import java.util.Random;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
+@Builder
+@AllArgsConstructor
 public class EventCreateReq {
     @NotBlank
     private Long eventUid;
@@ -25,9 +27,9 @@ public class EventCreateReq {
 
     @JsonProperty("hashtags")
     private List<SimpleHashtagName> hashtags;
-    private String imgUrl;
+    @Builder.Default
+    private String imgUrl = ramdomImgUrl((int)((Math.random()*2)+1));
 
-    @Builder
     public EventCreateReq(Long eventUid, Long hostUid, String targetId, String eventName, String introduction, LocalDate dDay, boolean isPrivate, List<SimpleHashtagName> hashtags) {
         this.eventUid = eventUid;
         this.hostUid = hostUid;
