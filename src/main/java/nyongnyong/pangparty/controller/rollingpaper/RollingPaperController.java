@@ -108,25 +108,24 @@ public class RollingPaperController {
 
         // validate path variable
         if (eventUid < 0 || rollingPaperUid < 0) {
-            return ResponseEntity.badRequest().build();
+            throw new IllegalStateException("존재하지  않는 이벤트 또는 롤링페이퍼입니다.");
         }
 
-        try {
-            Long uid;
-            rollingPaperStickerReq.setRollingPaperUid(rollingPaperUid);
-
-            if (token == null) {
-                uid = rollingPaperStickerService.addRollingPaperSticker(eventUid, rollingPaperStickerReq);
-            } else {
-                // check login status (token)
-                Long memberUid = memberAuthService.getMemberUid(token);
-                System.out.println(token);
-                uid = rollingPaperStickerService.addRollingPaperSticker(memberUid, eventUid, rollingPaperStickerReq);
-            }
-            return ResponseEntity.created(URI.create("/events/" + eventUid + "/rollingpaper/" + rollingPaperUid + "/stickers/" + uid)).build();
-        } catch (MemberNotFoundException | EventNotFoundException | RollingPaperNotFoundException |
-                 IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+        if (rollingPaperStickerReq.getScale() >= 4) {
+            throw new IllegalStateException("스티커가 너무 큽니다.");
         }
+
+        Long uid;
+        rollingPaperStickerReq.setRollingPaperUid(rollingPaperUid);
+
+        if (token == null) {
+            uid = rollingPaperStickerService.addRollingPaperSticker(eventUid, rollingPaperStickerReq);
+        } else {
+            // check login status (token)
+            Long memberUid = memberAuthService.getMemberUid(token);
+            System.out.println(token);
+            uid = rollingPaperStickerService.addRollingPaperSticker(memberUid, eventUid, rollingPaperStickerReq);
+        }
+        return ResponseEntity.created(URI.create("/events/" + eventUid + "/rollingpaper/" + rollingPaperUid + "/stickers/" + uid)).build();
     }
 }
