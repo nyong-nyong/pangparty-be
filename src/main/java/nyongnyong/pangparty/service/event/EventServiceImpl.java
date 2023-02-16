@@ -143,6 +143,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<EventCard> findTrendingEvents() {
+        Pageable top3 = PageRequest.of(0, 3);
+        return eventRepository.findTrendingEvents(top3);
+    }
+
+    @Override
     public List<EventExportRes> findExportStatistics(Long eventUid) {
         return eventRepository.findExportStatistics(eventUid);
     }

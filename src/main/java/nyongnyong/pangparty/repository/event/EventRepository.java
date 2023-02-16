@@ -60,6 +60,22 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
             " where date(e.createTime) = CURRENT_DATE")
     List<EventCard> findTodayStartEvents(Pageable pageable);
 
+    @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
+            " from Event e" +
+            " left join e.eventTarget.targetMember.memberProfile mp" +
+            " left join EventLike el on e.uid = el.event.uid" +
+            " where e.dDay >= CURRENT_DATE" +
+            " group by e.uid" +
+            " order by count(el) desc")
+    List<EventCard> findTrendingEvents(Pageable top3);
+//    @Query("select new nyongnyong.pangparty.dto.event.EventCard(e.uid, e.eventName, mp.id, e.imgUrl, e.dDay)" +
+//            " from Event e" +
+//            " left join e.eventTarget.targetMember.memberProfile mp" +
+//            " left join EventLike el on e.uid = el.event.uid" +
+//            " group by el.event.uid" +
+//            " order by count(*) desc")
+//    List<EventCard> findTrendingEvents(Pageable top3);
+
     @Query("select new nyongnyong.pangparty.dto.event.EventExportRes(count(distinct el.uid), count(distinct ep.uid), count(distinct rpp.uid), count(distinct am.uid)) from Event e" +
             " left join EventLike el on e.uid = el.event.uid" +
             " left join EventParticipant ep on e.uid = ep.event.uid" +

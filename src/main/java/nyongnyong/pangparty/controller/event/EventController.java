@@ -174,7 +174,7 @@ public class EventController {
     public ResponseEntity<?> findHomeEvents(@RequestParam String type){
         try{
             // Validate Path Variable
-            String[] types = { "start", "end" };
+            String[] types = { "start", "end", "trending" };
             List<String> typeList = Arrays.asList(types);
             if(!typeList.contains(type)){ // type이 start, end가 아니면 bad request
                 return ResponseEntity.badRequest().build();
@@ -188,7 +188,10 @@ public class EventController {
             } else if(type.equals("end")){
                 List<EventCard> todayEndEvents = eventService.findTodayEndEvents();
                 response.put("endEvents", todayEndEvents);
-            } else{
+            } else if(type.equals("trending")){
+                List<EventCard> trendingEvents = eventService.findTrendingEvents();
+                response.put("trendingEvents", trendingEvents);
+            } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             return ResponseEntity.ok(response);

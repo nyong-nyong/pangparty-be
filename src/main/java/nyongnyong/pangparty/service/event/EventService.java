@@ -41,6 +41,7 @@ public interface EventService {
     List<EventCard> findTodayStartEvents();
 
     List<EventCard> findTodayEndEvents();
+    List<EventCard> findTrendingEvents();
 
     List<EventExportRes> findExportStatistics(Long eventUid);
 
