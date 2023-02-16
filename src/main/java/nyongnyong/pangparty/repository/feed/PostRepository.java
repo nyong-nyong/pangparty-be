@@ -42,7 +42,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " p.title, p.content, p.imgUrl, mp.member.memberProfile.imgUrl,  p.createTime, p.modifyTime) from Post p" +
             " left join Member m on p.member.uid = m.uid" +
             " left join MemberProfile mp on m.uid = mp.member.uid" +
-            " where p.member.memberProfile.id = :memberId" +
+            " where p.member.uid = :memberUid" +
             " order by p.createTime desc")
-    List<FeedDto> findMyPostsByMemberId(@Param("memberId") String memberId);
+    List<FeedDto> findMyPostsByMemberUid(@Param("memberUid") Long memberUid);
 }

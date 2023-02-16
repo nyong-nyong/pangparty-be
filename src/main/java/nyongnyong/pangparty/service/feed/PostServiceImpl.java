@@ -157,7 +157,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<FeedRes> findProfileFeed(Long memberUid, String memberId, Pageable pageable) {
         try{
-            List<FeedDto> feedDtoPages = postRepository.findMyPostsByMemberId(memberId);
+            List<FeedDto> feedDtoPages = postRepository.findMyPostsByMemberUid(memberUid);
             ArrayList<FeedRes> feedResList = new ArrayList<>();
             for (int i = 0; i < feedDtoPages.size(); i++) {
                 FeedDto feedDto = feedDtoPages.get(i);
