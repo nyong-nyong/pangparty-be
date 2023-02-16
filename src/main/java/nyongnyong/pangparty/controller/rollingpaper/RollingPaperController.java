@@ -91,13 +91,9 @@ public class RollingPaperController {
             return ResponseEntity.badRequest().build();
         }
 
-        try {
-            Map<String, Object> response = Map.of("rollingPaperStickers", rollingPaperStickerService.findRollingPaperStickersByTopLoc(eventUid, rollingPaperUid, topStart, topEnd));
+        Map<String, Object> response = Map.of("rollingPaperStickers", rollingPaperStickerService.findRollingPaperStickersByTopLoc(eventUid, rollingPaperUid, topStart, topEnd));
 
-            return ResponseEntity.ok(response);
-        } catch (EventNotFoundException | RollingPaperNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{rollingPaperUid}/stickers")

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nyongnyong.pangparty.dto.album.AlbumMediaSimpleRes;
 import nyongnyong.pangparty.dto.event.*;
+import nyongnyong.pangparty.dto.rollingpaper.RollingPaperStickerRes;
 import nyongnyong.pangparty.dto.search.SearchReq;
 import nyongnyong.pangparty.entity.album.AlbumMedia;
 import nyongnyong.pangparty.entity.event.Event;
@@ -13,7 +14,6 @@ import nyongnyong.pangparty.entity.member.Friendship;
 import nyongnyong.pangparty.entity.member.Member;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaper;
 import nyongnyong.pangparty.entity.rollingpaper.RollingPaperPiece;
-import nyongnyong.pangparty.entity.rollingpaper.RollingPaperSticker;
 import nyongnyong.pangparty.exception.EventNotFoundException;
 import nyongnyong.pangparty.repository.album.AlbumMediaRepository;
 import nyongnyong.pangparty.repository.badge.MemberBadgeInfoRepository;
@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
     private final EventLikeRepository eventLikeRepository;
     private final MemberRepository memberRepository;
     private final RollingPaperRepository rollingPaperRepository;
-    private final RollingPaperPieceRepository  rollingPaperPieceRepository;
+    private final RollingPaperPieceRepository rollingPaperPieceRepository;
     private final RollingPaperStickerRepository rollingPaperStickerRepository;
     private final BannerRepository bannerRepository;
     private final FriendshipRepository friendshipRepository;
@@ -181,7 +181,7 @@ public class EventServiceImpl implements EventService {
         List<RollingPaperPiece> rollingPaperPieceList = rollingPaperPieceRepository.findAllByRollingPaperUid(event.getRollingPaper().getUid());
 
         // rp sticker list
-        List<RollingPaperSticker> rollingPaperPieceStickerList = rollingPaperStickerRepository.findRollingPaperStickersByRollingPaperUid(event.getRollingPaper().getUid());
+        List<RollingPaperStickerRes> rollingPaperPieceStickerList = rollingPaperStickerRepository.findRollingPaperStickersByRollingPaperUid(event.getRollingPaper().getUid()).stream().map(RollingPaperStickerRes::new).collect(Collectors.toList());
 
         //album 전체 조회
         List<AlbumMedia> albumMediaList = albumMediaRepository.findByAlbumUidOrderByUidAsc(event.getAlbum().getUid());
@@ -202,7 +202,7 @@ public class EventServiceImpl implements EventService {
         return eventRepository.searchEvent(conditions, pageable).map(EventCard::new);
     }
 
-    private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq){
+    private Event toEventEntity(Long hostUid, EventCreateReq eventCreateReq) {
         return Event.builder()
                 .eventName(eventCreateReq.getEventName())
                 .introduction(eventCreateReq.getIntroduction())
@@ -216,7 +216,7 @@ public class EventServiceImpl implements EventService {
                 .event(event).build();
     }
 
-    private EventTarget toEventTargetEntity(EventCreateReq eventCreateReq, Event event){
+    private EventTarget toEventTargetEntity(EventCreateReq eventCreateReq, Event event) {
         return EventTarget.builder()
                 .targetMember(memberRepository.findMemberById(eventCreateReq.getTargetId()))
                 .event(event)
