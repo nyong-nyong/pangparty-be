@@ -7,7 +7,6 @@ import nyongnyong.pangparty.dto.feed.FeedRes;
 import nyongnyong.pangparty.dto.member.MemberProfilePictureSimpleRes;
 import nyongnyong.pangparty.dto.member.MemberProfileReq;
 import nyongnyong.pangparty.exception.FeedNotFoundException;
-import nyongnyong.pangparty.exception.MemberNotFoundException;
 import nyongnyong.pangparty.exception.TokenInvalidException;
 import nyongnyong.pangparty.jwt.JwtTokenProvider;
 import nyongnyong.pangparty.service.album.MediaService;
@@ -16,7 +15,6 @@ import nyongnyong.pangparty.service.badge.BadgeService;
 import nyongnyong.pangparty.service.event.EventService;
 import nyongnyong.pangparty.service.feed.PostService;
 import nyongnyong.pangparty.service.member.MemberService;
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -53,21 +51,12 @@ public class MemberController {
                                                @PathVariable("targetId") String targetId) {
         // 로그인 안 한 상태
         if (token == null || token.isEmpty()) {
-            try {
-                return ResponseEntity.ok(memberService.findMemberProfile(null, targetId));
-            } catch (MemberNotFoundException e) {
-                return ResponseEntity.badRequest().build();
-            }
+            return ResponseEntity.ok(memberService.findMemberProfile(null, targetId));
         }
 
         // 로그인 상태
-        try {
-            String memberId = jwtTokenProvider.getIdFromToken(jwtTokenProvider.resolveToken(token));
-
-            return ResponseEntity.ok(memberService.findMemberProfile(memberId, targetId));
-        } catch (MemberNotFoundException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        String memberId = jwtTokenProvider.getIdFromToken(jwtTokenProvider.resolveToken(token));
+        return ResponseEntity.ok(memberService.findMemberProfile(memberId, targetId));
     }
 
     @PutMapping("/profile")
@@ -75,23 +64,18 @@ public class MemberController {
                                                  @RequestBody @Valid MemberProfileReq memberProfileReq) {
         // Validate Token
         if (token == null || token.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new TokenInvalidException();
         }
 
         // Validate Request Body
         if (memberProfileReq == null) {
-            return ResponseEntity.badRequest().build();
+            throw new IllegalStateException("요청 바디가 비어있습니다.");
         }
 
-        try {
-            String memberId = jwtTokenProvider.getIdFromToken(jwtTokenProvider.resolveToken(token));
+        String memberId = jwtTokenProvider.getIdFromToken(jwtTokenProvider.resolveToken(token));
+        memberService.updateMemberProfile(memberId, memberProfileReq);
 
-            memberService.updateMemberProfile(memberId, memberProfileReq);
-
-            return ResponseEntity.ok().build();
-        } catch (MemberNotFoundException | IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -105,13 +89,13 @@ public class MemberController {
                                                         @RequestPart(value = "file", required = false) MultipartFile file) {
         // Validate Token
         if (token == null || token.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new TokenInvalidException();
         }
 
         // Validate Request Part
         if (file == null) {
             log.debug("file is null");
-            return ResponseEntity.badRequest().build();
+            throw new IllegalStateException("파일이 존재하지 않습니다.");
         }
 
         try {
@@ -127,15 +111,13 @@ public class MemberController {
 //                String originalUrl = mediaService.uploadMedia(webpMedia, "webp/"+fileName, contentType, webpMedia.getSize());
 //                String thumbnailUrl = mediaService.uploadMedia(thumbnail, "thumbnail/"+fileName, contentType, thumbnail.getSize());
 //                String mediaUrl = mediaService.uploadMedia(media, "album/"+fileName, contentType, media.getSize());
-                String profileUrl = mediaService.uploadMedia(file, "profile/"+fileName, contentType, file.getSize());
+                String profileUrl = mediaService.uploadMedia(file, "profile/" + fileName, contentType, file.getSize());
                 MemberProfilePictureSimpleRes memberProfilePictureSimpleRes = memberService.createMemberProfilePicture(memberUid, profileUrl);
                 log.debug("memberProfilePictureSimpleRes : {}", memberProfilePictureSimpleRes);
                 return new ResponseEntity<>(memberProfilePictureSimpleRes, HttpStatus.CREATED);
-            } else{
+            } else {
                 throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
             }
-        } catch (FileSizeLimitExceededException e){
-            return new ResponseEntity<>(HttpStatus.PAYLOAD_TOO_LARGE);
         } catch (IllegalArgumentException | IOException e) {
             return ResponseEntity.badRequest().build();
         }

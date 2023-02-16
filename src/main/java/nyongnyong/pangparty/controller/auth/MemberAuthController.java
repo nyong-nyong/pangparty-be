@@ -25,13 +25,8 @@ public class MemberAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Validated @RequestBody MemberLoginReq memberLoginReq) {
-        try {
-            Map<String, String> response = memberAuthService.login(memberLoginReq);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
+        Map<String, String> response = memberAuthService.login(memberLoginReq);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/logout")
@@ -57,12 +52,8 @@ public class MemberAuthController {
             return ResponseEntity.badRequest().build();
         }
 
-        try {
-            memberAuthService.register(memberRegisterReq);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        memberAuthService.register(memberRegisterReq);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/refresh-token")
