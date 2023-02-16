@@ -107,8 +107,6 @@ public class AlbumController {
                 AlbumMediaSimpleRes albumMediaSimpleRes = albumMediaService.createAlbumMedia(eventUid, memberUid, thumbnailUrl, mediaUrl);
                 return new ResponseEntity<>(albumMediaSimpleRes, HttpStatus.CREATED);
             }
-        }catch (FileSizeLimitExceededException e){
-            return new ResponseEntity<>(HttpStatus.PAYLOAD_TOO_LARGE);
         }catch (NoSuchElementException | IOException e){
             log.debug(e.getMessage());
             return ResponseEntity.badRequest().build();

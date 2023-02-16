@@ -3,6 +3,7 @@ package nyongnyong.pangparty.advice;
 import io.jsonwebtoken.ExpiredJwtException;
 import nyongnyong.pangparty.dto.ErrorRes;
 import nyongnyong.pangparty.exception.*;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -81,5 +82,11 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorRes handleExpiredJwtException(ExpiredJwtException e) {
         return new ErrorRes("토큰이 만료되었습니다", HttpStatus.BAD_REQUEST.value(), "TOKEN_EXPIRED");
+    }
+
+    @ExceptionHandler(FileSizeLimitExceededException.class)
+    @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+    public ErrorRes handleFileSizeLimitException(FileSizeLimitExceededException e) {
+        return new ErrorRes("5MB가 넘는 파일은 올릴 수 없습니다.", HttpStatus.PAYLOAD_TOO_LARGE.value(), "FILE_SIZE_LIMIT_EXCEEDED");
     }
 }
